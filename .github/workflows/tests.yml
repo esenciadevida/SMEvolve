@@ -73,10 +73,14 @@ jobs:
         run: php artisan key:generate
         working-directory: Laravel-Website
 
+      - name: Run Pint code style check
+        run: vendor/bin/pint --test
+        working-directory: Laravel-Website
+
       - name: Setup Node
         uses: actions/setup-node@v5
         with:
-          node-version: "20"
+          node-version: "22"
           cache: npm
           cache-dependency-path: Laravel-Website/package-lock.json
 
