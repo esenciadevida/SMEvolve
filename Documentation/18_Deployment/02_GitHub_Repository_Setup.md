@@ -239,6 +239,18 @@ Recommended protections:
 
 The exact protection level should reflect the project's team size.
 
+**Implementation status (Prompt 023):** `main` is currently **unprotected**. Full branch protection and rulesets require GitHub Pro for private repositories, and the account is on the free plan. Enable these exact rules on `main` after upgrading to Pro (or if the repository is made public):
+
+* Require a pull request before merging (no approvals needed for solo workflow).
+* Require status check `tests` to pass before merging (strict — branch must be up to date).
+* Enforce rules for administrators.
+* Prevent force pushes.
+* Prevent branch deletion.
+* Require linear history.
+* Require conversation resolution.
+
+Additionally enable (via the GitHub web UI — the current token lacks the `security_events` scope): secret scanning, secret scanning push protection, Dependabot alerts, and Dependabot security updates.
+
 ---
 
 # 11. Pull Requests
