@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Administrator;
+use App\Models\User;
+
 return [
 
     /*
@@ -67,19 +70,19 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', App\Models\User::class),
+            'model' => env('AUTH_MODEL', User::class),
         ],
 
         'administrators' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Administrator::class,
+            'model' => Administrator::class,
         ],
     ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+    // 'users' => [
+    //     'driver' => 'database',
+    //     'table' => 'users',
+    // ],
 
     /*
     |--------------------------------------------------------------------------

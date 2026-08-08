@@ -9,9 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class AdminAnalyticsController extends Controller
 {
-    public function __construct(private readonly AdminAnalyticsService $analytics)
-    {
-    }
+    public function __construct(private readonly AdminAnalyticsService $analytics) {}
 
     public function index(Request $request)
     {

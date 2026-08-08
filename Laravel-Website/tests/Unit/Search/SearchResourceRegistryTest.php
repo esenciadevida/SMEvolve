@@ -13,7 +13,7 @@ class SearchResourceRegistryTest extends TestCase
 {
     public function test_it_registers_and_resolves_providers_by_key(): void
     {
-        $registry = new SearchResourceRegistry();
+        $registry = new SearchResourceRegistry;
 
         $registry->register($this->provider('quotes', 'Quotes', 'quotes.search'));
         $registry->register($this->provider('settings', 'Settings', 'settings.view'));
@@ -26,12 +26,12 @@ class SearchResourceRegistryTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        (new SearchResourceRegistry())->get('missing');
+        (new SearchResourceRegistry)->get('missing');
     }
 
     public function test_for_administrator_returns_only_authorized_providers(): void
     {
-        $registry = new SearchResourceRegistry();
+        $registry = new SearchResourceRegistry;
 
         $registry->register($this->provider('quotes', 'Quotes', 'quotes.search'));
         $registry->register($this->provider('administrators', 'Administrators', 'administrators.view'));
@@ -44,13 +44,13 @@ class SearchResourceRegistryTest extends TestCase
 
     private function provider(string $key, string $label, ?string $permission): SearchContract
     {
-        return new class($key, $label, $permission) implements SearchContract {
+        return new class($key, $label, $permission) implements SearchContract
+        {
             public function __construct(
                 private readonly string $key,
                 private readonly string $label,
                 private readonly ?string $permission,
-            ) {
-            }
+            ) {}
 
             public function key(): string
             {

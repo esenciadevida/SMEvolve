@@ -11,8 +11,7 @@ class QuoteReviewService
         private readonly QuoteAnswerService $answerService,
         private readonly QuoteRequirementService $requirementService,
         private readonly QuoteFlowService $flowService,
-    ) {
-    }
+    ) {}
 
     /**
      * Build the review dataset strictly from server-side data.

@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Ai\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Services\AI\AiConfigService;
-use App\Services\AI\AiUsageService;
 use App\Services\AI\AIProviderInterface;
+use App\Services\AI\AiUsageService;
 use App\Services\AI\HandoffService;
 use Illuminate\Http\Request;
 
@@ -16,8 +16,7 @@ class AdminDashboardController extends Controller
         private readonly AiConfigService $configService,
         private readonly AIProviderInterface $provider,
         private readonly HandoffService $handoffService,
-    ) {
-    }
+    ) {}
 
     public function index(Request $request)
     {

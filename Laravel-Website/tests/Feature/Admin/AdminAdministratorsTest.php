@@ -2,8 +2,6 @@
 
 namespace Tests\Feature\Admin;
 
-use App\Models\Administrator;
-
 class AdminAdministratorsTest extends AdminTestCase
 {
     public function test_super_admin_can_list_administrators(): void

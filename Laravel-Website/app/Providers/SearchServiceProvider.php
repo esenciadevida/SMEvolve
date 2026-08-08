@@ -20,13 +20,13 @@ class SearchServiceProvider extends ServiceProvider
         $this->app->singleton(PublicSearchService::class);
 
         $this->app->singleton(PublicSearchResourceRegistry::class, function () {
-            $registry = new PublicSearchResourceRegistry();
+            $registry = new PublicSearchResourceRegistry;
 
             $registry->register(new ServiceSearchProvider(app(ContentService::class)));
             $registry->register(new PackageSearchProvider(app(ContentService::class)));
             $registry->register(new PortfolioSearchProvider(app(PortfolioData::class)));
             $registry->register(new FaqSearchProvider(app(ContentService::class)));
-            $registry->register(new PageSearchProvider());
+            $registry->register(new PageSearchProvider);
 
             return $registry;
         });

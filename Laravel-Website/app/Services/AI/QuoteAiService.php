@@ -9,9 +9,7 @@ use Illuminate\Support\Arr;
 
 class QuoteAiService
 {
-    public function __construct(private readonly AiService $aiService)
-    {
-    }
+    public function __construct(private readonly AiService $aiService) {}
 
     /**
      * Whether the quote AI assist features are available right now.
@@ -29,7 +27,8 @@ class QuoteAiService
      *
      * @throws AIException
      */
-    public function analyze(QuoteSession $session): array    {
+    public function analyze(QuoteSession $session): array
+    {
         $analysis = $this->parseJson(
             $this->aiService->generate('quote_assistant', $this->buildPrompt($session), [
                 'temperature' => 0.2,
@@ -145,9 +144,6 @@ class QuoteAiService
         return collect($features)->pluck('key')->values()->all();
     }
 
-    /**
-     * @param  int  $maxOutputTokens
-     */
     private function recordInteraction(QuoteSession $session, string $operation, string $promptVersion, int $maxOutputTokens): void
     {
         try {

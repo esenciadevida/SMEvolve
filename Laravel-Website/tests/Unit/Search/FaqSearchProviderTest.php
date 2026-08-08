@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Search;
 
-use App\Services\Search\FaqSearchProvider;
 use App\Services\Content\ContentService;
+use App\Services\Search\FaqSearchProvider;
 use Tests\TestCase;
 
 class FaqSearchProviderTest extends TestCase

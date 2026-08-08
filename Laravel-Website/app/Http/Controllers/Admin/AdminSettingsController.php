@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AdminSettingsRequest;
+use App\Models\Administrator;
 use App\Services\Admin\AdminAuditService;
 use App\Services\Admin\SiteSettingsService;
 use Illuminate\Http\Request;
@@ -16,8 +17,7 @@ class AdminSettingsController extends Controller
     public function __construct(
         private readonly SiteSettingsService $settingsService,
         private readonly AdminAuditService $auditService,
-    ) {
-    }
+    ) {}
 
     public function index(Request $request, string $group)
     {
@@ -78,7 +78,7 @@ class AdminSettingsController extends Controller
             ->with('status', 'Settings saved successfully.');
     }
 
-    private function saveSocialLinks(Request $request, \App\Models\Administrator $administrator): bool
+    private function saveSocialLinks(Request $request, Administrator $administrator): bool
     {
         $current = collect(config('social_links.platforms', []));
         $submitted = collect($request->input('platforms', []))->mapWithKeys(function ($platform) {

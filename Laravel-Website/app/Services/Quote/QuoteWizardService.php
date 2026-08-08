@@ -14,8 +14,7 @@ class QuoteWizardService
         private readonly QuoteRequirementService $requirementService,
         private readonly QuoteReviewService $reviewService,
         private readonly QuoteStepValidator $validator,
-    ) {
-    }
+    ) {}
 
     /**
      * Start a new quote session.
@@ -179,6 +178,7 @@ class QuoteWizardService
 
             if (($question['type'] ?? null) === 'multiple_choice' && isset($input[$key])) {
                 $answers[$key] = $this->normalizeMultipleChoice($input[$key]);
+
                 continue;
             }
 
@@ -234,7 +234,6 @@ class QuoteWizardService
     }
 
     /**
-     * @param  mixed  $value
      * @return array<int, string>
      */
     private function normalizeMultipleChoice(mixed $value): array

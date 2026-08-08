@@ -20,7 +20,7 @@ class AdministratorSearchProviderTest extends TestCase
             'role_id' => $role->id,
         ]);
 
-        $results = (new AdministratorSearchProvider())->search('alice', 5);
+        $results = (new AdministratorSearchProvider)->search('alice', 5);
 
         $this->assertCount(1, $results);
         $this->assertSame('Alice Wonder', $results[0]['title']);
@@ -37,7 +37,7 @@ class AdministratorSearchProviderTest extends TestCase
             'role_id' => $role->id,
         ]);
 
-        $results = (new AdministratorSearchProvider())->search('bob@example.com', 5);
+        $results = (new AdministratorSearchProvider)->search('bob@example.com', 5);
 
         $this->assertCount(1, $results);
         $this->assertSame('bob@example.com', $results[0]['subtitle']);
@@ -49,7 +49,7 @@ class AdministratorSearchProviderTest extends TestCase
         Administrator::factory()->create(['name' => 'Chris Cole', 'email' => 'cc@example.com', 'role_id' => $role->id]);
         Administrator::factory()->create(['name' => 'Natalie Chris Cole', 'email' => 'cd@example.com', 'role_id' => $role->id]);
 
-        $results = (new AdministratorSearchProvider())->search('chris cole', 5);
+        $results = (new AdministratorSearchProvider)->search('chris cole', 5);
 
         $this->assertCount(2, $results);
         $this->assertSame('Chris Cole', $results[0]['title']);
@@ -58,10 +58,10 @@ class AdministratorSearchProviderTest extends TestCase
     public function test_permission_gate_requires_administrators_view(): void
     {
         $role = new Role(['permissions' => ['quotes.search']]);
-        $administrator = new Administrator();
+        $administrator = new Administrator;
         $administrator->setRelation('role', $role);
 
-        $provider = new AdministratorSearchProvider();
+        $provider = new AdministratorSearchProvider;
 
         $this->assertFalse($provider->canSearch($administrator));
     }

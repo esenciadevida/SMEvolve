@@ -11,9 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 class AdminAccountController extends Controller
 {
-    public function __construct(private readonly AdminAuditService $auditService)
-    {
-    }
+    public function __construct(private readonly AdminAuditService $auditService) {}
 
     public function profile(Request $request)
     {

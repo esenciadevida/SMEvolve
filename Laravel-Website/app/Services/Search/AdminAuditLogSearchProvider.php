@@ -27,8 +27,8 @@ class AdminAuditLogSearchProvider extends AbstractSearchProvider
 
                 $builder->orWhereHas('administrator', function (Builder $relation) use ($lower) {
                     $relation->whereRaw('LOWER(name) = ?', [$lower])
-                        ->orWhereRaw('LOWER(name) LIKE ?', [$lower . '%'])
-                        ->orWhereRaw('LOWER(name) LIKE ?', ['%' . $lower . '%']);
+                        ->orWhereRaw('LOWER(name) LIKE ?', [$lower.'%'])
+                        ->orWhereRaw('LOWER(name) LIKE ?', ['%'.$lower.'%']);
                 });
             })
             ->orderByRaw(
@@ -38,7 +38,7 @@ class AdminAuditLogSearchProvider extends AbstractSearchProvider
                     WHEN LOWER(resource_type) LIKE ? THEN 2
                     ELSE 3
                 END',
-                [$lower, $lower . '%', $lower . '%']
+                [$lower, $lower.'%', $lower.'%']
             )
             ->orderByDesc('created_at')
             ->limit($limit)

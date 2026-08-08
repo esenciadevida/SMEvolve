@@ -10,9 +10,13 @@ class QuoteAIInteraction extends Model
     protected $table = 'quote_ai_interactions';
 
     public const STATUS_PENDING = 'pending';
+
     public const STATUS_COMPLETED = 'completed';
+
     public const STATUS_FAILED = 'failed';
+
     public const STATUS_TIMEOUT = 'timeout';
+
     public const STATUS_RATE_LIMITED = 'rate_limited';
 
     protected $fillable = [

@@ -8,12 +8,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class QuoteSessionRequirement extends Model
 {
     public const SOURCE_USER = 'user';
+
     public const SOURCE_AI = 'ai';
+
     public const SOURCE_SYSTEM = 'system';
 
     public const STATUS_SUGGESTED = 'suggested';
+
     public const STATUS_SELECTED = 'selected';
+
     public const STATUS_CONFIRMED = 'confirmed';
+
     public const STATUS_REMOVED = 'removed';
 
     protected $fillable = [

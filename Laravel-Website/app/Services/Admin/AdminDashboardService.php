@@ -6,6 +6,7 @@ use App\Models\Administrator;
 use App\Models\QuoteSubmission;
 use App\Services\AI\AiConfigService;
 use App\Services\AI\AIProviderInterface;
+use Illuminate\Database\Eloquent\Collection;
 
 class AdminDashboardService
 {
@@ -13,8 +14,7 @@ class AdminDashboardService
         private readonly AdminAuditService $auditService,
         private readonly AiConfigService $aiConfigService,
         private readonly AIProviderInterface $provider,
-    ) {
-    }
+    ) {}
 
     /**
      * Build the permission-aware dashboard data for an administrator.
@@ -70,7 +70,7 @@ class AdminDashboardService
         ];
     }
 
-    private function recentQuotes(): \Illuminate\Database\Eloquent\Collection
+    private function recentQuotes(): Collection
     {
         return QuoteSubmission::query()
             ->orderByDesc('id')

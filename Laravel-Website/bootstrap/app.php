@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Middleware\AdminAuthenticate;
+use App\Http\Middleware\EnsureAdminAuthenticated;
+use App\Http\Middleware\EnsureAdminHasPermission;
+use App\Http\Middleware\SecurityHeaders;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -12,13 +16,13 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'ai.admin' => \App\Http\Middleware\EnsureAdminAuthenticated::class,
-            'admin.auth' => \App\Http\Middleware\AdminAuthenticate::class,
-            'admin.permission' => \App\Http\Middleware\EnsureAdminHasPermission::class,
+            'ai.admin' => EnsureAdminAuthenticated::class,
+            'admin.auth' => AdminAuthenticate::class,
+            'admin.permission' => EnsureAdminHasPermission::class,
         ]);
 
         $middleware->web(append: [
-            \App\Http\Middleware\SecurityHeaders::class,
+            SecurityHeaders::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

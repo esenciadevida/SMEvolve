@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AdminAiUpdateRequest;
+use App\Services\Admin\AdminAuditService;
 use App\Services\AI\AiConfigService;
 use App\Services\AI\AIProviderInterface;
-use App\Services\Admin\AdminAuditService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,8 +16,7 @@ class AdminAiController extends Controller
         private readonly AiConfigService $aiConfigService,
         private readonly AIProviderInterface $provider,
         private readonly AdminAuditService $auditService,
-    ) {
-    }
+    ) {}
 
     public function settings(Request $request)
     {

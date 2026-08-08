@@ -13,8 +13,7 @@ class AdminUsageController extends Controller
     public function __construct(
         private readonly AiUsageService $usageService,
         private readonly AIProviderInterface $provider,
-    ) {
-    }
+    ) {}
 
     public function index()
     {

@@ -12,8 +12,7 @@ class AdminSearchController extends Controller
 {
     public function __construct(
         private readonly SearchService $searchService,
-    ) {
-    }
+    ) {}
 
     public function index(AdminSearchRequest $request)
     {

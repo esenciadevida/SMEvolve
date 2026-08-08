@@ -9,9 +9,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class QuoteSubmission extends Model
 {
     public const STATUS_SUBMITTED = 'submitted';
+
     public const STATUS_UNDER_REVIEW = 'under_review';
+
     public const STATUS_QUOTED = 'quoted';
+
     public const STATUS_COMPLETED = 'completed';
+
     public const STATUS_CANCELLED = 'cancelled';
 
     protected $fillable = [

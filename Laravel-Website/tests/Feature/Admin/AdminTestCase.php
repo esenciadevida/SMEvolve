@@ -5,6 +5,7 @@ namespace Tests\Feature\Admin;
 use App\Models\Administrator;
 use App\Models\Role;
 use App\Models\SiteSetting;
+use App\Services\Admin\SiteSettingsService;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
@@ -54,6 +55,6 @@ abstract class AdminTestCase extends TestCase
 
     protected function createSiteSetting(string $key, mixed $value): SiteSetting
     {
-        return app(\App\Services\Admin\SiteSettingsService::class)->set($key, $value, 'test');
+        return app(SiteSettingsService::class)->set($key, $value, 'test');
     }
 }

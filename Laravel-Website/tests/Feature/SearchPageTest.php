@@ -91,7 +91,7 @@ class SearchPageTest extends TestCase
     public function test_autocomplete_validates_maximum_query_length(): void
     {
         $this->withHeaders(['Accept' => 'application/json'])
-            ->getJson('/search/autocomplete?q=' . Str::repeat('a', 121))
+            ->getJson('/search/autocomplete?q='.Str::repeat('a', 121))
             ->assertUnprocessable()
             ->assertJsonValidationErrors('q');
     }

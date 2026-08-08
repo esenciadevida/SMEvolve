@@ -20,9 +20,9 @@ class PortfolioProjectSeeder extends Seeder
     public function run(): void
     {
         $providers = [
-            new SampleInventorySystem(),
-            new ConceptClinicWebsite(),
-            new ConceptRetailStore(),
+            new SampleInventorySystem,
+            new ConceptClinicWebsite,
+            new ConceptRetailStore,
         ];
 
         foreach ($providers as $index => $provider) {

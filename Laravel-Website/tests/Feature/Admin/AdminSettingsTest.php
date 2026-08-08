@@ -2,6 +2,10 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Models\AdminAuditLog;
+use App\Models\SiteSetting;
+use App\Services\Admin\SiteSettingsService;
+
 class AdminSettingsTest extends AdminTestCase
 {
     public function test_super_admin_can_view_general_settings(): void
@@ -70,7 +74,7 @@ class AdminSettingsTest extends AdminTestCase
                 ],
             ]);
 
-        app(\App\Services\Admin\SiteSettingsService::class)->loadIntoConfig();
+        app(SiteSettingsService::class)->loadIntoConfig();
 
         $this->assertSame('Merged Company', config('company.name'));
     }
@@ -89,7 +93,7 @@ class AdminSettingsTest extends AdminTestCase
             ])
             ->assertRedirect(route('admin.settings.index', ['group' => 'social']));
 
-        $row = \App\Models\SiteSetting::where('key', 'social_links.platforms')->first();
+        $row = SiteSetting::where('key', 'social_links.platforms')->first();
         $this->assertNotNull($row);
 
         $platforms = json_decode((string) $row->value, true);
@@ -152,7 +156,7 @@ class AdminSettingsTest extends AdminTestCase
 
     private function countSocialSettingsAuditRows(): int
     {
-        return \App\Models\AdminAuditLog::where('action', 'settings.update')
+        return AdminAuditLog::where('action', 'settings.update')
             ->where('resource_type', 'site_settings')
             ->where('resource_id', 'social_links.platforms')
             ->count();

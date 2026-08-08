@@ -14,21 +14,21 @@ class SearchServiceTest extends TestCase
 {
     public function test_normalize_trims_and_lowercases(): void
     {
-        $service = new SearchService(new SearchResourceRegistry());
+        $service = new SearchService(new SearchResourceRegistry);
 
         $this->assertSame('smevolve', $service->normalize('  SMEvolve  '));
     }
 
     public function test_empty_query_returns_no_results(): void
     {
-        $service = new SearchService(new SearchResourceRegistry());
+        $service = new SearchService(new SearchResourceRegistry);
 
         $this->assertSame([], $service->search($this->administrator([]), '   '));
     }
 
     public function test_search_returns_grouped_results_from_authorized_providers(): void
     {
-        $registry = new SearchResourceRegistry();
+        $registry = new SearchResourceRegistry;
 
         $registry->register($this->provider('quotes', 'Quotes', 'quotes.search', [['type' => 'quote', 'id' => 1]]));
         $registry->register($this->provider('settings', 'Settings', 'settings.view', [['type' => 'setting', 'id' => 'company.name']]));
@@ -43,7 +43,7 @@ class SearchServiceTest extends TestCase
 
     public function test_search_skips_unauthorized_providers(): void
     {
-        $registry = new SearchResourceRegistry();
+        $registry = new SearchResourceRegistry;
 
         $registry->register($this->provider('quotes', 'Quotes', 'quotes.search', [['type' => 'quote', 'id' => 1]]));
         $registry->register($this->provider('administrators', 'Administrators', 'administrators.view', [['type' => 'administrator', 'id' => 2]]));
@@ -58,7 +58,7 @@ class SearchServiceTest extends TestCase
 
     public function test_search_can_restrict_to_a_resource_subset(): void
     {
-        $registry = new SearchResourceRegistry();
+        $registry = new SearchResourceRegistry;
 
         $registry->register($this->provider('quotes', 'Quotes', 'quotes.search', [['type' => 'quote', 'id' => 1]]));
         $registry->register($this->provider('settings', 'Settings', 'settings.view', [['type' => 'setting', 'id' => 'company.name']]));
@@ -73,8 +73,8 @@ class SearchServiceTest extends TestCase
 
     public function test_search_normalizes_the_query_before_forwarding_it(): void
     {
-        $capture = new stdClass();
-        $registry = new SearchResourceRegistry();
+        $capture = new stdClass;
+        $registry = new SearchResourceRegistry;
 
         $registry->register($this->provider('quotes', 'Quotes', 'quotes.search', [['type' => 'quote', 'id' => 1]], $capture));
 
@@ -86,8 +86,8 @@ class SearchServiceTest extends TestCase
 
     public function test_search_forwards_the_limit_to_providers(): void
     {
-        $capture = new stdClass();
-        $registry = new SearchResourceRegistry();
+        $capture = new stdClass;
+        $registry = new SearchResourceRegistry;
 
         $registry->register($this->provider('quotes', 'Quotes', 'quotes.search', [['type' => 'quote', 'id' => 1]], $capture));
 
@@ -99,7 +99,7 @@ class SearchServiceTest extends TestCase
 
     public function test_available_resources_reflect_permissions(): void
     {
-        $registry = new SearchResourceRegistry();
+        $registry = new SearchResourceRegistry;
 
         $registry->register($this->provider('quotes', 'Quotes', 'quotes.search', []));
         $registry->register($this->provider('settings', 'Settings', 'settings.view', []));
@@ -111,15 +111,15 @@ class SearchServiceTest extends TestCase
 
     private function provider(string $key, string $label, ?string $permission, array $results = [], ?stdClass $capture = null): SearchContract
     {
-        return new class($key, $label, $permission, $results, $capture) implements SearchContract {
+        return new class($key, $label, $permission, $results, $capture) implements SearchContract
+        {
             public function __construct(
                 private readonly string $key,
                 private readonly string $label,
                 private readonly ?string $permission,
                 private readonly array $results,
                 private readonly ?stdClass $capture,
-            ) {
-            }
+            ) {}
 
             public function key(): string
             {

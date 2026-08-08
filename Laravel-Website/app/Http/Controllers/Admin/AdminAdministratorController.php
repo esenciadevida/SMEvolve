@@ -18,8 +18,7 @@ class AdminAdministratorController extends Controller
     public function __construct(
         private readonly AdministratorService $administratorService,
         private readonly AdminAuditService $auditService,
-    ) {
-    }
+    ) {}
 
     public function index(Request $request)
     {

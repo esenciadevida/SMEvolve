@@ -14,8 +14,7 @@ class SearchResult
         public readonly string $subtitle,
         public readonly string $url,
         public readonly array $metadata = [],
-    ) {
-    }
+    ) {}
 
     /**
      * @return array{type: string, id: int|string, title: string, subtitle: string, url: string, metadata: array<string, mixed>}

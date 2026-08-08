@@ -20,7 +20,7 @@ class AdminAuditLogSearchProviderTest extends TestCase
 
         $this->log($admin, 'quotes.update_status', 'quotes', '42');
 
-        $results = (new AdminAuditLogSearchProvider())->search($admin->name, 5);
+        $results = (new AdminAuditLogSearchProvider)->search($admin->name, 5);
 
         $this->assertNotEmpty($results);
     }
@@ -33,7 +33,7 @@ class AdminAuditLogSearchProviderTest extends TestCase
         $this->log($admin, 'settings.update', 'site_settings', 'company.name');
         $this->log($admin, 'quotes.update_status', 'quotes', '7');
 
-        $results = (new AdminAuditLogSearchProvider())->search('settings.update', 5);
+        $results = (new AdminAuditLogSearchProvider)->search('settings.update', 5);
 
         $this->assertNotEmpty($results);
         $this->assertSame('Settings Update', $results[0]['title']);
@@ -46,7 +46,7 @@ class AdminAuditLogSearchProviderTest extends TestCase
 
         $this->log($admin, 'quotes.update_status', 'quotes', '99');
 
-        $results = (new AdminAuditLogSearchProvider())->search('99', 5);
+        $results = (new AdminAuditLogSearchProvider)->search('99', 5);
 
         $this->assertNotEmpty($results);
         $this->assertSame(route('admin.audit.index', ['q' => '99']), $results[0]['url']);
@@ -59,7 +59,7 @@ class AdminAuditLogSearchProviderTest extends TestCase
 
         $log = $this->log($admin, 'settings.update', 'site_settings', 'company.name', ['name' => 'SMEvolve']);
 
-        $results = (new AdminAuditLogSearchProvider())->search('smevolve', 5);
+        $results = (new AdminAuditLogSearchProvider)->search('smevolve', 5);
 
         $this->assertNotEmpty($results);
         $result = collect($results)->firstWhere('id', $log->id);
@@ -72,7 +72,7 @@ class AdminAuditLogSearchProviderTest extends TestCase
 
     public function test_permission_requires_audit_view(): void
     {
-        $provider = new AdminAuditLogSearchProvider();
+        $provider = new AdminAuditLogSearchProvider;
 
         $this->assertSame('audit.view', $provider->permission());
         $this->assertTrue($provider->canSearch($this->inMemoryAdministrator(['audit.view'])));

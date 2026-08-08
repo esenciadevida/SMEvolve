@@ -7,6 +7,7 @@ use App\Models\KnowledgeItem;
 use App\Models\Role;
 use App\Services\Search\KnowledgeItemSearchProvider;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class KnowledgeItemSearchProviderTest extends TestCase
@@ -17,7 +18,7 @@ class KnowledgeItemSearchProviderTest extends TestCase
     {
         $this->item('How we price projects', 'published');
 
-        $results = (new KnowledgeItemSearchProvider())->search('how we price projects', 5);
+        $results = (new KnowledgeItemSearchProvider)->search('how we price projects', 5);
 
         $this->assertNotEmpty($results);
         $this->assertSame('How we price projects', $results[0]['title']);
@@ -27,7 +28,7 @@ class KnowledgeItemSearchProviderTest extends TestCase
     {
         $this->item('Pricing overview', 'published', 'Every quotation is tailored to the project scope.');
 
-        $results = (new KnowledgeItemSearchProvider())->search('project scope', 5);
+        $results = (new KnowledgeItemSearchProvider)->search('project scope', 5);
 
         $this->assertNotEmpty($results);
         $this->assertSame('Pricing overview', $results[0]['title']);
@@ -38,7 +39,7 @@ class KnowledgeItemSearchProviderTest extends TestCase
         $item = $this->item('Archived topic', 'published');
         $item->delete();
 
-        $results = (new KnowledgeItemSearchProvider())->search('archived topic', 5);
+        $results = (new KnowledgeItemSearchProvider)->search('archived topic', 5);
 
         $this->assertSame([], $results);
     }
@@ -47,7 +48,7 @@ class KnowledgeItemSearchProviderTest extends TestCase
     {
         $item = $this->item('How we price projects', 'published');
 
-        $results = (new KnowledgeItemSearchProvider())->search('how we price projects', 5);
+        $results = (new KnowledgeItemSearchProvider)->search('how we price projects', 5);
 
         $this->assertCount(1, $results);
         $result = $results[0];
@@ -60,7 +61,7 @@ class KnowledgeItemSearchProviderTest extends TestCase
 
     public function test_permission_requires_ai_view(): void
     {
-        $provider = new KnowledgeItemSearchProvider();
+        $provider = new KnowledgeItemSearchProvider;
 
         $this->assertSame('ai.view', $provider->permission());
         $this->assertTrue($provider->canSearch($this->administrator(['ai.view'])));
@@ -71,7 +72,7 @@ class KnowledgeItemSearchProviderTest extends TestCase
     {
         return KnowledgeItem::create([
             'title' => $title,
-            'slug' => \Illuminate\Support\Str::slug($title),
+            'slug' => Str::slug($title),
             'type' => 'knowledge',
             'content' => $content,
             'status' => $status,

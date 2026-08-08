@@ -2,6 +2,7 @@
 
 namespace App\Data;
 
+use App\Services\Content\ContentService;
 use Illuminate\Support\Collection;
 
 class ServicesData
@@ -40,20 +41,20 @@ class ServicesData
     /**
      * Catalog entries (slug, name, icon, homepage, description) merged with rich content.
      *
-     * @return \Illuminate\Support\Collection<int, array<string, mixed>>
+     * @return Collection<int, array<string, mixed>>
      */
     public function catalog(): Collection
     {
         $content = $this->all();
 
-        return collect(app(\App\Services\Content\ContentService::class)->services())
+        return collect(app(ContentService::class)->services())
             ->map(fn (array $service) => array_merge($service, $content[$service['slug']] ?? []));
     }
 
     /**
      * Related services for a given slug, resolved to catalog entries.
      *
-     * @return \Illuminate\Support\Collection<int, array<string, mixed>>
+     * @return Collection<int, array<string, mixed>>
      */
     public function related(string $slug): Collection
     {
@@ -87,7 +88,7 @@ class ServicesData
                 'description' => 'Website Development focuses on designing and building professional, responsive, secure, and high-performing websites that help businesses establish credibility, attract customers, and support long-term growth.',
                 'paragraphs' => [
                     'Your website is often the first impression customers have of your business. A slow, outdated, or confusing site can turn visitors away before they ever learn what you offer.',
-                    "We build every website around your business objectives rather than relying on generic templates. The result is a digital presence that looks professional, loads quickly, and makes it easy for customers to find you and take action.",
+                    'We build every website around your business objectives rather than relying on generic templates. The result is a digital presence that looks professional, loads quickly, and makes it easy for customers to find you and take action.',
                 ],
                 'points' => [
                     'A tailored design that reflects your brand and industry.',

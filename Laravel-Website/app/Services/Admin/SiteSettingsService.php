@@ -52,7 +52,7 @@ class SiteSettingsService
     public function all(): array
     {
         return Cache::rememberForever(self::CACHE_KEY, function () {
-            if (! \Illuminate\Support\Facades\Schema::hasTable('site_settings')) {
+            if (! Schema::hasTable('site_settings')) {
                 return [];
             }
 

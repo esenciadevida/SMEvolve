@@ -29,8 +29,7 @@ class QuoteController extends Controller
         private readonly QuoteSubmissionService $submissionService,
         private readonly QuoteReviewService $reviewService,
         private readonly QuoteAiService $quoteAiService,
-    ) {
-    }
+    ) {}
 
     public function index(Request $request): View
     {

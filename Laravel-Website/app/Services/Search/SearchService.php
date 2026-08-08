@@ -8,8 +8,7 @@ class SearchService
 {
     public function __construct(
         private readonly SearchResourceRegistry $registry,
-    ) {
-    }
+    ) {}
 
     /**
      * Search authorized resources and return results grouped by resource.

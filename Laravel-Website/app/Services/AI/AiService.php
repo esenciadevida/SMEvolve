@@ -15,8 +15,7 @@ class AiService
         private readonly ConversationService $conversationService,
         private readonly AiUsageService $usageService,
         private readonly AiConfigService $configService,
-    ) {
-    }
+    ) {}
 
     public function provider(): AIProviderInterface
     {

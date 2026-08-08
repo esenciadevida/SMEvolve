@@ -3,6 +3,7 @@
 namespace App\Data\Portfolio;
 
 use App\Data\ServicesData;
+use App\Models\PortfolioCategory;
 use App\Models\PortfolioProject;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
@@ -22,7 +23,7 @@ class PortfolioData
     {
         $dbProjects = collect();
 
-        if (Schema::hasTable((new PortfolioProject())->getTable())) {
+        if (Schema::hasTable((new PortfolioProject)->getTable())) {
             $dbProjects = PortfolioProject::query()
                 ->with('category')
                 ->where('is_published', true)
@@ -36,14 +37,14 @@ class PortfolioData
         }
 
         return [
-            new Projects\SampleInventorySystem(),
-            new Projects\ConceptClinicWebsite(),
-            new Projects\ConceptRetailStore(),
+            new Projects\SampleInventorySystem,
+            new Projects\ConceptClinicWebsite,
+            new Projects\ConceptRetailStore,
         ];
     }
 
     /**
-     * @return \Illuminate\Support\Collection<int, array<string, mixed>>
+     * @return Collection<int, array<string, mixed>>
      */
     public function projects(): Collection
     {
@@ -94,7 +95,7 @@ class PortfolioData
     /**
      * Summary entries used by project cards and grids.
      *
-     * @return \Illuminate\Support\Collection<int, array<string, mixed>>
+     * @return Collection<int, array<string, mixed>>
      */
     public function catalog(): Collection
     {
@@ -113,7 +114,7 @@ class PortfolioData
     }
 
     /**
-     * @return \Illuminate\Support\Collection<int, array<string, mixed>>
+     * @return Collection<int, array<string, mixed>>
      */
     public function featured(int $limit = 3): Collection
     {
@@ -124,7 +125,7 @@ class PortfolioData
     }
 
     /**
-     * @return \Illuminate\Support\Collection<int, array<string, mixed>>
+     * @return Collection<int, array<string, mixed>>
      */
     public function byCategory(string $categorySlug): Collection
     {
@@ -136,7 +137,7 @@ class PortfolioData
     /**
      * Projects related to a given slug: same category first, then others.
      *
-     * @return \Illuminate\Support\Collection<int, array<string, mixed>>
+     * @return Collection<int, array<string, mixed>>
      */
     public function related(string $slug, int $limit = 3): Collection
     {
@@ -168,7 +169,7 @@ class PortfolioData
     /**
      * Resolve service catalog entries referenced by a project.
      *
-     * @return \Illuminate\Support\Collection<int, array<string, mixed>>
+     * @return Collection<int, array<string, mixed>>
      */
     public function relatedServices(array $project): Collection
     {
@@ -181,7 +182,7 @@ class PortfolioData
     }
 
     /**
-     * @return \Illuminate\Support\Collection<int, array<string, mixed>>
+     * @return Collection<int, array<string, mixed>>
      */
     public function categories(): Collection
     {
@@ -205,15 +206,15 @@ class PortfolioData
      */
     private function categoryRows(): array
     {
-        if (Schema::hasTable((new \App\Models\PortfolioCategory())->getTable())) {
-            $categories = \App\Models\PortfolioCategory::query()
+        if (Schema::hasTable((new PortfolioCategory)->getTable())) {
+            $categories = PortfolioCategory::query()
                 ->where('is_published', true)
                 ->orderBy('sort_order')
                 ->orderBy('name')
                 ->get();
 
             if ($categories->isNotEmpty()) {
-                return $categories->map(fn (\App\Models\PortfolioCategory $category) => [
+                return $categories->map(fn (PortfolioCategory $category) => [
                     'slug' => $category->slug,
                     'name' => $category->name,
                     'icon' => $category->icon,
@@ -224,7 +225,7 @@ class PortfolioData
             }
         }
 
-        return (new ProjectCategories())->all();
+        return (new ProjectCategories)->all();
     }
 
     /**

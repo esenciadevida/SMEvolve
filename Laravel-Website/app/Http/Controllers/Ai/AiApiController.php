@@ -11,8 +11,8 @@ use App\Http\Requests\Ai\StoreQuoteAnswerRequest;
 use App\Http\Requests\Ai\SubmitQuoteRequest;
 use App\Models\Conversation;
 use App\Models\QuoteSession;
-use App\Services\AI\AIException;
 use App\Services\AI\AiConfigService;
+use App\Services\AI\AIException;
 use App\Services\AI\AiService;
 use App\Services\AI\ConversationService;
 use App\Services\AI\HandoffService;
@@ -28,8 +28,7 @@ class AiApiController extends Controller
         private readonly AiService $aiService,
         private readonly QuoteAiService $quoteAiService,
         private readonly HandoffService $handoffService,
-    ) {
-    }
+    ) {}
 
     public function status(Request $request): JsonResponse
     {

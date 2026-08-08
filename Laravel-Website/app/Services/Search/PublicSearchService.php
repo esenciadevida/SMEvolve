@@ -6,8 +6,7 @@ class PublicSearchService
 {
     public function __construct(
         private readonly PublicSearchResourceRegistry $registry,
-    ) {
-    }
+    ) {}
 
     /**
      * Search public resources and return results grouped by resource.

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Quote;
 
+use App\Http\Controllers\QuoteController;
 use App\Models\QuoteSession;
 use App\Models\QuoteSubmission;
 use App\Services\Quote\QuoteSessionService;
@@ -10,6 +11,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
+use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
 class QuoteWizardTest extends TestCase
@@ -43,7 +45,7 @@ class QuoteWizardTest extends TestCase
 
     public function test_start_creates_a_quote_session(): void
     {
-        $response = $this->withCookie(\App\Http\Controllers\QuoteController::CLIENT_COOKIE, $this->sessionId)
+        $response = $this->withCookie(QuoteController::CLIENT_COOKIE, $this->sessionId)
             ->post(route('quote.start'));
 
         $response->assertRedirect();
@@ -335,7 +337,7 @@ class QuoteWizardTest extends TestCase
         return $session;
     }
 
-    private function postStep(QuoteSession $session, string $stepKey, array $data): \Illuminate\Testing\TestResponse
+    private function postStep(QuoteSession $session, string $stepKey, array $data): TestResponse
     {
         return $this->post(
             route('quote.step.store', ['quoteSession' => $session->uuid, 'stepKey' => $stepKey]),

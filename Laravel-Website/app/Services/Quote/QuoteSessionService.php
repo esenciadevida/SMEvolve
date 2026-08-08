@@ -9,9 +9,7 @@ use Illuminate\Support\Str;
 
 class QuoteSessionService
 {
-    public function __construct(private readonly ConversationService $conversationService)
-    {
-    }
+    public function __construct(private readonly ConversationService $conversationService) {}
 
     /**
      * Create a new quote session, backed by a conversation record.

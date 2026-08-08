@@ -21,7 +21,7 @@ class PublicSearchRequest extends FormRequest
         $types = array_keys(app(PublicSearchService::class)->availableResources());
 
         return [
-            'q' => ['nullable', 'string', 'max:' . (int) config('website.search.max_query_length', 120)],
+            'q' => ['nullable', 'string', 'max:'.(int) config('website.search.max_query_length', 120)],
             'type' => ['nullable', Rule::in($types)],
         ];
     }

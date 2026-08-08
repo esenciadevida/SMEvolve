@@ -16,8 +16,7 @@ class AdminPortfolioCategoryController extends Controller
 {
     public function __construct(
         private readonly AdminAuditService $auditService,
-    ) {
-    }
+    ) {}
 
     public function index(): View
     {

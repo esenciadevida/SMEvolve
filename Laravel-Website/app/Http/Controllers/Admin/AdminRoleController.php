@@ -17,8 +17,7 @@ class AdminRoleController extends Controller
     public function __construct(
         private readonly RoleService $roleService,
         private readonly AdminAuditService $auditService,
-    ) {
-    }
+    ) {}
 
     public function index()
     {

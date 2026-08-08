@@ -6,7 +6,7 @@ use App\Models\PortfolioCategory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\PortfolioCategory>
+ * @extends Factory<PortfolioCategory>
  */
 class PortfolioCategoryFactory extends Factory
 {

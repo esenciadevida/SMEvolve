@@ -14,8 +14,7 @@ class QuoteSubmissionService
     public function __construct(
         private readonly QuoteReviewService $reviewService,
         private readonly QuoteReferenceService $referenceService,
-    ) {
-    }
+    ) {}
 
     /**
      * Submit a quote session transactionally: creates the submission, the

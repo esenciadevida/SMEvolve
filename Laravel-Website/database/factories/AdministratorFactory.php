@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Administrator>
+ * @extends Factory<Administrator>
  */
 class AdministratorFactory extends Factory
 {

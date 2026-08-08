@@ -3,7 +3,6 @@
 namespace Tests\Feature\Admin;
 
 use App\Models\Administrator;
-use App\Models\Role;
 
 class AdminSessionTest extends AdminTestCase
 {

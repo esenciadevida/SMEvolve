@@ -10,9 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class AdminAuthController extends Controller
 {
-    public function __construct(private readonly AdminAuditService $auditService)
-    {
-    }
+    public function __construct(private readonly AdminAuditService $auditService) {}
 
     public function showLogin(Request $request)
     {

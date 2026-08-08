@@ -15,11 +15,17 @@ class QuoteSession extends Model
     use SoftDeletes;
 
     public const STATUS_STARTED = 'started';
+
     public const STATUS_IN_PROGRESS = 'in_progress';
+
     public const STATUS_COMPLETED = 'completed';
+
     public const STATUS_REVIEW = 'review';
+
     public const STATUS_ABANDONED = 'abandoned';
+
     public const STATUS_EXPIRED = 'expired';
+
     public const STATUS_SUBMITTED = 'submitted';
 
     protected $fillable = [

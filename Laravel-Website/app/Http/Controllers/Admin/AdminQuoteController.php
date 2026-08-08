@@ -15,8 +15,7 @@ class AdminQuoteController extends Controller
     public function __construct(
         private readonly AdminQuoteService $quoteService,
         private readonly AdminAuditService $auditService,
-    ) {
-    }
+    ) {}
 
     public function index(Request $request)
     {

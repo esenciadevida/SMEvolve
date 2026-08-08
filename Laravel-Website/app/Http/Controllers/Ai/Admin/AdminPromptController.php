@@ -15,8 +15,7 @@ class AdminPromptController extends Controller
     public function __construct(
         private readonly PromptService $promptService,
         private readonly AiAuditService $auditService,
-    ) {
-    }
+    ) {}
 
     public function index()
     {

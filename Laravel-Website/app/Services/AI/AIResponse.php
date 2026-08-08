@@ -11,8 +11,7 @@ final class AIResponse
         public readonly int $inputTokens,
         public readonly int $outputTokens,
         public readonly ?string $requestId = null,
-    ) {
-    }
+    ) {}
 
     public function totalTokens(): int
     {

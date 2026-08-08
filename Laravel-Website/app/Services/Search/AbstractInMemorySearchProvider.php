@@ -9,8 +9,7 @@ abstract class AbstractInMemorySearchProvider implements PublicSearchContract
     public function __construct(
         private readonly string $key,
         private readonly string $label,
-    ) {
-    }
+    ) {}
 
     public function key(): string
     {

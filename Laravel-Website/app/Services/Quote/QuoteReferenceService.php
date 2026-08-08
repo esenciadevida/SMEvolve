@@ -9,7 +9,7 @@ class QuoteReferenceService
     /**
      * Generate a unique, human-readable public reference such as SME-2026-001245.
      */
-    public function generate(\DateTimeInterface $date = null): string
+    public function generate(?\DateTimeInterface $date = null): string
     {
         $date = $date ?? now();
 

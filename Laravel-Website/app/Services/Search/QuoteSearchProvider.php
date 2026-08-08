@@ -64,7 +64,7 @@ class QuoteSearchProvider extends AbstractSearchProvider
                     WHEN LOWER(reference) LIKE ? OR LOWER(contact_name) LIKE ? OR LOWER(contact_email) LIKE ? THEN 3
                     ELSE 4
                 END',
-                [$lower, $lower, $lower, $lower . '%', $lower . '%', $lower . '%']
+                [$lower, $lower, $lower, $lower.'%', $lower.'%', $lower.'%']
             )
             ->orderByDesc('submitted_at');
     }

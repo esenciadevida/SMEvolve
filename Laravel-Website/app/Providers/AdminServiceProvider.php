@@ -3,14 +3,14 @@
 namespace App\Providers;
 
 use App\Models\Administrator;
-use App\Services\Admin\AdminAuditService;
 use App\Services\Admin\AdminAnalyticsService;
+use App\Services\Admin\AdminAuditService;
 use App\Services\Admin\AdminDashboardService;
-use App\Services\Admin\AdminQuoteService;
 use App\Services\Admin\AdministratorService;
+use App\Services\Admin\AdminQuoteService;
 use App\Services\Admin\SiteSettingsService;
-use App\Services\Search\AdministratorSearchProvider;
 use App\Services\Search\AdminAuditLogSearchProvider;
+use App\Services\Search\AdministratorSearchProvider;
 use App\Services\Search\KnowledgeItemSearchProvider;
 use App\Services\Search\PortfolioProjectSearchProvider;
 use App\Services\Search\QuoteSearchProvider;
@@ -35,14 +35,14 @@ class AdminServiceProvider extends ServiceProvider
         $this->app->singleton(SearchService::class);
 
         $this->app->singleton(SearchResourceRegistry::class, function () {
-            $registry = new SearchResourceRegistry();
+            $registry = new SearchResourceRegistry;
 
-            $registry->register(new QuoteSearchProvider());
-            $registry->register(new AdministratorSearchProvider());
-            $registry->register(new SiteSettingSearchProvider());
-            $registry->register(new KnowledgeItemSearchProvider());
-            $registry->register(new AdminAuditLogSearchProvider());
-            $registry->register(new PortfolioProjectSearchProvider());
+            $registry->register(new QuoteSearchProvider);
+            $registry->register(new AdministratorSearchProvider);
+            $registry->register(new SiteSettingSearchProvider);
+            $registry->register(new KnowledgeItemSearchProvider);
+            $registry->register(new AdminAuditLogSearchProvider);
+            $registry->register(new PortfolioProjectSearchProvider);
 
             return $registry;
         });

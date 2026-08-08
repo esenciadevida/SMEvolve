@@ -4,6 +4,7 @@ namespace Tests\Feature\Ai;
 
 use App\Models\Conversation;
 use App\Models\QuoteSession;
+use App\Services\AI\AiConfigService;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -125,7 +126,7 @@ class AiApiTest extends TestCase
 
     public function test_assistant_returns_unavailable_when_disabled(): void
     {
-        app(\App\Services\AI\AiConfigService::class)
+        app(AiConfigService::class)
             ->set('assistant.enabled', false, 'test');
 
         $this->postJson(route('ai.api.conversations.store'), [

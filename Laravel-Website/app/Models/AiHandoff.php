@@ -9,8 +9,11 @@ use Illuminate\Support\Str;
 class AiHandoff extends Model
 {
     public const STATUS_REQUESTED = 'requested';
+
     public const STATUS_IN_PROGRESS = 'in_progress';
+
     public const STATUS_RESOLVED = 'resolved';
+
     public const STATUS_CANCELLED = 'cancelled';
 
     public const REASONS = [

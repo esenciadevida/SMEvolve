@@ -9,7 +9,9 @@ use Illuminate\Support\Str;
 class Message extends Model
 {
     public const ROLE_USER = 'user';
+
     public const ROLE_ASSISTANT = 'assistant';
+
     public const ROLE_SYSTEM = 'system';
 
     protected $fillable = [

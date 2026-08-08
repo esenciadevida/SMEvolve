@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AdminChatbotUpdateRequest;
-use App\Services\AI\AiConfigService;
 use App\Services\Admin\AdminAuditService;
+use App\Services\AI\AiConfigService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,8 +14,7 @@ class AdminChatbotController extends Controller
     public function __construct(
         private readonly AiConfigService $aiConfigService,
         private readonly AdminAuditService $auditService,
-    ) {
-    }
+    ) {}
 
     public function index(Request $request)
     {

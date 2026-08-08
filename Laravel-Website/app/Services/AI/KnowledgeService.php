@@ -13,8 +13,7 @@ class KnowledgeService
     public function __construct(
         private readonly ServicesData $servicesData,
         private readonly ContentService $content,
-    ) {
-    }
+    ) {}
 
     /**
      * Build the full knowledge context for an AI request.

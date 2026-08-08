@@ -8,9 +8,7 @@ use Illuminate\Http\Request;
 
 class AdminAuditController extends Controller
 {
-    public function __construct(private readonly AdminAuditService $auditService)
-    {
-    }
+    public function __construct(private readonly AdminAuditService $auditService) {}
 
     public function index(Request $request)
     {

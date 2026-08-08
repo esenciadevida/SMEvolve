@@ -29,7 +29,7 @@ class KnowledgeItemSearchProvider extends AbstractSearchProvider
                     WHEN LOWER(title) LIKE ? THEN 2
                     ELSE 3
                 END',
-                [$lower, $lower . '%', '%' . $lower . '%']
+                [$lower, $lower.'%', '%'.$lower.'%']
             )
             ->orderByDesc('published_at')
             ->orderByDesc('id')

@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Search;
 
-use App\Services\Search\PackageSearchProvider;
 use App\Services\Content\ContentService;
+use App\Services\Search\PackageSearchProvider;
 use Tests\TestCase;
 
 class PackageSearchProviderTest extends TestCase
@@ -38,7 +38,7 @@ class PackageSearchProviderTest extends TestCase
         $results = (new PackageSearchProvider(app(ContentService::class)))->search('e-commerce website', 5);
 
         $this->assertNotEmpty($results);
-        $this->assertSame(route('packages') . '#website-packages', $results[0]['url']);
+        $this->assertSame(route('packages').'#website-packages', $results[0]['url']);
     }
 
     public function test_result_shape_is_normalized(): void

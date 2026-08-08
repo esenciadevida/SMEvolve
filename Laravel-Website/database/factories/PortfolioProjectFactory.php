@@ -7,7 +7,7 @@ use App\Models\PortfolioProject;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\PortfolioProject>
+ * @extends Factory<PortfolioProject>
  */
 class PortfolioProjectFactory extends Factory
 {

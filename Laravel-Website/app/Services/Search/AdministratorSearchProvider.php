@@ -29,7 +29,7 @@ class AdministratorSearchProvider extends AbstractSearchProvider
                     WHEN LOWER(name) LIKE ? OR LOWER(email) LIKE ? THEN 2
                     ELSE 3
                 END',
-                [$lower, $lower, $lower . '%', $lower . '%']
+                [$lower, $lower, $lower.'%', $lower.'%']
             )
             ->orderBy('name')
             ->limit($limit)

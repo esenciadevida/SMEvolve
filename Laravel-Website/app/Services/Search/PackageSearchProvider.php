@@ -37,7 +37,7 @@ class PackageSearchProvider extends AbstractInMemorySearchProvider
             id: $record['slug'],
             title: $record['name'],
             subtitle: $record['description'] ?? '',
-            url: route('packages') . '#website-packages',
+            url: route('packages').'#website-packages',
             metadata: [
                 'features' => array_slice($record['features'] ?? [], 0, 3),
             ],

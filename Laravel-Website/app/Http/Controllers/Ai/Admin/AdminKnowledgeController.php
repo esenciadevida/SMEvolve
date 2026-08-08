@@ -11,9 +11,7 @@ use Illuminate\Support\Str;
 
 class AdminKnowledgeController extends Controller
 {
-    public function __construct(private readonly AiAuditService $auditService)
-    {
-    }
+    public function __construct(private readonly AiAuditService $auditService) {}
 
     public function index(Request $request)
     {

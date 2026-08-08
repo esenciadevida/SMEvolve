@@ -12,8 +12,7 @@ class AdminConfigController extends Controller
     public function __construct(
         private readonly AiConfigService $configService,
         private readonly AiAuditService $auditService,
-    ) {
-    }
+    ) {}
 
     public function index()
     {

@@ -13,8 +13,7 @@ class AdminDashboardController extends Controller
     public function __construct(
         private readonly AdminDashboardService $dashboardService,
         private readonly AdminAnalyticsService $analyticsService,
-    ) {
-    }
+    ) {}
 
     public function index(Request $request)
     {

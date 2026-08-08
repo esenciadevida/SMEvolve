@@ -10,8 +10,7 @@ class SearchController extends Controller
 {
     public function __construct(
         private readonly PublicSearchService $searchService,
-    ) {
-    }
+    ) {}
 
     public function index(PublicSearchRequest $request)
     {

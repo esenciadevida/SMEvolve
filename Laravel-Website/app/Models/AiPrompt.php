@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class AiPrompt extends Model
@@ -19,7 +20,7 @@ class AiPrompt extends Model
         return $this->hasMany(AiPromptVersion::class, 'prompt_id');
     }
 
-    public function activeVersion(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function activeVersion(): BelongsTo
     {
         return $this->belongsTo(AiPromptVersion::class, 'active_version_id');
     }

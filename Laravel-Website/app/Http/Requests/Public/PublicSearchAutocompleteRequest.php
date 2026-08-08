@@ -24,11 +24,11 @@ class PublicSearchAutocompleteRequest extends FormRequest
             'q' => [
                 'required',
                 'string',
-                'min:' . (int) config('website.search.min_query_length', 2),
-                'max:' . (int) config('website.search.max_query_length', 120),
+                'min:'.(int) config('website.search.min_query_length', 2),
+                'max:'.(int) config('website.search.max_query_length', 120),
             ],
             'type' => ['nullable', Rule::in($types)],
-            'limit' => ['nullable', 'integer', 'min:1', 'max:' . (int) config('website.search.max_results_per_resource', 10)],
+            'limit' => ['nullable', 'integer', 'min:1', 'max:'.(int) config('website.search.max_results_per_resource', 10)],
         ];
     }
 }

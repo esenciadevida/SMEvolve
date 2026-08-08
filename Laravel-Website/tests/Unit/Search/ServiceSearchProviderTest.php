@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Search;
 
-use App\Services\Search\ServiceSearchProvider;
 use App\Services\Content\ContentService;
+use App\Services\Search\ServiceSearchProvider;
 use Tests\TestCase;
 
 class ServiceSearchProviderTest extends TestCase

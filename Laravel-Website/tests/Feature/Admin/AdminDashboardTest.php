@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Admin;
 
-use App\Models\Administrator;
+use App\Models\QuoteSession;
 use App\Models\QuoteSubmission;
-use App\Models\Role;
+use Illuminate\Support\Str;
 
 class AdminDashboardTest extends AdminTestCase
 {
@@ -13,9 +13,9 @@ class AdminDashboardTest extends AdminTestCase
         $role = $this->superAdminRole();
         $admin = $this->createAdmin($role);
 
-        $session = \App\Models\QuoteSession::create([
-            'uuid' => (string) \Illuminate\Support\Str::uuid(),
-            'session_id' => (string) \Illuminate\Support\Str::uuid(),
+        $session = QuoteSession::create([
+            'uuid' => (string) Str::uuid(),
+            'session_id' => (string) Str::uuid(),
             'status' => 'completed',
             'started_at' => now(),
             'last_activity_at' => now(),

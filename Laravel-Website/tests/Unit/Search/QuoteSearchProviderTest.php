@@ -18,7 +18,7 @@ class QuoteSearchProviderTest extends TestCase
         $this->submission('SME-100', 'Jane Doe');
         $this->submission('X-SME-100-Y', 'Doe Jane');
 
-        $results = (new QuoteSearchProvider())->search('sme-100', 5);
+        $results = (new QuoteSearchProvider)->search('sme-100', 5);
 
         $this->assertCount(2, $results);
         $this->assertSame('SME-100', $results[0]['title']);
@@ -30,7 +30,7 @@ class QuoteSearchProviderTest extends TestCase
         $this->submission('SME-000001', 'John Smith');
         $this->submission('SME-000002', 'John Smithson');
 
-        $results = (new QuoteSearchProvider())->search('john smith', 5);
+        $results = (new QuoteSearchProvider)->search('john smith', 5);
 
         $this->assertSame('SME-000001', $results[0]['title']);
     }
@@ -40,7 +40,7 @@ class QuoteSearchProviderTest extends TestCase
         $this->submission('SME-000100', 'Jane Doe');
         $this->submission('SME-000200', 'Doe Enterprises');
 
-        $results = (new QuoteSearchProvider())->search('doe', 5);
+        $results = (new QuoteSearchProvider)->search('doe', 5);
 
         $this->assertSame('SME-000200', $results[0]['title']);
         $this->assertSame('SME-000100', $results[1]['title']);
@@ -50,7 +50,7 @@ class QuoteSearchProviderTest extends TestCase
     {
         $this->submission('sme-2026-000050', 'Casey Test');
 
-        $results = (new QuoteSearchProvider())->search('SME-2026-000050', 5);
+        $results = (new QuoteSearchProvider)->search('SME-2026-000050', 5);
 
         $this->assertCount(1, $results);
         $this->assertSame('sme-2026-000050', $results[0]['title']);
@@ -59,10 +59,10 @@ class QuoteSearchProviderTest extends TestCase
     public function test_per_resource_limit_applies(): void
     {
         for ($i = 0; $i < 8; $i++) {
-            $this->submission('SME-00000' . $i, 'Same Name');
+            $this->submission('SME-00000'.$i, 'Same Name');
         }
 
-        $results = (new QuoteSearchProvider())->search('same name', 5);
+        $results = (new QuoteSearchProvider)->search('same name', 5);
 
         $this->assertCount(5, $results);
     }
@@ -71,7 +71,7 @@ class QuoteSearchProviderTest extends TestCase
     {
         $submission = $this->submission('SME-2026-000099', 'Jane Doe');
 
-        $results = (new QuoteSearchProvider())->search('jane doe', 1);
+        $results = (new QuoteSearchProvider)->search('jane doe', 1);
 
         $this->assertCount(1, $results);
         $this->assertSame('quote', $results[0]['type']);

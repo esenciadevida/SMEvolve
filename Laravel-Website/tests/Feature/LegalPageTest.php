@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class LegalPageTest extends TestCase
@@ -18,19 +19,19 @@ class LegalPageTest extends TestCase
         ];
     }
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('legalPageProvider')]
+    #[DataProvider('legalPageProvider')]
     public function test_legal_pages_return_a_successful_response(string $path, string $route): void
     {
         $this->get($path)->assertOk()->assertViewIs('pages.legal');
     }
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('legalPageProvider')]
+    #[DataProvider('legalPageProvider')]
     public function test_legal_pages_have_valid_routes(string $path, string $route): void
     {
         $this->assertSame(url($path), route($route));
     }
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('legalPageProvider')]
+    #[DataProvider('legalPageProvider')]
     public function test_legal_pages_use_configurable_metadata(string $path, string $route): void
     {
         $document = collect(config('legal.documents', []))->first(
@@ -45,7 +46,7 @@ class LegalPageTest extends TestCase
             ->assertSee(e($document['meta']['description']), false);
     }
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('legalPageProvider')]
+    #[DataProvider('legalPageProvider')]
     public function test_legal_pages_render_document_content(string $path, string $route): void
     {
         $document = collect(config('legal.documents', []))->first(
@@ -66,7 +67,7 @@ class LegalPageTest extends TestCase
         }
     }
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('legalPageProvider')]
+    #[DataProvider('legalPageProvider')]
     public function test_legal_pages_emit_structured_data(string $path, string $route): void
     {
         $this->get($path)
@@ -77,7 +78,7 @@ class LegalPageTest extends TestCase
             ->assertSee('Organization');
     }
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('legalPageProvider')]
+    #[DataProvider('legalPageProvider')]
     public function test_legal_pages_render_footer_links(string $path, string $route): void
     {
         $response = $this->get($path)->assertOk();

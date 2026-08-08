@@ -18,7 +18,7 @@ class AdminSearchAutocompleteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'q' => ['required', 'string', 'min:' . (int) config('admin.search_min_query_length', 2), 'max:100'],
+            'q' => ['required', 'string', 'min:'.(int) config('admin.search_min_query_length', 2), 'max:100'],
             'type' => ['nullable', Rule::in(['quotes', 'administrators', 'settings', 'knowledge', 'audit_logs'])],
             'limit' => ['nullable', 'integer', 'min:1', 'max:5'],
         ];

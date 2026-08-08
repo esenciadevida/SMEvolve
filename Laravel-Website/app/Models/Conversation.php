@@ -12,10 +12,15 @@ class Conversation extends Model
     use SoftDeletes;
 
     public const STATUS_NEW = 'new';
+
     public const STATUS_ACTIVE = 'active';
+
     public const STATUS_IDLE = 'idle';
+
     public const STATUS_COMPLETED = 'completed';
+
     public const STATUS_ABANDONED = 'abandoned';
+
     public const STATUS_ARCHIVED = 'archived';
 
     protected $fillable = [

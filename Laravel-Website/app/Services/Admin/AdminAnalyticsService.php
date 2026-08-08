@@ -10,6 +10,7 @@ use App\Models\Message;
 use App\Models\QuoteSession;
 use App\Models\QuoteSubmission;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 
 class AdminAnalyticsService
 {
@@ -220,10 +221,10 @@ class AdminAnalyticsService
     /**
      * Build a zero-padded daily series from a day-keyed lookup map.
      *
-     * @param  \Illuminate\Support\Collection<string, mixed>  $counts
+     * @param  Collection<string, mixed>  $counts
      * @return array<int, array{label: string, full: string, value: int}>
      */
-    private function dailySeries(Carbon $from, \Illuminate\Support\Collection $counts): array
+    private function dailySeries(Carbon $from, Collection $counts): array
     {
         $days = $from->diffInDays(now()->startOfDay()) + 1;
         $series = [];

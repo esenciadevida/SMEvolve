@@ -6,9 +6,7 @@ use App\Models\QuoteSession;
 
 class QuoteStepValidator
 {
-    public function __construct(private readonly QuoteRequirementService $requirementService)
-    {
-    }
+    public function __construct(private readonly QuoteRequirementService $requirementService) {}
 
     /**
      * Build Laravel validation rules for the questions of a step.

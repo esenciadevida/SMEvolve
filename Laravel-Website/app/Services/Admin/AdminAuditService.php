@@ -4,6 +4,7 @@ namespace App\Services\Admin;
 
 use App\Models\AdminAuditLog;
 use App\Models\Administrator;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -30,7 +31,7 @@ class AdminAuditService
         ]);
     }
 
-    public function recent(int $limit = 10): \Illuminate\Database\Eloquent\Collection
+    public function recent(int $limit = 10): Collection
     {
         return AdminAuditLog::query()
             ->with('administrator:id,name,email')

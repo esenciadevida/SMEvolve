@@ -12,8 +12,7 @@ abstract class AbstractSearchProvider implements SearchContract
         private readonly string $key,
         private readonly string $label,
         private readonly ?string $permission = null,
-    ) {
-    }
+    ) {}
 
     public function key(): string
     {
@@ -55,9 +54,9 @@ abstract class AbstractSearchProvider implements SearchContract
     {
         $builder->where(function (Builder $query) use ($columns, $lower) {
             foreach ($columns as $column) {
-                $query->orWhereRaw('LOWER(' . $column . ') = ?', [$lower])
-                    ->orWhereRaw('LOWER(' . $column . ') LIKE ?', [$lower . '%'])
-                    ->orWhereRaw('LOWER(' . $column . ') LIKE ?', ['%' . $lower . '%']);
+                $query->orWhereRaw('LOWER('.$column.') = ?', [$lower])
+                    ->orWhereRaw('LOWER('.$column.') LIKE ?', [$lower.'%'])
+                    ->orWhereRaw('LOWER('.$column.') LIKE ?', ['%'.$lower.'%']);
             }
         });
     }

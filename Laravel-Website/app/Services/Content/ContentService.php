@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Schema;
 class ContentService
 {
     /**
-     * @var array<string, \Illuminate\Support\Collection<int, array<string, mixed>>>
+     * @var array<string, Collection<int, array<string, mixed>>>
      */
     private array $cache = [];
 
@@ -132,7 +132,7 @@ class ContentService
      * falling back to the original source when the table has no rows.
      *
      * @param  callable(ContentItem): array<string, mixed>  $mapper
-     * @return \Illuminate\Support\Collection<int, array<string, mixed>>
+     * @return Collection<int, array<string, mixed>>
      */
     private function mapped(string $type, callable $mapper): Collection
     {
@@ -140,7 +140,7 @@ class ContentService
             return $this->cache[$type];
         }
 
-        if (! Schema::hasTable((new ContentItem())->getTable())) {
+        if (! Schema::hasTable((new ContentItem)->getTable())) {
             return $this->cache[$type] = collect($this->fallback($type));
         }
 
@@ -167,7 +167,7 @@ class ContentService
             'service' => config('website.services', []),
             'industry' => config('industries', []),
             'benefit' => config('benefits', []),
-            'value' => (new ValuesData())->all(),
+            'value' => (new ValuesData)->all(),
             'faq' => config('faqs.items', []),
             'package' => config('packages.website_packages.items', []),
             default => [],

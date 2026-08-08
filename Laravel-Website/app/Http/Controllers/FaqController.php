@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Services\Content\ContentService;
-use Illuminate\Support\Collection;
 use Illuminate\View\View;
 
 class FaqController extends Controller
