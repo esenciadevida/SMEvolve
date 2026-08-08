@@ -1,0 +1,31 @@
+<?php
+
+namespace App\Http\Requests\Admin;
+
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
+class AdministratorUpdateRequest extends FormRequest
+{
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function rules(): array
+    {
+        return [
+            'name' => ['required', 'string', 'max:100'],
+            'email' => [
+                'required',
+                'email',
+                'max:190',
+                Rule::unique('administrators', 'email')->ignore($this->route('administrator')),
+            ],
+            'role_id' => ['required', 'integer', Rule::exists('roles', 'id')],
+        ];
+    }
+}

@@ -1,0 +1,28 @@
+@props([
+    'title',
+    'description' => null,
+    'technologies' => [],
+    'icon' => null,
+])
+
+<article {{ $attributes->class('group flex h-full flex-col rounded-2xl border border-gray-200/70 bg-white p-6 text-left shadow-sm dark:bg-dark-card transition duration-300 hover:-translate-y-1 hover:border-primary-600/40 hover:shadow-card-hover') }}>
+    @if ($icon)
+        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary-600 to-secondary-600 text-white shadow-md shadow-primary-600/20">
+            <x-icon :name="$icon" class="h-6 w-6" />
+        </div>
+    @endif
+
+    <h3 class="mt-5 text-lg font-semibold tracking-tight text-gray-900">{{ $title }}</h3>
+
+    @if ($description)
+        <p class="mt-2 flex-1 text-sm leading-relaxed text-gray-600">{{ $description }}</p>
+    @endif
+
+    @if (! empty($technologies))
+        <ul class="mt-5 flex flex-wrap gap-2">
+            @foreach ($technologies as $technology)
+                <li class="rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs font-medium text-gray-700 transition group-hover:border-gray-300">{{ $technology }}</li>
+            @endforeach
+        </ul>
+    @endif
+</article>

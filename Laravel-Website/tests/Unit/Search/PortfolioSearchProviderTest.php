@@ -1,0 +1,46 @@
+<?php
+
+namespace Tests\Unit\Search;
+
+use App\Data\Portfolio\PortfolioData;
+use App\Services\Search\PortfolioSearchProvider;
+use Tests\TestCase;
+
+class PortfolioSearchProviderTest extends TestCase
+{
+    public function test_finds_project_by_exact_title(): void
+    {
+        $results = $this->provider()->search('inventory management system', 5);
+
+        $this->assertNotEmpty($results);
+        $this->assertSame('sample-inventory-system', $results[0]['id']);
+        $this->assertSame('portfolio', $results[0]['type']);
+    }
+
+    public function test_finds_project_by_technology(): void
+    {
+        $results = $this->provider()->search('alpine', 5);
+
+        $this->assertNotEmpty($results);
+    }
+
+    public function test_finds_project_by_category(): void
+    {
+        $results = $this->provider()->search('custom software', 10);
+
+        $this->assertNotEmpty($results);
+    }
+
+    public function test_result_url_links_to_the_project(): void
+    {
+        $results = $this->provider()->search('inventory management system', 5);
+
+        $this->assertNotEmpty($results);
+        $this->assertSame(route('portfolio.show', 'sample-inventory-system'), $results[0]['url']);
+    }
+
+    private function provider(): PortfolioSearchProvider
+    {
+        return new PortfolioSearchProvider(app(PortfolioData::class));
+    }
+}
