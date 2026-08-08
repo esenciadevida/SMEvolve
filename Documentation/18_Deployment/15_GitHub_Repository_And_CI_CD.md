@@ -399,6 +399,18 @@ CI
 Production Database
 ```
 
+**Implementation status (Prompt 024):** CI is live in `.github/workflows/tests.yml` (named `tests`). It runs on every push to `main` and on pull requests targeting `main`. The job uses PHP 8.4 (required by the committed `composer.lock`), Node 22, an isolated MySQL 8 service container (`smevolve_testing`), and a read-only `contents` permission. Steps in order:
+
+1. Composer dependency install from `composer.lock`.
+2. Laravel environment setup (`.env.example` → `.env`, fresh `APP_KEY`).
+3. Pint code-style check (`vendor/bin/pint --test`).
+4. `npm ci` from `package-lock.json`.
+5. Frontend production build (`npm run build`).
+6. Database migrations on the isolated test database.
+7. Full automated test suite (`php artisan test`).
+
+Dependabot version updates and security updates are configured (`.github/dependabot.yml`); Dependabot alerts and automated security fixes are enabled on the repository. Secret scanning and secret scanning push protection remain to be enabled manually in GitHub settings (the automation token lacks the `security_events` scope). No deployment workflow exists yet — CI validates only; Hostinger deployment is a later phase.
+
 ---
 
 # 21. Production Deployment Trigger

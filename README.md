@@ -98,23 +98,32 @@ The repository ships with `.env.example` only — never commit `.env`. Required 
 
 ## Testing
 
-Run the automated test suite:
+Run the same major checks that CI runs, in order:
 
 ```bash
+# 1. Code style (Pint)
+vendor/bin/pint --test
+
+# 2. Automated test suite
 php artisan test
+
+# 3. Frontend build
+npm run build
 ```
 
-## Development Commands
+## Continuous Integration
 
-```bash
-# Build frontend assets
-npm run dev        # watch mode
-npm run build      # production build
+GitHub Actions validates every push to `main` and every pull request. The workflow (`.github/workflows/tests.yml`) runs:
 
-# Laravel tooling
-php artisan serve  # local dev server
-php artisan migrate --seed
-```
+1. PHP 8.4 + Composer dependency install (from `composer.lock`)
+2. Laravel environment setup (`.env.example` → `.env`, fresh `APP_KEY`)
+3. Pint code-style check
+4. Node 22 + `npm ci` (from `package-lock.json`)
+5. Frontend production build (`npm run build`)
+6. Database migrations on an isolated MySQL 8 test database
+7. The full automated test suite
+
+CI never uses production credentials, never connects to a production database, and does not deploy. Dependabot raises pull requests for outdated Composer and npm dependencies.
 
 ## Deployment Overview
 
@@ -129,6 +138,18 @@ Hostinger (production hosting)
 ```
 
 Production is deployed from the `main` branch after CI passes. See `Documentation/18_Deployment/` for the full deployment workflow, environment configuration, and production checklist.
+
+## Development Commands
+
+```bash
+# Build frontend assets
+npm run dev        # watch mode
+npm run build      # production build
+
+# Laravel tooling
+php artisan serve  # local dev server
+php artisan migrate --seed
+```
 
 ## Documentation
 
