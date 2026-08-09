@@ -37,7 +37,6 @@ class AdminUsageController extends Controller
             'timeout' => config('ai.groq.timeout'),
             'assistantEnabled' => (bool) config('ai.assistant.enabled'),
             'quoteEnabled' => (bool) config('ai.quote.enabled'),
-            'adminEnabled' => (bool) config('ai.admin.enabled'),
             'limits' => config('ai.limits'),
             'rateLimits' => config('ai.rate_limits'),
         ]);

@@ -25,8 +25,6 @@
             x-on:keydown.enter.prevent="select()"
             x-on:keydown.esc="close()"
             x-on:focus="onFocus()"
-            x-on:keydown.window.cmd.k.prevent="focus()"
-            x-on:keydown.window.ctrl.k.prevent="focus()"
             x-on:keydown.window="openOnSlash($event)"
             role="combobox"
             :aria-expanded="open"
@@ -36,7 +34,6 @@
             :placeholder="placeholder"
             class="no-native-clear w-72 rounded-xl border border-slate-300 bg-white py-2 pl-9 pr-12 text-sm text-slate-900 shadow-sm transition placeholder:text-slate-400 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/30 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
         >
-        <kbd class="pointer-events-none absolute right-3 top-1/2 hidden -translate-y-1/2 rounded border border-slate-200 px-1.5 py-0.5 text-[10px] font-medium text-slate-400 sm:block dark:border-slate-700 dark:text-slate-500">Ctrl K</kbd>
     </div>
 
     <div

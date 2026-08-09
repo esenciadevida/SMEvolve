@@ -74,14 +74,6 @@ return [
         'decay_minutes' => 1,
     ],
 
-    'admin' => [
-        'enabled' => env('AI_ADMIN_ENABLED', true),
-        'email' => env('AI_ADMIN_EMAIL', 'admin@smevolve.tech'),
-        'password' => env('AI_ADMIN_PASSWORD'),
-        'session_key' => 'smevolve_admin_authenticated',
-        'login_rate_limit' => 5,
-    ],
-
     'usage' => [
         'alert_threshold' => (int) env('AI_USAGE_ALERT_THRESHOLD', 1000),
     ],

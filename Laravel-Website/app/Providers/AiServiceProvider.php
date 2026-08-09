@@ -73,11 +73,6 @@ class AiServiceProvider extends ServiceProvider
             (int) config('ai.rate_limits.decay_minutes', 1),
             (int) config('ai.rate_limits.handoffs', 3)
         )->by($job->ip() ?? 'unknown'));
-
-        RateLimiter::for('ai:admin-login', fn ($job) => Limit::perMinutes(
-            15,
-            (int) config('ai.admin.login_rate_limit', 5)
-        )->by($job->ip() ?? 'unknown'));
     }
 
     private function limiterKey($job): string

@@ -7,6 +7,7 @@ use App\Models\AiHandoff;
 use App\Models\AiUsage;
 use App\Models\Conversation;
 use App\Models\Message;
+use App\Models\PageView;
 use App\Models\QuoteSession;
 use App\Models\QuoteSubmission;
 use Illuminate\Support\Carbon;
@@ -216,6 +217,124 @@ class AdminAnalyticsService
             ->pluck('total', 'day');
 
         return $this->dailySeries($from, $counts);
+    }
+
+    /**
+     * Traffic summary within the range.
+     *
+     * @return array<string, int|float>
+     */
+    public function trafficSummary(int $days = 30): array
+    {
+        $from = now()->startOfDay()->subDays($days - 1);
+
+        $visitors = PageView::where('viewed_at', '>=', $from)->distinct('visitor_id')->count('visitor_id');
+        $views = PageView::where('viewed_at', '>=', $from)->count();
+
+        return [
+            'visitors' => $visitors,
+            'page_views' => $views,
+            'avg_views_per_visitor' => $visitors > 0 ? round($views / $visitors, 1) : 0,
+            'views_today' => PageView::where('viewed_at', '>=', now()->startOfDay())->count(),
+        ];
+    }
+
+    /**
+     * Page views per day over the trailing window (oldest first).
+     *
+     * @return array<int, array{label: string, full: string, value: int}>
+     */
+    public function trafficDaily(int $days = 30): array
+    {
+        $from = now()->startOfDay()->subDays($days - 1);
+
+        $counts = PageView::query()
+            ->whereDate('viewed_at', '>=', $from)
+            ->selectRaw('DATE(viewed_at) as day, COUNT(*) as total')
+            ->groupBy('day')
+            ->pluck('total', 'day');
+
+        return $this->dailySeries($from, $counts);
+    }
+
+    /**
+     * @return array<int, array{label: string, value: int}>
+     */
+    public function trafficTopPages(int $days = 30, int $limit = 10): array
+    {
+        $from = now()->startOfDay()->subDays($days - 1);
+
+        return PageView::query()
+            ->whereDate('viewed_at', '>=', $from)
+            ->selectRaw('path, COUNT(*) as total')
+            ->groupBy('path')
+            ->orderByDesc('total')
+            ->limit($limit)
+            ->get()
+            ->map(fn ($row) => ['label' => $row->path, 'value' => (int) $row->total])
+            ->all();
+    }
+
+    /**
+     * @return array<int, array{label: string, value: int}>
+     */
+    public function trafficTopReferrers(int $days = 30, int $limit = 10): array
+    {
+        $from = now()->startOfDay()->subDays($days - 1);
+
+        return PageView::query()
+            ->whereDate('viewed_at', '>=', $from)
+            ->whereNotNull('referer_host')
+            ->selectRaw('referer_host, COUNT(*) as total')
+            ->groupBy('referer_host')
+            ->orderByDesc('total')
+            ->limit($limit)
+            ->get()
+            ->map(fn ($row) => ['label' => $row->referer_host, 'value' => (int) $row->total])
+            ->all();
+    }
+
+    /**
+     * @return array<int, array{label: string, value: int}>
+     */
+    public function trafficDeviceBreakdown(int $days = 30): array
+    {
+        return $this->trafficBreakdown('device_type', $days);
+    }
+
+    /**
+     * @return array<int, array{label: string, value: int}>
+     */
+    public function trafficBrowserBreakdown(int $days = 30): array
+    {
+        return $this->trafficBreakdown('browser', $days);
+    }
+
+    /**
+     * @return array<int, array{label: string, value: int}>
+     */
+    public function trafficOsBreakdown(int $days = 30): array
+    {
+        return $this->trafficBreakdown('os', $days);
+    }
+
+    /**
+     * @return array<int, array{label: string, value: int}>
+     */
+    private function trafficBreakdown(string $column, int $days): array
+    {
+        $from = now()->startOfDay()->subDays($days - 1);
+
+        return PageView::query()
+            ->whereDate('viewed_at', '>=', $from)
+            ->whereNotNull($column)
+            ->selectRaw($column.', COUNT(*) as total')
+            ->groupBy($column)
+            ->orderByDesc('total')
+            ->limit(10)
+            ->get()
+            ->map(fn ($row) => ['label' => (string) $row->{$column}, 'value' => (int) $row->total])
+            ->all();
     }
 
     /**

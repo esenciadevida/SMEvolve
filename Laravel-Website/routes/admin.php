@@ -8,12 +8,18 @@ use App\Http\Controllers\Admin\AdminAuditController;
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminChatbotController;
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\AdminNotificationController;
 use App\Http\Controllers\Admin\AdminPortfolioCategoryController;
 use App\Http\Controllers\Admin\AdminPortfolioController;
 use App\Http\Controllers\Admin\AdminQuoteController;
 use App\Http\Controllers\Admin\AdminRoleController;
 use App\Http\Controllers\Admin\AdminSearchController;
 use App\Http\Controllers\Admin\AdminSettingsController;
+use App\Http\Controllers\Ai\Admin\AdminConfigController as AiAdminConfigController;
+use App\Http\Controllers\Ai\Admin\AdminDashboardController as AiAdminDashboardController;
+use App\Http\Controllers\Ai\Admin\AdminKnowledgeController as AiAdminKnowledgeController;
+use App\Http\Controllers\Ai\Admin\AdminPromptController as AiAdminPromptController;
+use App\Http\Controllers\Ai\Admin\AdminUsageController as AiAdminUsageController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -30,8 +36,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
             ->name('dashboard');
 
         Route::get('/analytics', [AdminAnalyticsController::class, 'index'])
-            ->middleware('admin.permission:dashboard.view')
+            ->middleware('admin.permission:analytics.view')
             ->name('analytics');
+
+        Route::prefix('analytics')->name('analytics.')->middleware('admin.permission:analytics.view')->group(function () {
+            Route::get('/traffic', [AdminAnalyticsController::class, 'traffic'])->name('traffic');
+            Route::get('/quotes', [AdminAnalyticsController::class, 'quotes'])->name('quotes');
+            Route::get('/chatbot', [AdminAnalyticsController::class, 'chatbot'])->name('chatbot');
+            Route::get('/ai', [AdminAnalyticsController::class, 'ai'])->name('ai');
+        });
 
         Route::get('/search', [AdminSearchController::class, 'index'])
             ->middleware('admin.permission:quotes.search,administrators.view,settings.view,ai.view,audit.view,portfolio.view')
@@ -84,6 +97,44 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/status', [AdminAiController::class, 'status'])
                 ->middleware('admin.permission:ai.view')
                 ->name('status');
+
+            Route::get('/', [AiAdminDashboardController::class, 'index'])
+                ->middleware('admin.permission:ai.view')
+                ->name('dashboard');
+
+            Route::get('/config', [AiAdminConfigController::class, 'index'])
+                ->middleware('admin.permission:ai.view')
+                ->name('config');
+            Route::post('/config', [AiAdminConfigController::class, 'update'])
+                ->middleware('admin.permission:ai.update')
+                ->name('config.update');
+
+            Route::get('/prompts', [AiAdminPromptController::class, 'index'])
+                ->middleware('admin.permission:ai.view')
+                ->name('prompts');
+            Route::post('/prompts/{prompt}/versions', [AiAdminPromptController::class, 'storeVersion'])
+                ->middleware('admin.permission:ai.update')
+                ->name('prompts.versions.store');
+            Route::post('/prompts/{prompt}/versions/{version}/activate', [AiAdminPromptController::class, 'activateVersion'])
+                ->middleware('admin.permission:ai.update')
+                ->name('prompts.versions.activate');
+
+            Route::get('/knowledge', [AiAdminKnowledgeController::class, 'index'])
+                ->middleware('admin.permission:ai.view')
+                ->name('knowledge.index');
+            Route::post('/knowledge', [AiAdminKnowledgeController::class, 'store'])
+                ->middleware('admin.permission:ai.update')
+                ->name('knowledge.store');
+            Route::delete('/knowledge/{knowledgeItem}', [AiAdminKnowledgeController::class, 'destroy'])
+                ->middleware('admin.permission:ai.update')
+                ->name('knowledge.destroy');
+
+            Route::get('/usage', [AiAdminUsageController::class, 'index'])
+                ->middleware('admin.permission:ai.view')
+                ->name('usage');
+            Route::get('/health', [AiAdminUsageController::class, 'health'])
+                ->middleware('admin.permission:ai.view')
+                ->name('health');
         });
 
         Route::prefix('administrators')->name('administrators.')->group(function () {
@@ -182,6 +233,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/audit', [AdminAuditController::class, 'index'])
             ->middleware('admin.permission:audit.view')
             ->name('audit.index');
+
+        Route::prefix('notifications')->name('notifications.')->group(function () {
+            Route::get('/', [AdminNotificationController::class, 'index'])->name('index');
+            Route::post('/', [AdminNotificationController::class, 'update'])->name('update');
+        });
 
         Route::prefix('account')->name('profile.')->group(function () {
             Route::get('/profile', [AdminAccountController::class, 'profile'])->name('index');

@@ -7,8 +7,11 @@ use App\Services\Admin\AdminAnalyticsService;
 use App\Services\Admin\AdminAuditService;
 use App\Services\Admin\AdminDashboardService;
 use App\Services\Admin\AdministratorService;
+use App\Services\Admin\AdminNotificationService;
 use App\Services\Admin\AdminQuoteService;
 use App\Services\Admin\SiteSettingsService;
+use App\Services\Admin\SystemHealthService;
+use App\Services\Analytics\PageViewTrackingService;
 use App\Services\Search\AdminAuditLogSearchProvider;
 use App\Services\Search\AdministratorSearchProvider;
 use App\Services\Search\KnowledgeItemSearchProvider;
@@ -17,6 +20,10 @@ use App\Services\Search\QuoteSearchProvider;
 use App\Services\Search\SearchResourceRegistry;
 use App\Services\Search\SearchService;
 use App\Services\Search\SiteSettingSearchProvider;
+use App\Services\Security\Geolocation\GeolocationProviderInterface;
+use App\Services\Security\Geolocation\GeolocationService;
+use App\Services\Security\Geolocation\NullGeolocationProvider;
+use App\Services\Security\RequestMetaService;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
@@ -32,7 +39,23 @@ class AdminServiceProvider extends ServiceProvider
         $this->app->singleton(AdminDashboardService::class);
         $this->app->singleton(AdminQuoteService::class);
         $this->app->singleton(AdministratorService::class);
+        $this->app->singleton(AdminNotificationService::class);
+        $this->app->singleton(SystemHealthService::class);
         $this->app->singleton(SearchService::class);
+
+        $this->app->singleton(GeolocationProviderInterface::class, function () {
+            $provider = config('admin.geolocation.provider');
+
+            if (is_string($provider) && class_exists($provider)) {
+                return new $provider;
+            }
+
+            return new NullGeolocationProvider;
+        });
+
+        $this->app->singleton(GeolocationService::class);
+        $this->app->singleton(RequestMetaService::class);
+        $this->app->singleton(PageViewTrackingService::class);
 
         $this->app->singleton(SearchResourceRegistry::class, function () {
             $registry = new SearchResourceRegistry;
@@ -67,6 +90,7 @@ class AdminServiceProvider extends ServiceProvider
     private function bootGates(): void
     {
         Gate::define('admin.dashboard', fn (Administrator $administrator) => $administrator->hasPermission('dashboard.view'));
+        Gate::define('admin.analytics.view', fn (Administrator $administrator) => $administrator->hasPermission('analytics.view'));
         Gate::define('admin.settings.view', fn (Administrator $administrator) => $administrator->hasPermission('settings.view'));
         Gate::define('admin.settings.update', fn (Administrator $administrator) => $administrator->hasPermission('settings.update'));
         Gate::define('admin.quotes.view', fn (Administrator $administrator) => $administrator->hasPermission('quotes.view'));

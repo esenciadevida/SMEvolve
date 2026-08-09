@@ -5,12 +5,16 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AdminLoginRequest;
 use App\Services\Admin\AdminAuditService;
+use App\Services\Admin\AdminNotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AdminAuthController extends Controller
 {
-    public function __construct(private readonly AdminAuditService $auditService) {}
+    public function __construct(
+        private readonly AdminAuditService $auditService,
+        private readonly AdminNotificationService $notifications,
+    ) {}
 
     public function showLogin(Request $request)
     {
@@ -27,6 +31,25 @@ class AdminAuthController extends Controller
         $remember = (bool) $request->boolean('remember');
 
         if (! Auth::guard('admin')->attempt($credentials, $remember)) {
+            $this->auditService->logFailedLogin(
+                $request,
+                (string) $request->validated('email'),
+                'invalid credentials',
+            );
+
+            $this->notifications->notify(
+                'security.login_failed',
+                'Failed administrator login attempt',
+                ['A failed administrator login attempt was detected on the SMEvolve Admin Portal.'],
+                details: [
+                    ['label' => 'Email', 'value' => (string) $request->validated('email')],
+                    ['label' => 'IP address', 'value' => (string) ($request->ip() ?? 'unknown')],
+                    ['label' => 'Time', 'value' => now()->toDateTimeString()],
+                ],
+                actionUrl: route('admin.audit.index'),
+                actionText: 'Review the audit log',
+            );
+
             return back()
                 ->withErrors(['email' => 'The provided credentials are incorrect.'])
                 ->withInput($request->only('email'));
@@ -37,6 +60,12 @@ class AdminAuthController extends Controller
         if (! $administrator->is_active) {
             Auth::guard('admin')->logout();
             $request->session()->regenerate();
+
+            $this->auditService->logFailedLogin(
+                $request,
+                (string) $request->validated('email'),
+                'account disabled',
+            );
 
             return back()
                 ->withErrors(['email' => 'The provided credentials are incorrect.'])
@@ -53,6 +82,21 @@ class AdminAuthController extends Controller
             (string) $administrator->id,
             actor: $administrator,
             request: $request,
+        );
+
+        $this->notifications->notify(
+            'security.login_success',
+            'New administrator login',
+            ['A new login was detected on your SMEvolve administrator account.'],
+            recipients: [$administrator],
+            details: [
+                ['label' => 'Email', 'value' => $administrator->email],
+                ['label' => 'IP address', 'value' => (string) ($request->ip() ?? 'unknown')],
+                ['label' => 'Browser', 'value' => (string) $request->userAgent()],
+                ['label' => 'Time', 'value' => now()->toDateTimeString()],
+            ],
+            actionUrl: route('admin.security.index'),
+            actionText: 'Review account security',
         );
 
         return redirect()->intended(route('admin.dashboard'));

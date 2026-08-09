@@ -1,10 +1,9 @@
-<x-layouts.admin :title="'Knowledge'">
+<x-layouts.admin-portal :title="'AI Knowledge Base'">
+    <x-admin.page-header title="Knowledge Base" subtitle="Curated knowledge items injected into AI responses alongside content from the website configuration (services, packages, FAQs, company info)." />
+
     <div class="grid gap-6 lg:grid-cols-3">
         <div class="lg:col-span-2">
-            <h1 class="text-xl font-bold">Knowledge Base</h1>
-            <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Curated knowledge items injected into AI responses alongside content from the website configuration (services, packages, FAQs, company info).</p>
-
-            <form method="GET" action="{{ route('admin.ai.knowledge.index') }}" class="mt-4 flex flex-wrap items-center gap-2">
+            <form method="GET" action="{{ route('admin.ai.knowledge.index') }}" class="flex flex-wrap items-center gap-2">
                 <input
                     type="search"
                     name="search"
@@ -21,57 +20,54 @@
                 <button type="submit" class="rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700">Filter</button>
             </form>
 
-            <div class="mt-4 overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+            <x-admin.card class="mt-4">
                 @if ($items->isEmpty())
                     <p class="p-5 text-sm text-slate-500 dark:text-slate-400">No knowledge items found.</p>
                 @else
-                    <table class="w-full text-left text-sm">
-                        <thead class="border-b border-slate-200 text-xs uppercase tracking-wide text-slate-500 dark:border-slate-800 dark:text-slate-400">
-                            <tr>
-                                <th class="px-4 py-3 font-medium">Title</th>
-                                <th class="px-4 py-3 font-medium">Type</th>
-                                <th class="px-4 py-3 font-medium">Status</th>
-                                <th class="px-4 py-3 font-medium">Priority</th>
-                                <th class="px-4 py-3 font-medium"></th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
-                            @foreach ($items as $item)
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="border-b border-slate-200 text-xs uppercase tracking-wide text-slate-500 dark:border-slate-800 dark:text-slate-400">
                                 <tr>
-                                    <td class="px-4 py-3">
-                                        <p class="font-medium">{{ $item->title }}</p>
-                                        <p class="text-xs text-slate-500 dark:text-slate-400">{{ Str::limit($item->content, 60) }}</p>
-                                    </td>
-                                    <td class="px-4 py-3 text-slate-500 dark:text-slate-400">{{ $item->type }}</td>
-                                    <td class="px-4 py-3">
-                                        @if ($item->status === 'published')
-                                            <span class="rounded-full bg-success-500/15 px-2 py-0.5 text-xs font-medium text-success-700 dark:text-success-500">Published</span>
-                                        @elseif ($item->status === 'archived')
-                                            <span class="rounded-full bg-slate-500/15 px-2 py-0.5 text-xs font-medium text-slate-600 dark:text-slate-400">Archived</span>
-                                        @else
-                                            <span class="rounded-full bg-warning-500/15 px-2 py-0.5 text-xs font-medium text-warning-700 dark:text-warning-500">Draft</span>
-                                        @endif
-                                    </td>
-                                    <td class="px-4 py-3 text-slate-500 dark:text-slate-400">{{ $item->priority }}</td>
-                                    <td class="px-4 py-3 text-right">
-                                        <form method="POST" action="{{ route('admin.ai.knowledge.destroy', $item) }}" onsubmit="return confirm('Delete this knowledge item?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="text-xs font-medium text-error-600 hover:text-error-700 dark:text-error-500">Delete</button>
-                                        </form>
-                                    </td>
+                                    <th class="px-4 py-3 font-medium">Title</th>
+                                    <th class="px-4 py-3 font-medium">Type</th>
+                                    <th class="px-4 py-3 font-medium">Status</th>
+                                    <th class="px-4 py-3 font-medium">Priority</th>
+                                    <th class="px-4 py-3 font-medium"></th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                                @foreach ($items as $item)
+                                    <tr>
+                                        <td class="px-4 py-3">
+                                            <p class="font-medium">{{ $item->title }}</p>
+                                            <p class="text-xs text-slate-500 dark:text-slate-400">{{ Str::limit($item->content, 60) }}</p>
+                                        </td>
+                                        <td class="px-4 py-3 text-slate-500 dark:text-slate-400">{{ $item->type }}</td>
+                                        <td class="px-4 py-3">
+                                            <x-admin.badge :tone="$item->status === 'published' ? 'success' : ($item->status === 'archived' ? 'slate' : 'warning')">
+                                                {{ ucfirst($item->status) }}
+                                            </x-admin.badge>
+                                        </td>
+                                        <td class="px-4 py-3 text-slate-500 dark:text-slate-400">{{ $item->priority }}</td>
+                                        <td class="px-4 py-3 text-right">
+                                            <form method="POST" action="{{ route('admin.ai.knowledge.destroy', $item) }}" onsubmit="return confirm('Delete this knowledge item?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="text-xs font-medium text-error-600 hover:text-error-700 dark:text-error-500">Delete</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 @endif
-            </div>
 
-            {{ $items->links() }}
+                {{ $items->links() }}
+            </x-admin.card>
         </div>
 
-        <div class="rounded-xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900">
-            <h2 class="text-sm font-semibold">Add Knowledge Item</h2>
+        <x-admin.card title="Add Knowledge Item">
             <form method="POST" action="{{ route('admin.ai.knowledge.store') }}" class="mt-4 space-y-3">
                 @csrf
 
@@ -120,6 +116,6 @@
 
                 <button type="submit" class="w-full rounded-lg bg-primary-600 px-4 py-2 text-sm font-semibold text-white hover:bg-primary-700">Add item</button>
             </form>
-        </div>
+        </x-admin.card>
     </div>
-</x-layouts.admin>
+</x-layouts.admin-portal>

@@ -12,6 +12,10 @@ class AdminAccessTest extends AdminTestCase
             'admin.quotes.index',
             'admin.chatbot.index',
             'admin.ai.settings',
+            'admin.analytics.traffic',
+            'admin.analytics.quotes',
+            'admin.analytics.chatbot',
+            'admin.analytics.ai',
             'admin.administrators.index',
             'admin.audit.index',
             'admin.profile.index',
@@ -58,6 +62,26 @@ class AdminAccessTest extends AdminTestCase
 
         $this->actingAs($admin, 'admin')
             ->get(route('admin.administrators.index'))
+            ->assertForbidden();
+    }
+
+    public function test_support_cannot_access_analytics_section(): void
+    {
+        $role = $this->supportRole();
+        $admin = $this->createAdmin($role);
+
+        $this->actingAs($admin, 'admin')
+            ->get(route('admin.analytics.traffic'))
+            ->assertForbidden();
+    }
+
+    public function test_editor_without_quotes_permission_cannot_view_quote_analytics(): void
+    {
+        $role = $this->editorRole();
+        $admin = $this->createAdmin($role);
+
+        $this->actingAs($admin, 'admin')
+            ->get(route('admin.analytics.quotes'))
             ->assertForbidden();
     }
 
@@ -112,6 +136,22 @@ class AdminAccessTest extends AdminTestCase
 
         $this->actingAs($admin, 'admin')
             ->get(route('admin.ai.settings'))
+            ->assertOk();
+
+        $this->actingAs($admin, 'admin')
+            ->get(route('admin.analytics.traffic'))
+            ->assertOk();
+
+        $this->actingAs($admin, 'admin')
+            ->get(route('admin.analytics.quotes'))
+            ->assertOk();
+
+        $this->actingAs($admin, 'admin')
+            ->get(route('admin.analytics.chatbot'))
+            ->assertOk();
+
+        $this->actingAs($admin, 'admin')
+            ->get(route('admin.analytics.ai'))
             ->assertOk();
 
         $this->actingAs($admin, 'admin')

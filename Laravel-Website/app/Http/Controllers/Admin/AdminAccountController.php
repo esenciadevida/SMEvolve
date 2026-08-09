@@ -6,12 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AdminPasswordRequest;
 use App\Http\Requests\Admin\AdminProfileRequest;
 use App\Services\Admin\AdminAuditService;
+use App\Services\Admin\AdminNotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AdminAccountController extends Controller
 {
-    public function __construct(private readonly AdminAuditService $auditService) {}
+    public function __construct(
+        private readonly AdminAuditService $auditService,
+        private readonly AdminNotificationService $notifications,
+    ) {}
 
     public function profile(Request $request)
     {
@@ -41,7 +45,15 @@ class AdminAccountController extends Controller
 
     public function security(Request $request)
     {
-        return view('admin.account.security');
+        $administrator = Auth::guard('admin')->user();
+
+        return view('admin.account.security', [
+            'administrator' => $administrator,
+            'recentSignIns' => $this->auditService->recentForAdministrator($administrator, 10),
+            'failedAttempts' => $request->ip() !== null
+                ? $this->auditService->failedLoginCountForIp($request->ip(), 60)
+                : 0,
+        ]);
     }
 
     public function updatePassword(AdminPasswordRequest $request)
@@ -62,6 +74,19 @@ class AdminAccountController extends Controller
             (string) $administrator->id,
             actor: $administrator,
             request: $request,
+        );
+
+        $this->notifications->notify(
+            'security.password_changed',
+            'Administrator password changed',
+            ['The password for your SMEvolve administrator account was changed.'],
+            recipients: [$administrator],
+            details: [
+                ['label' => 'IP address', 'value' => (string) ($request->ip() ?? 'unknown')],
+                ['label' => 'Time', 'value' => now()->toDateTimeString()],
+            ],
+            actionUrl: route('admin.security.index'),
+            actionText: 'Review account security',
         );
 
         return redirect()->route('admin.security.index')->with('status', 'Password changed successfully.');

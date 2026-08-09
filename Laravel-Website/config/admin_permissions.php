@@ -19,6 +19,12 @@ return [
         'risk' => 'low',
     ],
 
+    'analytics.view' => [
+        'label' => 'View Analytics',
+        'description' => 'Access traffic and engagement analytics in the Admin Portal.',
+        'risk' => 'low',
+    ],
+
     'settings.view' => [
         'label' => 'View Settings',
         'description' => 'View approved website settings.',

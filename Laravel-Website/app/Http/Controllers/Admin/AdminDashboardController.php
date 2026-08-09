@@ -3,32 +3,21 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Services\Admin\AdminAnalyticsService;
 use App\Services\Admin\AdminDashboardService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AdminDashboardController extends Controller
 {
-    public function __construct(
-        private readonly AdminDashboardService $dashboardService,
-        private readonly AdminAnalyticsService $analyticsService,
-    ) {}
+    public function __construct(private readonly AdminDashboardService $dashboardService) {}
 
     public function index(Request $request)
     {
         $administrator = Auth::guard('admin')->user();
 
-        $data = $this->dashboardService->build($administrator);
+        $range = $request->string('range')->trim()->value();
+        $range = in_array($range, ['today', 'yesterday', '7d', '30d', '90d'], true) ? $range : '30d';
 
-        $data['quoteTrend'] = $administrator->hasPermission('quotes.view')
-            ? $this->analyticsService->quotesDaily(14)
-            : [];
-
-        $data['aiTrend'] = $administrator->hasPermission('ai.view')
-            ? $this->analyticsService->aiDaily(14)
-            : [];
-
-        return view('admin.dashboard', $data);
+        return view('admin.dashboard', $this->dashboardService->build($administrator, $range));
     }
 }

@@ -2,13 +2,28 @@
     @php
         $hour = (int) now()->format('G');
         $greeting = $hour < 12 ? 'Good morning' : ($hour < 18 ? 'Good afternoon' : 'Good evening');
-        $hasSections = $quoteMetrics !== null || $chatbotStatus !== null || $aiStatus !== null || $recentQuotes !== null || $recentActivity !== null || ! empty($aiTrend);
+        $hasSections = ! empty($kpis) || ! empty($quoteTrend) || ! empty($aiTrend) || ! empty($trafficTrend)
+            || $recentQuotes !== null || $recentActivity !== null || ! empty($securityEvents);
     @endphp
 
-    <x-admin.page-header
-        :title="$greeting . ', ' . (auth('admin')->user()->name ?: 'there') . '.'"
-        :subtitle="'Here\'s what\'s happening with SMEvolve today, ' . now()->format('l, j F Y')"
-    />
+    <div class="mb-6 flex flex-wrap items-end justify-between gap-4">
+        <x-admin.page-header
+            :title="$greeting . ', ' . (auth('admin')->user()->name ?: 'there') . '.'"
+            :subtitle="'Here\'s what\'s happening with SMEvolve today, ' . now()->format('l, j F Y')"
+        />
+        <form method="GET" action="{{ route('admin.dashboard') }}" class="flex items-center gap-2">
+            <select
+                name="range"
+                onchange="this.form.submit()"
+                class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+                aria-label="Date range"
+            >
+                @foreach (['today' => 'Today', 'yesterday' => 'Yesterday', '7d' => 'Last 7 days', '30d' => 'Last 30 days', '90d' => 'Last 90 days'] as $value => $label)
+                    <option value="{{ $value }}" @selected($range === $value)>{{ $label }}</option>
+                @endforeach
+            </select>
+        </form>
+    </div>
 
     @if (! empty($warnings))
         <div class="mb-6 flex items-start gap-3 rounded-xl border border-warning-500/30 bg-warning-500/10 px-4 py-3 text-sm text-warning-700 dark:text-warning-500">
@@ -21,26 +36,50 @@
         </div>
     @endif
 
-    @if ($quoteMetrics !== null)
-        <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            <x-admin.stat-card label="Total Quotes" :value="$quoteMetrics['total']" icon="clipboard-document-list" tone="primary" />
-            <x-admin.stat-card label="New" :value="$quoteMetrics['new']" icon="trending-up" tone="info" />
-            <x-admin.stat-card label="In Progress" :value="$quoteMetrics['in_progress']" icon="clock" tone="warning" />
-            <x-admin.stat-card label="Completed" :value="$quoteMetrics['completed']" icon="check-circle" tone="success" />
+    @if (! empty($kpis))
+        <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+            @if (isset($kpis['visitors']))
+                <x-admin.stat-card label="Visitors" :value="number_format($kpis['visitors'])" :hint="$rangeLabel" icon="users" tone="primary" />
+            @endif
+            @if (isset($kpis['page_views']))
+                <x-admin.stat-card label="Page Views" :value="number_format($kpis['page_views'])" :hint="$rangeLabel" icon="eye" tone="info" />
+            @endif
+            @if (isset($kpis['quotes']))
+                <x-admin.stat-card label="Total Quotes" :value="number_format($kpis['quotes'])" :hint="$rangeLabel" icon="clipboard-document-list" tone="secondary" />
+            @endif
+            @if (isset($kpis['conversations']))
+                <x-admin.stat-card label="Chatbot Conversations" :value="number_format($kpis['conversations'])" :hint="$rangeLabel" icon="chat-bubble-left-right" tone="success" />
+            @endif
+            @if (isset($kpis['ai_requests']))
+                <x-admin.stat-card label="AI Requests" :value="number_format($kpis['ai_requests'])" :hint="$rangeLabel" icon="sparkles" tone="warning" />
+            @endif
         </div>
     @endif
 
-    @if ($quoteMetrics !== null || ! empty($aiTrend))
-        <div class="mt-6 grid gap-6 lg:grid-cols-2">
-            @if ($quoteMetrics !== null)
-                <x-admin.card title="Quote submissions" subtitle="Last 14 days">
+    @php
+        $charts = array_filter([
+            'quote' => ! empty($quoteTrend),
+            'ai' => ! empty($aiTrend),
+            'traffic' => ! empty($trafficTrend),
+        ]);
+        $chartCols = count($charts) === 3 ? 'lg:grid-cols-3' : (count($charts) === 2 ? 'lg:grid-cols-2' : 'lg:grid-cols-1');
+    @endphp
+
+    @if (count($charts) > 0)
+        <div class="mt-6 grid gap-6 {{ $chartCols }}">
+            @if (isset($charts['quote']))
+                <x-admin.card title="Quote submissions" :subtitle="$rangeLabel">
                     <x-admin.bars-chart :data="$quoteTrend" color="bg-primary-500" empty="No quote submissions yet." />
                 </x-admin.card>
             @endif
-
-            @if (! empty($aiTrend))
-                <x-admin.card title="AI requests" subtitle="Last 14 days">
+            @if (isset($charts['ai']))
+                <x-admin.card title="AI requests" :subtitle="$rangeLabel">
                     <x-admin.bars-chart :data="$aiTrend" value-key="requests" color="bg-secondary-500" empty="No AI requests yet." />
+                </x-admin.card>
+            @endif
+            @if (isset($charts['traffic']))
+                <x-admin.card title="Page views" :subtitle="$rangeLabel">
+                    <x-admin.bars-chart :data="$trafficTrend" color="bg-info-500" empty="No page views recorded yet." />
                 </x-admin.card>
             @endif
         </div>
@@ -53,8 +92,8 @@
                     <div class="space-y-3">
                         <div class="flex items-center justify-between">
                             <span class="text-sm text-slate-500 dark:text-slate-400">Status</span>
-                            <x-admin.badge :tone="$chatbotStatus['state'] === 'active' ? 'success' : 'slate'" dot>
-                                {{ $chatbotStatus['label'] }}
+                            <x-admin.badge :tone="$chatbotStatus['enabled'] ? 'success' : 'slate'" dot>
+                                {{ $chatbotStatus['enabled'] ? 'Enabled' : 'Disabled' }}
                             </x-admin.badge>
                         </div>
                         <a
@@ -74,17 +113,21 @@
                         <div class="flex items-center justify-between">
                             <span class="text-sm text-slate-500 dark:text-slate-400">Status</span>
                             <x-admin.badge
-                                :tone="$aiStatus['state'] === 'active' ? 'success' : ($aiStatus['state'] === 'warning' ? 'warning' : 'slate')"
+                                :tone="$aiStatus['configured'] && $aiStatus['enabled'] ? 'success' : ($aiStatus['configured'] ? 'warning' : 'slate')"
                                 dot
                             >
-                                {{ $aiStatus['label'] }}
+                                {{ $aiStatus['enabled'] ? 'Enabled' : 'Disabled' }}
                             </x-admin.badge>
                         </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-slate-500 dark:text-slate-400">Provider</span>
+                            <span class="text-sm font-medium">{{ $aiStatus['provider'] }}</span>
+                        </div>
                         <a
-                            href="{{ route('admin.ai.settings') }}"
+                            href="{{ route('admin.ai.dashboard') }}"
                             class="inline-flex items-center gap-1.5 text-sm font-medium text-primary-600 hover:text-primary-700 dark:text-primary-400"
                         >
-                            Configure AI
+                            Open AI console
                             <x-icon name="arrow-right" class="h-4 w-4" />
                         </a>
                     </div>
@@ -93,8 +136,21 @@
         </div>
     @endif
 
-    @if ($recentQuotes !== null || $recentActivity !== null)
-        <div class="mt-6 grid gap-6 lg:grid-cols-2">
+    <div class="mt-6 grid gap-6 lg:grid-cols-3">
+        <div class="space-y-6 lg:col-span-2">
+            @if (! empty($topPages))
+                <x-admin.card title="Top pages" :subtitle="$rangeLabel">
+                    <ul class="space-y-2">
+                        @foreach ($topPages as $page)
+                            <li class="flex items-center justify-between gap-4 text-sm">
+                                <span class="truncate font-medium text-slate-700 dark:text-slate-300">{{ $page['label'] }}</span>
+                                <x-admin.badge tone="primary">{{ number_format($page['value']) }} views</x-admin.badge>
+                            </li>
+                        @endforeach
+                    </ul>
+                </x-admin.card>
+            @endif
+
             @if ($recentQuotes !== null)
                 <x-admin.card title="Recent Quotes" subtitle="Latest submissions">
                     @if ($recentQuotes->isEmpty())
@@ -147,7 +203,66 @@
                 </x-admin.card>
             @endif
         </div>
-    @endif
+
+        <div class="space-y-6">
+            @if (! empty($quickActions))
+                <x-admin.card title="Quick actions">
+                    <div class="grid gap-2">
+                        @foreach ($quickActions as $action)
+                            <a
+                                href="{{ $action['href'] }}"
+                                class="flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:border-primary-500 hover:text-primary-700 dark:border-slate-800 dark:text-slate-300 dark:hover:border-primary-500"
+                            >
+                                <x-icon :name="$action['icon']" class="h-4 w-4" />
+                                {{ $action['label'] }}
+                            </a>
+                        @endforeach
+                    </div>
+                </x-admin.card>
+            @endif
+
+            @if (! empty($securityEvents))
+                <x-admin.card title="Security" subtitle="Recent sign-ins and sensitive changes">
+                    <ul class="divide-y divide-slate-100 dark:divide-slate-800">
+                        @foreach ($securityEvents as $event)
+                            @php $failed = str_starts_with((string) $event->action, 'admin.login.failed'); @endphp
+                            <li class="flex items-center gap-3 py-2.5 first:pt-0 last:pb-0">
+                                <x-icon :name="$failed ? 'shield-exclamation' : 'shield-check'" :class="$failed ? 'h-4 w-4 shrink-0 text-error-500' : 'h-4 w-4 shrink-0 text-primary-500'" />
+                                <div class="min-w-0">
+                                    <p class="truncate text-sm text-slate-700 dark:text-slate-300">{{ $event->action }}</p>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400">{{ $event->administrator?->email ?? $event->description }} &middot; {{ $event->created_at->diffForHumans() }}</p>
+                                </div>
+                            </li>
+                        @endforeach
+                    </ul>
+                </x-admin.card>
+            @endif
+
+            <x-admin.card title="System health">
+                <ul class="space-y-2.5">
+                    @foreach ($systemHealth as $check)
+                        <li class="flex items-center justify-between gap-3">
+                            <span class="text-sm text-slate-700 dark:text-slate-300">{{ $check['label'] }}</span>
+                            <x-admin.badge
+                                :tone="match ($check['status']) {
+                                    'operational' => 'success',
+                                    'warning' => 'warning',
+                                    'not_configured' => 'slate',
+                                    default => 'error',
+                                }"
+                                dot
+                            >
+                                {{ $check['status'] }}
+                            </x-admin.badge>
+                        </li>
+                    @endforeach
+                </ul>
+                <p class="mt-3 border-t border-slate-100 pt-3 text-xs text-slate-400 dark:border-slate-800 dark:text-slate-500">
+                    Health information reflects the serving environment.
+                </p>
+            </x-admin.card>
+        </div>
+    </div>
 
     @if (! $hasSections)
         <x-admin.card>

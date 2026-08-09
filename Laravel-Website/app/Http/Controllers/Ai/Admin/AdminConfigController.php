@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Ai\Admin\AdminUpdateConfigRequest;
 use App\Services\AI\AiAuditService;
 use App\Services\AI\AiConfigService;
+use Illuminate\Support\Facades\Auth;
 
 class AdminConfigController extends Controller
 {
@@ -27,13 +28,14 @@ class AdminConfigController extends Controller
             'values' => $values,
             'assistantEnabled' => $this->configService->assistantEnabled(),
             'quoteEnabled' => $this->configService->quoteEnabled(),
+            'globalEnabled' => (bool) config('ai.enabled'),
         ]);
     }
 
     public function update(AdminUpdateConfigRequest $request)
     {
         $values = $request->validated('values');
-        $actor = (string) $request->session()->get(config('ai.admin.session_key'), 'admin');
+        $actor = (string) (Auth::guard('admin')->id() ?? 'system');
 
         foreach ($values as $key => $value) {
             $key = (string) $key;

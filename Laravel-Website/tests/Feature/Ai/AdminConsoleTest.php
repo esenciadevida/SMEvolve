@@ -2,7 +2,9 @@
 
 namespace Tests\Feature\Ai;
 
+use App\Models\Administrator;
 use App\Models\AiPrompt;
+use App\Models\Role;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
@@ -13,78 +15,58 @@ class AdminConsoleTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-        config()->set('ai.admin.enabled', true);
-        config()->set('ai.admin.email', 'admin@smevolve.tech');
-        config()->set('ai.admin.password', 'secret-admin-password');
     }
 
-    public function test_login_page_is_public(): void
+    public function test_console_requires_admin_authentication(): void
     {
-        $this->get(route('admin.ai.login'))->assertOk()->assertSee('AI Console Login');
+        $this->get(route('admin.ai.dashboard'))->assertRedirect(route('admin.login'));
     }
 
-    public function test_dashboard_redirects_to_login_when_unauthenticated(): void
+    public function test_admin_without_ai_permission_is_denied(): void
     {
-        $this->get(route('admin.ai.dashboard'))->assertRedirect(route('admin.ai.login'));
+        $admin = $this->admin('support');
+
+        $this->actingAs($admin, 'admin')
+            ->get(route('admin.ai.dashboard'))
+            ->assertForbidden();
     }
 
-    public function test_login_rejects_invalid_credentials(): void
+    public function test_admin_can_view_dashboard_and_config_pages(): void
     {
-        $this->from(route('admin.ai.login'))
-            ->post(route('admin.ai.login.store'), [
-                'email' => 'admin@smevolve.tech',
-                'password' => 'wrong-password',
-            ])
-            ->assertRedirect(route('admin.ai.login'))
-            ->assertSessionHasErrors('email');
-    }
+        $admin = $this->admin('super_admin');
 
-    public function test_login_accepts_valid_credentials(): void
-    {
-        $this->post(route('admin.ai.login.store'), [
-            'email' => 'admin@smevolve.tech',
-            'password' => 'secret-admin-password',
-        ])->assertRedirect(route('admin.ai.dashboard'));
-
-        $this->get(route('admin.ai.dashboard'))->assertOk()->assertSee('Dashboard');
-    }
-
-    public function test_admin_can_view_config_prompts_knowledge_usage_health(): void
-    {
-        $this->actingAsAdmin();
-
-        $this->get(route('admin.ai.config'))->assertOk();
-        $this->get(route('admin.ai.prompts'))->assertOk();
-        $this->get(route('admin.ai.knowledge.index'))->assertOk();
-        $this->get(route('admin.ai.usage'))->assertOk();
-        $this->get(route('admin.ai.health'))->assertOk();
+        $this->actingAs($admin, 'admin')->get(route('admin.ai.dashboard'))->assertOk();
+        $this->actingAs($admin, 'admin')->get(route('admin.ai.config'))->assertOk();
+        $this->actingAs($admin, 'admin')->get(route('admin.ai.prompts'))->assertOk();
+        $this->actingAs($admin, 'admin')->get(route('admin.ai.knowledge.index'))->assertOk();
+        $this->actingAs($admin, 'admin')->get(route('admin.ai.usage'))->assertOk();
+        $this->actingAs($admin, 'admin')->get(route('admin.ai.health'))->assertOk();
     }
 
     public function test_admin_can_update_configuration(): void
     {
-        $this->actingAsAdmin();
+        $admin = $this->admin('super_admin');
 
-        $this->post(route('admin.ai.config.update'), [
+        $this->actingAs($admin, 'admin')->post(route('admin.ai.config.update'), [
             'values' => [
                 'assistant.welcome_message' => 'Hello, welcome!',
                 'quote.enabled' => '0',
             ],
-        ])->assertRedirect();
+        ])->assertRedirect()->assertSessionHasNoErrors();
 
         $this->assertDatabaseHas('ai_configurations', ['key' => 'assistant.welcome_message', 'value' => 'Hello, welcome!']);
     }
 
     public function test_admin_can_create_prompt_version(): void
     {
-        $this->actingAsAdmin();
+        $admin = $this->admin('super_admin');
 
         $prompt = AiPrompt::create([
             'key' => 'test_prompt_'.uniqid(),
             'name' => 'Test Prompt',
         ]);
 
-        $this->post(route('admin.ai.prompts.versions.store', $prompt), [
+        $this->actingAs($admin, 'admin')->post(route('admin.ai.prompts.versions.store', $prompt), [
             'version' => '1.0',
             'content' => 'Test content',
             'activate' => '1',
@@ -96,9 +78,9 @@ class AdminConsoleTest extends TestCase
 
     public function test_admin_can_create_knowledge_item(): void
     {
-        $this->actingAsAdmin();
+        $admin = $this->admin('super_admin');
 
-        $this->post(route('admin.ai.knowledge.store'), [
+        $this->actingAs($admin, 'admin')->post(route('admin.ai.knowledge.store'), [
             'type' => 'custom',
             'title' => 'Refund Policy',
             'content' => 'Refunds are issued within 7 business days.',
@@ -113,11 +95,20 @@ class AdminConsoleTest extends TestCase
         ]);
     }
 
-    private function actingAsAdmin(): void
+    private function admin(string $roleName): Administrator
     {
-        $this->post(route('admin.ai.login.store'), [
-            'email' => 'admin@smevolve.tech',
-            'password' => 'secret-admin-password',
-        ])->assertRedirect(route('admin.ai.dashboard'));
+        $role = Role::updateOrCreate(
+            ['name' => $roleName],
+            [
+                'label' => ucfirst(str_replace('_', ' ', $roleName)),
+                'permissions' => config("admin.roles.{$roleName}", []),
+            ]
+        );
+
+        return Administrator::factory()->create([
+            'role_id' => $role->id,
+            'email' => "{$roleName}@example.com",
+            'is_active' => true,
+        ]);
     }
 }

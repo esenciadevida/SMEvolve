@@ -16,8 +16,8 @@ class AiWidgetTest extends TestCase
         $this->get('/quote')->assertOk()->assertDontSee('SMEvolve AI Assistant', false);
     }
 
-    public function test_admin_login_page_returns_success(): void
+    public function test_ai_console_redirects_unauthenticated_users_to_admin_login(): void
     {
-        $this->get(route('admin.ai.login'))->assertOk();
+        $this->get(route('admin.ai.dashboard'))->assertRedirect(route('admin.login'));
     }
 }

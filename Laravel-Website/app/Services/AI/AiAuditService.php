@@ -3,10 +3,14 @@
 namespace App\Services\AI;
 
 use App\Models\AiAuditLog;
+use App\Services\Security\RequestMetaService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AiAuditService
 {
+    public function __construct(private readonly RequestMetaService $meta) {}
+
     public function log(
         string $action,
         ?string $resourceType = null,
@@ -16,7 +20,7 @@ class AiAuditService
         ?Request $request = null
     ): AiAuditLog {
         return AiAuditLog::create([
-            'admin_id' => $this->adminId($request),
+            'admin_id' => $this->adminId(),
             'action' => $action,
             'resource_type' => $resourceType,
             'resource_id' => $resourceId,
@@ -24,6 +28,9 @@ class AiAuditService
             'new_value' => $this->encode($newValue),
             'ip_address' => $request?->ip(),
             'user_agent' => $request !== null ? mb_substr((string) $request->userAgent(), 0, 255) : null,
+            'browser' => $request !== null ? $this->meta->browser($request->userAgent()) : null,
+            'os' => $request !== null ? $this->meta->operatingSystem($request->userAgent()) : null,
+            'device_type' => $request !== null ? $this->meta->deviceType($request->userAgent()) : null,
         ]);
     }
 
@@ -36,13 +43,11 @@ class AiAuditService
             ->toArray();
     }
 
-    private function adminId(?Request $request): ?string
+    private function adminId(): ?string
     {
-        if ($request === null) {
-            return 'system';
-        }
+        $administrator = Auth::guard('admin')->user();
 
-        return (string) ($request->session()->get(config('ai.admin.session_key'), 'unknown'));
+        return $administrator !== null ? (string) $administrator->id : null;
     }
 
     private function encode(mixed $value): ?string

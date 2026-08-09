@@ -1,0 +1,1631 @@
+# SMEvolve
+
+## Prompt 029 — Admin Portal Command Center, Analytics & Security Monitoring
+
+**Project:** SMEvolve
+**Module:** Admin Portal
+**Purpose:** Redesign the existing Admin Portal into a unified administrative command center with integrated analytics, AI management, audit monitoring, and security notifications.
+
+---
+
+# 1. CURRENT ADMIN PORTAL
+
+The current sidebar is:
+
+```text
+Overview
+
+Dashboard
+Analytics
+
+Management
+
+Website
+Quotes
+Portfolio
+Chatbot
+
+System
+
+AI
+Roles & Permissions
+Administrators
+Audit Log
+```
+
+This structure should be improved rather than discarded.
+
+---
+
+# 2. PRIMARY OBJECTIVE
+
+The Admin Portal should become the central control center for SMEvolve.
+
+The administrator should be able to understand the state of the business immediately after logging in.
+
+The new architecture should combine:
+
+```text
+Dashboard
++
+Analytics
++
+Website Management
++
+Quotes
++
+Portfolio
++
+Chatbot
++
+AI
++
+Security
++
+Administration
+```
+
+---
+
+# 3. NEW SIDEBAR STRUCTURE
+
+Use the following structure as the target design:
+
+```text
+OVERVIEW
+
+Dashboard
+
+
+MANAGEMENT
+
+Website
+Quotes
+Portfolio
+Chatbot
+AI Management
+
+
+ANALYTICS
+
+Traffic & Engagement
+Quotes Analytics
+Chatbot Analytics
+AI Analytics
+
+
+SYSTEM
+
+Roles & Permissions
+Administrators
+Audit Log
+Security
+Notifications
+Settings
+```
+
+Do not create unnecessary menu items if a feature can be logically contained inside another section.
+
+---
+
+# 4. DASHBOARD + ANALYTICS
+
+Remove the standalone top-level:
+
+```text
+Analytics
+```
+
+from the primary navigation.
+
+Instead, make the Dashboard the central analytics and operational overview.
+
+The dashboard should contain:
+
+```text
+Business Overview
+Website Analytics
+Quote Analytics
+Chatbot Analytics
+AI Analytics
+Security Activity
+System Health
+Recent Activity
+```
+
+Detailed analytics pages can still exist under the Analytics section if the application needs them.
+
+---
+
+# 5. DASHBOARD DESIGN
+
+The administrator should understand the most important information within approximately 5–10 seconds.
+
+The dashboard should contain high-level KPI cards.
+
+Examples:
+
+```text
+Visitors
+Page Views
+Quotes
+Pending Quotes
+Portfolio Views
+Chatbot Conversations
+AI Requests
+New Contacts
+```
+
+Use actual available SMEvolve data.
+
+Do not display fake statistics.
+
+---
+
+# 6. TIME PERIOD FILTER
+
+Provide a global date selector:
+
+```text
+Today
+Yesterday
+7 Days
+30 Days
+90 Days
+Custom
+```
+
+Changing the period should update the relevant dashboard metrics.
+
+---
+
+# 7. WEBSITE ANALYTICS
+
+Display:
+
+```text
+Total Visitors
+Unique Visitors
+Page Views
+Sessions
+Bounce/Engagement indicators where available
+Top Pages
+Traffic Sources where available
+```
+
+Google Analytics remains the source for website traffic analytics where applicable.
+
+Do not duplicate Google Analytics data unnecessarily inside the application.
+
+---
+
+# 8. GOOGLE ANALYTICS INTEGRATION
+
+The Admin Dashboard may display selected analytics metrics if a secure API integration is implemented.
+
+However:
+
+**Google Analytics does NOT need to become a complete replica inside the Admin Portal.**
+
+The dashboard should display useful business-level summaries.
+
+For detailed analysis, administrators can continue using Google Analytics.
+
+---
+
+# 9. QUOTE ANALYTICS
+
+Display:
+
+```text
+Total Quotes
+New Quotes
+Pending Quotes
+Reviewed Quotes
+Accepted Quotes
+Rejected Quotes
+Conversion Rate where meaningful
+```
+
+Add trend visualization.
+
+Example:
+
+```text
+Quotes
+│
+│       ╭───╮
+│   ╭───╯   ╰──╮
+│───╯           ╰──
+└──────────────────
+```
+
+Use actual database information.
+
+---
+
+# 10. QUOTE PIPELINE
+
+Provide a visual summary:
+
+```text
+New
+ ↓
+Reviewing
+ ↓
+Quoted
+ ↓
+Accepted
+```
+
+Use the actual statuses defined by SMEvolve.
+
+---
+
+# 11. PORTFOLIO ANALYTICS
+
+Display:
+
+```text
+Portfolio Items
+Most Viewed Projects
+Recent Projects
+Category Performance
+```
+
+Only display metrics that are actually available.
+
+---
+
+# 12. CHATBOT ANALYTICS
+
+Display:
+
+```text
+Total Conversations
+Conversations Today
+Successful Responses
+Failed Responses
+Average Response Time where available
+Common Topics where safely measurable
+```
+
+Do not expose private user conversations unnecessarily.
+
+---
+
+# 13. AI ANALYTICS
+
+Create an AI Analytics section.
+
+Display:
+
+```text
+AI Requests
+Successful Requests
+Failed Requests
+Assistant Requests
+Quote AI Requests
+Average Response Time
+AI Errors
+```
+
+If token/cost information is available from the provider, it may be displayed.
+
+Do not invent cost information.
+
+---
+
+# 14. AI MANAGEMENT
+
+AI should appear as a subsection of Management:
+
+```text
+AI Management
+```
+
+It must remain inside the existing Admin authentication system.
+
+Suggested structure:
+
+```text
+AI Management
+
+Overview
+Assistant
+Quote AI
+Prompts
+Knowledge
+Settings
+Logs
+```
+
+There must be no separate AI login.
+
+---
+
+# 15. SYSTEM HEALTH
+
+Add a System Health section to the Dashboard.
+
+Display status for:
+
+```text
+Application
+Database
+Email
+AI
+Search
+Storage
+Cache
+```
+
+Example:
+
+```text
+System Health
+
+Application       ● Operational
+Database          ● Operational
+Email             ● Operational
+AI                ● Operational
+Search            ● Operational
+Storage           ● Operational
+```
+
+Never expose credentials.
+
+---
+
+# 16. SYSTEM HEALTH STATES
+
+Support:
+
+```text
+Operational
+Warning
+Degraded
+Unavailable
+Not Configured
+```
+
+Use clear visual indicators.
+
+---
+
+# 17. RECENT ADMIN ACTIVITY
+
+Add a Recent Activity section.
+
+Example:
+
+```text
+Recent Activity
+
+Admin changed quote status
+Admin updated portfolio item
+Administrator logged in
+AI settings changed
+New administrator created
+```
+
+Each event should have:
+
+```text
+Actor
+Action
+Timestamp
+Target
+```
+
+---
+
+# 18. AUDIT LOG
+
+The existing Audit Log should become the central administrative activity record.
+
+Record important actions including:
+
+```text
+Login
+Logout
+Failed login
+Password change
+Password reset
+Administrator creation
+Administrator deletion
+Role changes
+Permission changes
+Settings changes
+Quote changes
+Portfolio changes
+Website content changes
+AI configuration changes
+AI prompt changes
+Knowledge changes
+```
+
+---
+
+# 19. AUDIT LOG METADATA
+
+Each audit event should capture, where technically and legally appropriate:
+
+```text
+Event ID
+Timestamp
+Administrator
+Administrator ID
+Action
+Target type
+Target ID
+Description
+IP address
+User agent
+Browser
+Operating system
+Device type
+Approximate location
+Request ID where available
+Success/failure
+```
+
+Do not collect unnecessary personal information.
+
+---
+
+# 20. IP ADDRESS
+
+Capture the source IP associated with the request.
+
+Example:
+
+```text
+IP:
+197.xxx.xxx.xxx
+```
+
+Do not display or expose IP addresses publicly.
+
+They should only be available to authorized administrators.
+
+---
+
+# 21. LOCATION
+
+Where appropriate, derive an approximate geographic location from the IP.
+
+Example:
+
+```text
+Location:
+Lagos, Nigeria
+```
+
+Do not claim exact physical location from an IP address.
+
+The UI should label it as:
+
+```text
+Approximate location
+```
+
+---
+
+# 22. DEVICE INFORMATION
+
+Capture useful device information.
+
+Example:
+
+```text
+Device:
+Desktop
+
+Browser:
+Chrome 151
+
+OS:
+Windows 11
+```
+
+Do not collect unnecessary device identifiers.
+
+---
+
+# 23. LOGIN EVENT
+
+Every administrator login should generate an audit event.
+
+Example:
+
+```text
+Administrator Login
+
+Administrator:
+admin@smevolve.tech
+
+Status:
+Successful
+
+Time:
+09 Aug 2026, 00:42
+
+IP:
+xxx.xxx.xxx.xxx
+
+Approximate Location:
+Lagos, Nigeria
+
+Device:
+Desktop
+
+Browser:
+Chrome
+
+OS:
+Windows
+```
+
+---
+
+# 24. FAILED LOGIN EVENT
+
+Failed login attempts should also be recorded.
+
+Example:
+
+```text
+Failed Administrator Login
+
+Account:
+admin@smevolve.tech
+
+Status:
+Failed
+
+Reason:
+Invalid credentials
+
+IP:
+xxx.xxx.xxx.xxx
+
+Approximate Location:
+Lagos, Nigeria
+
+Device:
+Desktop
+
+Browser:
+Chrome
+
+Time:
+...
+```
+
+Do not store the submitted password.
+
+---
+
+# 25. SECURITY NOTIFICATIONS
+
+Administrators should receive email notifications for important security events.
+
+At minimum:
+
+```text
+Successful login
+Failed login
+Password changed
+Password reset
+New administrator created
+Administrator role changed
+Administrator account disabled
+```
+
+---
+
+# 26. ADMIN LOGIN EMAIL
+
+Send an email after successful administrator login.
+
+Example subject:
+
+```text
+New SMEvolve Admin Login
+```
+
+The email should contain:
+
+```text
+Administrator
+Date & Time
+IP Address
+Approximate Location
+Device
+Browser
+Operating System
+Action
+```
+
+---
+
+# 27. FAILED LOGIN EMAIL
+
+For failed logins, send security notifications according to a reasonable threshold.
+
+Do not send an email for every single failed attempt if doing so could create an email flood.
+
+Recommended approach:
+
+```text
+Normal failed attempt
+        ↓
+Audit Log
+
+Repeated/suspicious attempts
+        ↓
+Security Email
+```
+
+---
+
+# 28. SUSPICIOUS LOGIN DETECTION
+
+Where practical, identify potentially unusual login activity.
+
+Examples:
+
+```text
+New device
+Unusual location
+Repeated failed attempts
+Rapid login attempts
+```
+
+Do not automatically classify legitimate activity as malicious.
+
+Label events as:
+
+```text
+Unusual activity
+```
+
+rather than making unsupported security claims.
+
+---
+
+# 29. PASSWORD CHANGE NOTIFICATION
+
+When an administrator changes their password:
+
+Send:
+
+```text
+Subject:
+SMEvolve Admin Password Changed
+```
+
+Include:
+
+```text
+Administrator
+Date & Time
+IP
+Approximate Location
+Device
+Browser
+```
+
+Never include the new password.
+
+---
+
+# 30. ROLE/PERMISSION CHANGE
+
+When an administrator's permissions change:
+
+Send a security notification.
+
+Example:
+
+```text
+Administrator:
+admin@smevolve.tech
+
+Action:
+Permissions Updated
+
+Changed By:
+superadmin@smevolve.tech
+
+Date:
+...
+
+Changes:
+Added: quotes.manage
+Removed: portfolio.delete
+```
+
+Only include information the recipient is authorized to see.
+
+---
+
+# 31. NEW ADMINISTRATOR
+
+When a new administrator account is created:
+
+Send an administrative notification.
+
+Record:
+
+```text
+Created By
+New Administrator
+Role
+Date
+IP
+```
+
+Do not include the administrator's password.
+
+---
+
+# 32. ADMIN ACCOUNT DISABLED
+
+When an administrator account is disabled:
+
+Record:
+
+```text
+Administrator
+Action
+Performed By
+Date
+Reason if provided
+IP
+```
+
+Send a notification where appropriate.
+
+---
+
+# 33. SECURITY NOTIFICATION RECIPIENT
+
+Create a configurable security notification recipient.
+
+Default:
+
+```text
+hello@smevolve.tech
+```
+
+The recipient should be configurable from Admin Settings if the architecture supports it.
+
+Do not hard-code a personal email address.
+
+---
+
+# 34. EMAIL DELIVERY
+
+Use the configured transactional email service.
+
+Current planned architecture:
+
+```text
+SMEvolve
+   ↓
+Brevo SMTP
+   ↓
+hello@smevolve.tech
+```
+
+Do not send mail through the Laravel `log` mailer in production.
+
+---
+
+# 35. EMAIL TEMPLATE
+
+Create a professional SMEvolve security notification template.
+
+Include:
+
+```text
+SMEvolve logo/branding
+Event title
+Event status
+Event details
+Security information
+Timestamp
+Recommended action where appropriate
+Footer
+```
+
+---
+
+# 36. EMAIL SECURITY
+
+Never include:
+
+```text
+Passwords
+API keys
+SMTP passwords
+Database passwords
+Session tokens
+Authentication tokens
+```
+
+---
+
+# 37. AUDIT LOG SEARCH
+
+The Audit Log should support:
+
+```text
+Search
+Date range
+Administrator
+Action
+Target
+Status
+IP
+```
+
+---
+
+# 38. AUDIT LOG FILTERS
+
+Provide filters such as:
+
+```text
+All
+Authentication
+Users
+Roles
+Permissions
+Website
+Quotes
+Portfolio
+Chatbot
+AI
+Settings
+Security
+```
+
+---
+
+# 39. AUDIT LOG DETAILS
+
+Clicking an audit event should open a detailed view.
+
+Example:
+
+```text
+Event
+Administrator Login
+
+Actor
+admin@smevolve.tech
+
+Timestamp
+09 Aug 2026 00:42:18
+
+IP
+xxx.xxx.xxx.xxx
+
+Approximate Location
+Lagos, Nigeria
+
+Device
+Desktop
+
+Browser
+Chrome 151
+
+Operating System
+Windows 11
+
+Status
+Successful
+```
+
+---
+
+# 40. AUDIT DATA IMMUTABILITY
+
+Administrators should not be able to casually modify or delete audit records.
+
+If deletion is required for legal/privacy reasons, it should be restricted and itself audited.
+
+---
+
+# 41. AUDIT RETENTION
+
+Define a reasonable retention period based on:
+
+```text
+Security requirements
+Storage
+Privacy requirements
+Applicable law
+Business needs
+```
+
+Do not retain sensitive information indefinitely without justification.
+
+---
+
+# 42. NOTIFICATION PREFERENCES
+
+Add administrator notification preferences.
+
+Example:
+
+```text
+Security Notifications
+
+Successful Login       ON
+Failed Login Alerts    ON
+Password Changes       ON
+Role Changes           ON
+New Admin              ON
+System Alerts          ON
+```
+
+Critical security notifications should not be casually disabled by ordinary administrators.
+
+---
+
+# 43. NOTIFICATION HISTORY
+
+Add:
+
+```text
+System → Notifications
+```
+
+where authorized administrators can view sent notifications.
+
+Display:
+
+```text
+Notification
+Recipient
+Event
+Date
+Delivery status
+```
+
+Do not display SMTP credentials.
+
+---
+
+# 44. DASHBOARD SECURITY WIDGET
+
+Add a security activity card to the Dashboard.
+
+Example:
+
+```text
+Security
+
+Last Admin Login
+Today 00:42
+
+Failed Logins
+3
+
+New Administrators
+1
+
+Security Events
+12
+```
+
+Provide a link:
+
+```text
+View Audit Log →
+```
+
+---
+
+# 45. DASHBOARD QUICK ACTIONS
+
+Add useful administrator shortcuts:
+
+```text
+Create Quote
+Add Portfolio Item
+Manage Chatbot
+AI Management
+Manage Administrators
+View Audit Log
+System Settings
+```
+
+Only show actions permitted to the logged-in administrator.
+
+---
+
+# 46. DASHBOARD RECENT QUOTES
+
+Show the latest relevant quote activity:
+
+```text
+Quote
+Customer
+Service
+Status
+Date
+```
+
+Allow the administrator to open the quote.
+
+---
+
+# 47. DASHBOARD RECENT CONTACTS
+
+If the system has contact submissions, display recent contacts.
+
+Do not expose unnecessary private information.
+
+---
+
+# 48. DASHBOARD SYSTEM ALERTS
+
+Display important operational warnings:
+
+```text
+AI not configured
+Email unavailable
+Database warning
+Storage warning
+Search unavailable
+```
+
+Do not display technical secrets.
+
+---
+
+# 49. DASHBOARD PERSONALIZATION
+
+Display:
+
+```text
+Good morning, [Administrator Name]
+```
+
+followed by:
+
+```text
+Here's what's happening with SMEvolve.
+```
+
+Use the administrator's account information already available to the system.
+
+---
+
+# 50. RESPONSIVE DESIGN
+
+The dashboard must work properly on:
+
+```text
+Desktop
+Laptop
+Tablet
+Mobile
+```
+
+Prioritize desktop administration but maintain usable mobile access.
+
+---
+
+# 51. PERFORMANCE
+
+Do not make the dashboard execute dozens of expensive queries on every page load.
+
+Use:
+
+```text
+Aggregated queries
+Caching where appropriate
+Lazy loading
+Background processing where appropriate
+```
+
+Do not introduce Redis solely for this feature if file/database caching is sufficient.
+
+---
+
+# 52. GOOGLE ANALYTICS
+
+Google Analytics should remain separate from the Admin Portal's core analytics engine.
+
+The dashboard may display selected GA4 information if a proper integration is implemented.
+
+Do not store unnecessary GA4 data in the SMEvolve database.
+
+---
+
+# 53. ANALYTICS SOURCE LABELING
+
+Clearly identify data sources.
+
+Example:
+
+```text
+Website Traffic
+Source: Google Analytics
+
+Quotes
+Source: SMEvolve Database
+
+AI Requests
+Source: SMEvolve AI Logs
+```
+
+This prevents administrators from assuming all metrics originate from the same system.
+
+---
+
+# 54. SECURITY DATA SOURCE
+
+Security information should come from SMEvolve's own authentication/audit system.
+
+Do not depend on Google Analytics to determine administrator logins or security events.
+
+---
+
+# 55. NOTIFICATION EVENT FLOW
+
+Use:
+
+```text
+Admin Action
+     ↓
+Audit Event
+     ↓
+Security Evaluation
+     ↓
+Notification
+     ↓
+Brevo SMTP
+     ↓
+Authorized Recipient
+```
+
+---
+
+# 56. FAILURE HANDLING
+
+If email delivery fails:
+
+The underlying administrator action must not necessarily fail.
+
+Example:
+
+```text
+Password changed
+       ↓
+Audit event recorded
+       ↓
+Email attempt fails
+       ↓
+Notification failure logged
+```
+
+Do not prevent a legitimate password change merely because an email could not be delivered.
+
+---
+
+# 57. EMAIL RETRY
+
+Where queues are introduced later, failed notification emails may be retried.
+
+For the current `QUEUE_CONNECTION=sync` environment, implement a simple reliable flow without requiring Redis.
+
+---
+
+# 58. SECURITY RATE LIMITING
+
+Protect:
+
+```text
+Admin Login
+Password Reset
+Admin APIs
+AI Test Console
+```
+
+against excessive requests.
+
+---
+
+# 59. ADMIN SESSION SECURITY
+
+Review:
+
+```text
+Session lifetime
+Secure cookies
+HttpOnly
+SameSite
+Session regeneration
+Logout
+```
+
+Use the existing Laravel authentication/security mechanisms.
+
+---
+
+# 60. IP PRIVACY
+
+IP addresses should only be visible to authorized administrators.
+
+Do not expose them through:
+
+```text
+Public APIs
+Frontend pages
+Public JavaScript
+Google Analytics
+Public search
+```
+
+unless explicitly required and legally justified.
+
+---
+
+# 61. LOCATION PRIVACY
+
+Only store approximate location derived from IP where justified.
+
+Do not attempt to derive:
+
+```text
+Street address
+Exact GPS coordinates
+```
+
+from an IP address.
+
+---
+
+# 62. DEVICE PRIVACY
+
+Capture only information necessary for security and troubleshooting.
+
+Avoid unnecessary device fingerprinting.
+
+---
+
+# 63. SECURITY AUDIT TEST
+
+Test:
+
+```text
+Successful login
+Failed login
+Logout
+Password change
+Password reset
+Role change
+Permission change
+New administrator
+Disabled administrator
+AI configuration change
+Quote change
+Portfolio change
+```
+
+Verify each appropriate event appears in the Audit Log.
+
+---
+
+# 64. EMAIL TEST
+
+Test:
+
+```text
+Admin login
+Password change
+Role change
+New administrator
+```
+
+Verify emails arrive through Brevo.
+
+Verify:
+
+```text
+Sender
+Subject
+Timestamp
+IP
+Approximate location
+Device
+Browser
+Action
+```
+
+are correctly represented.
+
+---
+
+# 65. NO SECRET EXPOSURE TEST
+
+Inspect:
+
+```text
+Browser
+HTML
+JavaScript
+Network requests
+Laravel logs
+GitHub
+```
+
+Verify secrets are not exposed.
+
+---
+
+# 66. PRODUCTION CONFIGURATION
+
+Production must contain:
+
+```env
+APP_ENV=production
+APP_DEBUG=false
+```
+
+Email must use the production SMTP configuration.
+
+AI credentials must remain server-side.
+
+---
+
+# 67. GITHUB
+
+Commit the implementation.
+
+Suggested commit:
+
+```text
+feat: enhance admin command center and security monitoring
+```
+
+Do not commit:
+
+```text
+.env
+SMTP credentials
+GROQ_API_KEY
+Database passwords
+```
+
+---
+
+# 68. DATABASE MIGRATIONS
+
+If audit metadata, notifications, or analytics tables require schema changes:
+
+Create proper Laravel migrations.
+
+Do not manually modify production tables.
+
+---
+
+# 69. EXPECTED DATABASE COMPONENTS
+
+Reuse existing tables where possible.
+
+Only introduce new tables where necessary, such as:
+
+```text
+audit_logs
+admin_notifications
+security_events
+```
+
+Do not create duplicate tables if equivalent structures already exist.
+
+---
+
+# 70. ADMIN PORTAL FINAL STRUCTURE
+
+The desired final navigation is:
+
+```text
+OVERVIEW
+
+Dashboard
+
+
+MANAGEMENT
+
+Website
+Quotes
+Portfolio
+Chatbot
+AI Management
+
+
+ANALYTICS
+
+Traffic & Engagement
+Quotes Analytics
+Chatbot Analytics
+AI Analytics
+
+
+SYSTEM
+
+Roles & Permissions
+Administrators
+Audit Log
+Security
+Notifications
+Settings
+```
+
+---
+
+# 71. DASHBOARD FINAL CONTENT
+
+The Dashboard should contain:
+
+```text
+Welcome Header
+
+KPI Cards
+├── Visitors
+├── Quotes
+├── Contacts
+├── Chatbot Conversations
+├── AI Requests
+└── Portfolio Activity
+
+Charts
+├── Website Traffic
+├── Quote Trends
+└── AI/Chatbot Activity
+
+Operational
+├── System Health
+├── Security
+└── Recent Activity
+
+Quick Actions
+```
+
+Only show metrics supported by real data.
+
+---
+
+# 72. SUCCESS CRITERIA
+
+The implementation is complete when:
+
+```text
+☐ Dashboard and high-level analytics are unified
+☐ Dashboard provides meaningful operational information
+☐ Existing sidebar is reorganized
+☐ AI Management is integrated into Admin
+☐ No separate AI authentication exists
+☐ Security events are audited
+☐ Login events are captured
+☐ Failed login events are captured
+☐ Password changes are audited
+☐ Role changes are audited
+☐ Administrator changes are audited
+☐ IP information is captured
+☐ Approximate location is captured
+☐ Device information is captured
+☐ Browser information is captured
+☐ Timestamp is captured
+☐ Actions are captured
+☐ Security emails are sent
+☐ Email failures are logged
+☐ Secrets are protected
+☐ Google Analytics remains appropriately separated
+☐ Dashboard is responsive
+☐ Existing functionality remains intact
+```
+
+---
+
+# 73. COMPLETION REPORT
+
+Return:
+
+```text
+Dashboard:
+[Complete / Issues]
+
+Analytics:
+[Complete / Issues]
+
+AI Management:
+[Complete / Issues]
+
+Audit Log:
+[Complete / Issues]
+
+Security Monitoring:
+[Complete / Issues]
+
+Login Notifications:
+[Working / Issues]
+
+Password Notifications:
+[Working / Issues]
+
+Role/Permission Notifications:
+[Working / Issues]
+
+Administrator Notifications:
+[Working / Issues]
+
+IP Capture:
+[Working / Issues]
+
+Approximate Location:
+[Working / Issues]
+
+Device Capture:
+[Working / Issues]
+
+Browser Capture:
+[Working / Issues]
+
+Email Delivery:
+[Working / Issues]
+
+Brevo:
+[Connected / Issues]
+
+Google Analytics:
+[Connected / Issues]
+
+Security:
+[Passed / Issues]
+
+Outstanding Issues:
+[List]
+```
+
+---
+
+# 74. FINAL ARCHITECTURAL PRINCIPLE
+
+The SMEvolve Admin Portal must become the **single operational command center**.
+
+The administrator should not need to jump between unrelated interfaces to understand the system.
+
+The final relationship is:
+
+```text
+                         SMEvolve Admin
+                              │
+             ┌────────────────┼────────────────┐
+             │                │                │
+         Dashboard         Management        System
+             │                │                │
+         Analytics       Website/Quotes      Security
+             │            Portfolio/AI        Audit
+             │             Chatbot            Admins
+             │                               Settings
+             │
+        Operational View
+             │
+      ┌──────┼──────┐
+      ▼      ▼      ▼
+   Website  Quotes  AI
+   Traffic  Trends  Activity
+```
+
+The Admin Portal should provide **visibility, control, accountability, and security** without becoming unnecessarily complicated.
+
+All administrator actions must be traceable, and important security events must generate appropriate notifications through the configured email infrastructure.

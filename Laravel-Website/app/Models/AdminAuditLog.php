@@ -14,8 +14,15 @@ class AdminAuditLog extends Model
         'resource_id',
         'old_value',
         'new_value',
+        'status',
+        'description',
+        'request_id',
         'ip_address',
         'user_agent',
+        'browser',
+        'os',
+        'device_type',
+        'location',
     ];
 
     public function administrator(): BelongsTo

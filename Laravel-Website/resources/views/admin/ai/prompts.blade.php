@@ -1,12 +1,9 @@
-<x-layouts.admin :title="'Prompts'">
-    <div class="space-y-6">
-        <div>
-            <h1 class="text-xl font-bold">Prompt Management</h1>
-            <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Each prompt profile has layered content: <code>global</code>, <code>business</code>, and the feature-specific prompt (<code>website_assistant</code>, <code>quote_assistant</code>).</p>
-        </div>
+<x-layouts.admin-portal :title="'AI Prompts'">
+    <x-admin.page-header title="Prompt Management" subtitle="Each prompt profile has layered content: global, business, and the feature-specific prompt (website_assistant, quote_assistant)." />
 
+    <div class="space-y-6">
         @foreach ($prompts as $prompt)
-            <div class="rounded-xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900">
+            <x-admin.card>
                 <div class="flex items-start justify-between gap-4">
                     <div>
                         <h2 class="text-sm font-semibold">{{ $prompt->name }}</h2>
@@ -15,9 +12,7 @@
                             <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ $prompt->description }}</p>
                         @endif
                     </div>
-                    <span class="rounded-full bg-success-500/15 px-2.5 py-0.5 text-xs font-medium text-success-700 dark:text-success-500">
-                        v{{ $prompt->active_version_id ? \App\Models\AiPromptVersion::where('id', $prompt->active_version_id)->value('version') : '-' }}
-                    </span>
+                    <x-admin.badge tone="success">v{{ $prompt->active_version_id ? \App\Models\AiPromptVersion::where('id', $prompt->active_version_id)->value('version') : '-' }}</x-admin.badge>
                 </div>
 
                 <details class="mt-4">
@@ -31,7 +26,7 @@
                                         <p class="text-sm font-medium">
                                             v{{ $version->version }}
                                             @if ($version->id === $prompt->active_version_id)
-                                                <span class="ml-1 rounded-full bg-primary-600/15 px-2 py-0.5 text-xs text-primary-700 dark:text-primary-400">Active</span>
+                                                <x-admin.badge tone="primary" class="ml-1">Active</x-admin.badge>
                                             @endif
                                         </p>
                                         <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{{ $version->status }} · {{ $version->created_at }}</p>
@@ -84,7 +79,7 @@
                         <button type="submit" class="rounded-lg bg-primary-600 px-4 py-1.5 text-xs font-semibold text-white hover:bg-primary-700">Create version</button>
                     </div>
                 </form>
-            </div>
+            </x-admin.card>
         @endforeach
     </div>
-</x-layouts.admin>
+</x-layouts.admin-portal>

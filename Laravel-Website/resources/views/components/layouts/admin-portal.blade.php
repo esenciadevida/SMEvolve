@@ -8,7 +8,12 @@
     $groups = [
         'Overview' => [
             ['label' => 'Dashboard', 'icon' => 'home', 'route' => route('admin.dashboard'), 'active' => request()->routeIs('admin.dashboard'), 'visible' => $administrator?->hasPermission('dashboard.view') ?? false],
-            ['label' => 'Analytics', 'icon' => 'chart-pie', 'route' => route('admin.analytics'), 'active' => request()->routeIs('admin.analytics'), 'visible' => $administrator?->hasPermission('dashboard.view') ?? false],
+        ],
+        'Analytics' => [
+            ['label' => 'Traffic & Engagement', 'icon' => 'chart-bar', 'route' => route('admin.analytics.traffic'), 'active' => request()->routeIs('admin.analytics.traffic'), 'visible' => $administrator?->hasPermission('analytics.view') ?? false],
+            ['label' => 'Quotes Analytics', 'icon' => 'clipboard-document-list', 'route' => route('admin.analytics.quotes'), 'active' => request()->routeIs('admin.analytics.quotes'), 'visible' => ($administrator?->hasPermission('analytics.view') && $administrator?->hasPermission('quotes.view')) ?? false],
+            ['label' => 'Chatbot Analytics', 'icon' => 'chat-bubble-left-right', 'route' => route('admin.analytics.chatbot'), 'active' => request()->routeIs('admin.analytics.chatbot'), 'visible' => ($administrator?->hasPermission('analytics.view') && $administrator?->hasPermission('chatbot.view')) ?? false],
+            ['label' => 'AI Analytics', 'icon' => 'sparkles', 'route' => route('admin.analytics.ai'), 'active' => request()->routeIs('admin.analytics.ai'), 'visible' => ($administrator?->hasPermission('analytics.view') && $administrator?->hasPermission('ai.view')) ?? false],
         ],
         'Management' => [
             ['label' => 'Website', 'icon' => 'globe-alt', 'route' => route('admin.settings.index', ['group' => 'general']), 'active' => request()->routeIs('admin.settings.*'), 'visible' => $administrator?->hasPermission('settings.view') ?? false],
@@ -17,7 +22,7 @@
             ['label' => 'Chatbot', 'icon' => 'chat-bubble-left-right', 'route' => route('admin.chatbot.index'), 'active' => request()->routeIs('admin.chatbot.*'), 'visible' => $administrator?->hasPermission('chatbot.view') ?? false],
         ],
         'System' => [
-            ['label' => 'AI', 'icon' => 'sparkles', 'route' => route('admin.ai.settings'), 'active' => request()->routeIs('admin.ai.*'), 'visible' => $administrator?->hasPermission('ai.view') ?? false],
+            ['label' => 'AI Console', 'icon' => 'sparkles', 'route' => route('admin.ai.dashboard'), 'active' => request()->routeIs('admin.ai.*'), 'visible' => $administrator?->hasPermission('ai.view') ?? false],
             ['label' => 'Roles & Permissions', 'icon' => 'key', 'route' => route('admin.roles.index'), 'active' => request()->routeIs('admin.roles.*'), 'visible' => $administrator?->hasPermission('administrators.view') ?? false],
             ['label' => 'Administrators', 'icon' => 'user-group', 'route' => route('admin.administrators.index'), 'active' => request()->routeIs('admin.administrators.*'), 'visible' => $administrator?->hasPermission('administrators.view') ?? false],
             ['label' => 'Audit Log', 'icon' => 'shield-check', 'route' => route('admin.audit.index'), 'active' => request()->routeIs('admin.audit.*'), 'visible' => $administrator?->hasPermission('audit.view') ?? false],

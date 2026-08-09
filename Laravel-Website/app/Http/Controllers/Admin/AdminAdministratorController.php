@@ -9,6 +9,7 @@ use App\Models\Administrator;
 use App\Models\Role;
 use App\Services\Admin\AdminAuditService;
 use App\Services\Admin\AdministratorService;
+use App\Services\Admin\AdminNotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use RuntimeException;
@@ -18,6 +19,7 @@ class AdminAdministratorController extends Controller
     public function __construct(
         private readonly AdministratorService $administratorService,
         private readonly AdminAuditService $auditService,
+        private readonly AdminNotificationService $notifications,
     ) {}
 
     public function index(Request $request)
@@ -67,6 +69,21 @@ class AdminAdministratorController extends Controller
             newValue: ['name' => $administrator->name, 'email' => $administrator->email, 'role_id' => $administrator->role_id],
             actor: $actor,
             request: $request,
+        );
+
+        $this->notifications->notify(
+            'administrators.created',
+            'New administrator account created',
+            ['A new administrator account was created on the SMEvolve Admin Portal.'],
+            details: [
+                ['label' => 'Name', 'value' => $administrator->name],
+                ['label' => 'Email', 'value' => $administrator->email],
+                ['label' => 'Role', 'value' => $administrator->role?->label ?? '—'],
+                ['label' => 'Created by', 'value' => (string) ($actor->name ?? 'unknown')],
+                ['label' => 'Time', 'value' => now()->toDateTimeString()],
+            ],
+            actionUrl: route('admin.administrators.show', $administrator),
+            actionText: 'View the new account',
         );
 
         return redirect()->route('admin.administrators.show', $administrator)
@@ -128,6 +145,22 @@ class AdminAdministratorController extends Controller
             request: $request,
         );
 
+        if ($roleChanged) {
+            $this->notifications->notify(
+                'administrators.role_changed',
+                'Administrator role changed',
+                ['The role of an administrator account was changed.'],
+                details: [
+                    ['label' => 'Account', 'value' => $administrator->name.' <'.$administrator->email.'>'],
+                    ['label' => 'New role', 'value' => $administrator->role?->label ?? '—'],
+                    ['label' => 'Changed by', 'value' => (string) ($actor->name ?? 'unknown')],
+                    ['label' => 'Time', 'value' => now()->toDateTimeString()],
+                ],
+                actionUrl: route('admin.administrators.show', $administrator),
+                actionText: 'View the account',
+            );
+        }
+
         return redirect()->route('admin.administrators.show', $administrator)
             ->with('status', 'Administrator updated successfully.');
     }
@@ -154,6 +187,19 @@ class AdminAdministratorController extends Controller
             request: $request,
         );
 
+        $this->notifications->notify(
+            'administrators.disabled',
+            'Administrator account disabled',
+            ['An administrator account was disabled on the SMEvolve Admin Portal.'],
+            details: [
+                ['label' => 'Account', 'value' => $administrator->name.' <'.$administrator->email.'>'],
+                ['label' => 'Disabled by', 'value' => (string) ($actor->name ?? 'unknown')],
+                ['label' => 'Time', 'value' => now()->toDateTimeString()],
+            ],
+            actionUrl: route('admin.administrators.show', $administrator),
+            actionText: 'View the account',
+        );
+
         return back()->with('status', 'Administrator disabled.');
     }
 
@@ -173,6 +219,19 @@ class AdminAdministratorController extends Controller
             newValue: true,
             actor: $actor,
             request: $request,
+        );
+
+        $this->notifications->notify(
+            'administrators.disabled',
+            'Administrator account reactivated',
+            ['A disabled administrator account was reactivated on the SMEvolve Admin Portal.'],
+            details: [
+                ['label' => 'Account', 'value' => $administrator->name.' <'.$administrator->email.'>'],
+                ['label' => 'Enabled by', 'value' => (string) ($actor->name ?? 'unknown')],
+                ['label' => 'Time', 'value' => now()->toDateTimeString()],
+            ],
+            actionUrl: route('admin.administrators.show', $administrator),
+            actionText: 'View the account',
         );
 
         return back()->with('status', 'Administrator enabled.');

@@ -15,5 +15,8 @@ class AiAuditLog extends Model
         'new_value',
         'ip_address',
         'user_agent',
+        'browser',
+        'os',
+        'device_type',
     ];
 }
