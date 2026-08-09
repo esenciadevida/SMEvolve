@@ -129,5 +129,8 @@ class AdminServiceProvider extends ServiceProvider
         RateLimiter::for('admin:search', fn ($job) => Limit::perMinute(
             (int) config('admin.search_rate_limit', 30)
         )->by($job->user()?->id ?? $job->ip() ?? 'unknown'));
+
+        RateLimiter::for('admin:password_reset', fn ($job) => Limit::perMinutes(15, 5)
+            ->by($job->ip() ?? 'unknown'));
     }
 }

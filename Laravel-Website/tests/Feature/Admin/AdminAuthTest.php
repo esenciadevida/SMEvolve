@@ -3,6 +3,7 @@
 namespace Tests\Feature\Admin;
 
 use App\Models\AdminAuditLog;
+use App\Models\AdminNotification;
 
 class AdminAuthTest extends AdminTestCase
 {
@@ -11,6 +12,14 @@ class AdminAuthTest extends AdminTestCase
         $this->get(route('admin.login'))
             ->assertOk()
             ->assertSee('Admin Login');
+    }
+
+    public function test_login_page_has_password_visibility_toggle(): void
+    {
+        $this->get(route('admin.login'))
+            ->assertOk()
+            ->assertSee('show = ! show', false)
+            ->assertSee('type="password"', false);
     }
 
     public function test_dashboard_redirects_to_login_when_unauthenticated(): void
@@ -88,7 +97,7 @@ class AdminAuthTest extends AdminTestCase
             ->assertSessionHasErrors('email');
 
         $this->assertSame(2, AdminAuditLog::where('action', 'admin.login.failed')->count());
-        $this->assertSame(1, \App\Models\AdminNotification::where('event', 'security.login_failed')->count());
+        $this->assertSame(1, AdminNotification::where('event', 'security.login_failed')->count());
     }
 
     public function test_successful_login_creates_security_notification(): void

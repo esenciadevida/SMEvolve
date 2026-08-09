@@ -11,6 +11,13 @@
                 <a href="{{ route('admin.administrators.edit', $administrator) }}" class="rounded-lg border border-slate-300 px-4 py-2 text-sm hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800">Edit</a>
             @endif
 
+            @if ($canUpdate)
+                <form method="POST" action="{{ route('admin.administrators.password-reset', $administrator) }}" onsubmit="return confirm('Send a password reset link to {{ $administrator->email }}?');">
+                    @csrf
+                    <button type="submit" class="rounded-lg border border-slate-300 px-4 py-2 text-sm hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800">Send password reset link</button>
+                </form>
+            @endif
+
             @if ($canDisable && $administrator->is_active)
                 <form method="POST" action="{{ route('admin.administrators.disable', $administrator) }}" onsubmit="return confirm('Disable this administrator?');">
                     @csrf

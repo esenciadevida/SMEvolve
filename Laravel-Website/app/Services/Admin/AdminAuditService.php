@@ -76,14 +76,23 @@ class AdminAuditService
     }
 
     /**
-     * Recent sign-in related events for a single administrator (used by the
-     * account security screen).
+     * Recent sign-in and password events for a single administrator (used by
+     * the account security screen). Includes events performed by the account
+     * and password-reset events raised against the account by another admin.
      */
     public function recentForAdministrator(Administrator $administrator, int $limit = 10): Collection
     {
         return AdminAuditLog::query()
-            ->where('administrator_id', $administrator->id)
-            ->whereIn('action', ['admin.login', 'admin.login.failed', 'admin.logout', 'security.password_change'])
+            ->where(function ($query) use ($administrator) {
+                $query->where('administrator_id', $administrator->id)
+                    ->whereIn('action', ['admin.login', 'admin.login.failed', 'admin.logout', 'security.password_change']);
+
+                $query->orWhere(function ($targeted) use ($administrator) {
+                    $targeted->where('resource_type', 'administrators')
+                        ->where('resource_id', (string) $administrator->id)
+                        ->whereIn('action', ['security.password_reset', 'security.password_reset_requested']);
+                });
+            })
             ->orderByDesc('id')
             ->limit($limit)
             ->get();

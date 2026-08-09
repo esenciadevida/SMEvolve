@@ -110,6 +110,13 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
+
+        'admins' => [
+            'provider' => 'administrators',
+            'table' => env('AUTH_PASSWORD_RESET_ADMIN_TOKEN_TABLE', 'admin_password_reset_tokens'),
+            'expire' => 60,
+            'throttle' => 60,
+        ],
     ],
 
     /*

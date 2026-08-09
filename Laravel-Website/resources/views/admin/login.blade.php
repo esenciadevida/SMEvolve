@@ -37,15 +37,12 @@
             </div>
 
             <div>
-                <label for="password" class="block text-sm font-medium text-slate-700 dark:text-slate-300">Password</label>
-                <input
-                    type="password"
-                    id="password"
+                <x-forms.password-input
                     name="password"
-                    required
+                    label="Password"
                     autocomplete="current-password"
-                    class="mt-1.5 w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 shadow-sm transition placeholder:text-slate-400 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/30 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500"
-                >
+                    :required="true"
+                />
             </div>
 
             <label class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">

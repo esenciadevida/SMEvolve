@@ -12,6 +12,7 @@ use App\Services\Admin\AdministratorService;
 use App\Services\Admin\AdminNotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Password;
 use RuntimeException;
 
 class AdminAdministratorController extends Controller
@@ -235,5 +236,47 @@ class AdminAdministratorController extends Controller
         );
 
         return back()->with('status', 'Administrator enabled.');
+    }
+
+    /**
+     * Trigger a secure password reset for an administrator. The reset link is
+     * emailed to the target account; no password is ever set or transmitted by
+     * the requesting administrator.
+     */
+    public function sendPasswordReset(Request $request, Administrator $administrator)
+    {
+        $this->authorize('admin.administrators.update');
+
+        $actor = Auth::guard('admin')->user();
+        $token = Password::broker('admins')->createToken($administrator);
+        $resetUrl = route('admin.password.reset.show', [
+            'token' => $token,
+            'email' => $administrator->email,
+        ]);
+
+        $this->auditService->log(
+            'security.password_reset_requested',
+            'administrators',
+            (string) $administrator->id,
+            actor: $actor,
+            request: $request,
+        );
+
+        $this->notifications->notify(
+            'security.password_reset',
+            'Administrator password reset requested',
+            ['A password reset link was requested for your SMEvolve administrator account.'],
+            recipients: [$administrator],
+            details: [
+                ['label' => 'Account', 'value' => $administrator->name.' <'.$administrator->email.'>'],
+                ['label' => 'Requested by', 'value' => (string) ($actor->name ?? 'unknown')],
+                ['label' => 'Link expires', 'value' => now()->addMinutes((int) config('auth.passwords.admins.expire', 60))->toDateTimeString()],
+                ['label' => 'Time', 'value' => now()->toDateTimeString()],
+            ],
+            actionUrl: $resetUrl,
+            actionText: 'Reset your password',
+        );
+
+        return back()->with('status', 'Password reset link sent to '.$administrator->email.'.');
     }
 }

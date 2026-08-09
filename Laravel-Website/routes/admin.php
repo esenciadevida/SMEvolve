@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminChatbotController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminNotificationController;
+use App\Http\Controllers\Admin\AdminPasswordResetController;
 use App\Http\Controllers\Admin\AdminPortfolioCategoryController;
 use App\Http\Controllers\Admin\AdminPortfolioController;
 use App\Http\Controllers\Admin\AdminQuoteController;
@@ -27,6 +28,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('/login', [AdminAuthController::class, 'login'])
         ->middleware('throttle:admin:login')
         ->name('login.store');
+
+    Route::get('/password/reset/{token}', [AdminPasswordResetController::class, 'showResetForm'])
+        ->name('password.reset.show');
+    Route::post('/password/reset', [AdminPasswordResetController::class, 'store'])
+        ->middleware('throttle:admin:password_reset')
+        ->name('password.reset.store');
 
     Route::middleware(['admin.auth'])->group(function () {
         Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
@@ -162,6 +169,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::post('/{administrator}/enable', [AdminAdministratorController::class, 'enable'])
                 ->middleware('admin.permission:administrators.disable')
                 ->name('enable');
+            Route::post('/{administrator}/password-reset', [AdminAdministratorController::class, 'sendPasswordReset'])
+                ->middleware('admin.permission:administrators.update')
+                ->name('password-reset');
         });
 
         Route::prefix('roles')->name('roles.')->group(function () {
