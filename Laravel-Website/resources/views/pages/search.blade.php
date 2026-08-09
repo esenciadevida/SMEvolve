@@ -8,7 +8,8 @@
 <x-layouts.app
     :title="$searchMeta['title']"
     :description="$searchMeta['description']"
-    :canonical="url()->current()"
+    :canonical="route('search')"
+    robots="noindex, follow"
 >
     <x-sections.page-hero
         id="search"

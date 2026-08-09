@@ -18,6 +18,7 @@
         'Management' => [
             ['label' => 'Website', 'icon' => 'globe-alt', 'route' => route('admin.settings.index', ['group' => 'general']), 'active' => request()->routeIs('admin.settings.*'), 'visible' => $administrator?->hasPermission('settings.view') ?? false],
             ['label' => 'Quotes', 'icon' => 'clipboard-document-list', 'route' => route('admin.quotes.index'), 'active' => request()->routeIs('admin.quotes.*'), 'visible' => $administrator?->hasPermission('quotes.view') ?? false],
+            ['label' => 'Contact Messages', 'icon' => 'envelope', 'route' => route('admin.contact.index'), 'active' => request()->routeIs('admin.contact.*'), 'visible' => $administrator?->hasPermission('contact.view') ?? false],
             ['label' => 'Portfolio', 'icon' => 'briefcase', 'route' => route('admin.portfolio.index'), 'active' => request()->routeIs('admin.portfolio.*'), 'visible' => $administrator?->hasPermission('portfolio.view') ?? false],
             ['label' => 'Chatbot', 'icon' => 'chat-bubble-left-right', 'route' => route('admin.chatbot.index'), 'active' => request()->routeIs('admin.chatbot.*'), 'visible' => $administrator?->hasPermission('chatbot.view') ?? false],
         ],

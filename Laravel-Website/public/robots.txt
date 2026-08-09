@@ -1,2 +1,12 @@
 User-agent: *
-Disallow:
+Allow: /
+
+# Private / application routes are protected by authentication and are not
+# intended for search indexing. robots.txt is NOT a security mechanism.
+Disallow: /admin/
+Disallow: /api/
+Disallow: /search
+Disallow: /storage/
+Disallow: /vendor/
+
+Sitemap: https://smevolve.tech/sitemap.xml

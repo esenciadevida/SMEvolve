@@ -96,6 +96,7 @@ class AdminServiceProvider extends ServiceProvider
         Gate::define('admin.quotes.view', fn (Administrator $administrator) => $administrator->hasPermission('quotes.view'));
         Gate::define('admin.quotes.search', fn (Administrator $administrator) => $administrator->hasPermission('quotes.search'));
         Gate::define('admin.quotes.updateStatus', fn (Administrator $administrator) => $administrator->hasPermission('quotes.update_status'));
+        Gate::define('admin.contact.view', fn (Administrator $administrator) => $administrator->hasPermission('contact.view'));
         Gate::define('admin.portfolio.view', fn (Administrator $administrator) => $administrator->hasPermission('portfolio.view'));
         Gate::define('admin.portfolio.create', fn (Administrator $administrator) => $administrator->hasPermission('portfolio.create'));
         Gate::define('admin.portfolio.update', fn (Administrator $administrator) => $administrator->hasPermission('portfolio.update'));

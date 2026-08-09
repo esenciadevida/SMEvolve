@@ -113,4 +113,44 @@ return [
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Brand Identity
+    |--------------------------------------------------------------------------
+    |
+    | Visual identity applied to every branded transactional email. Values are
+    | derived from the website design system (resources/css/app.css). The
+    | domain is taken from APP_URL so production links are always correct.
+    |
+    */
+
+    'brand' => [
+        'name' => 'SMEvolve',
+        'domain' => parse_url((string) env('APP_URL', 'https://smevolve.tech'), PHP_URL_HOST) ?: 'smevolve.tech',
+        'primary' => env('MAIL_BRAND_PRIMARY', '#2563eb'),
+        'primary_dark' => env('MAIL_BRAND_PRIMARY_DARK', '#1d4ed8'),
+        'text' => '#0f172a',
+        'muted' => '#64748b',
+        'faint' => '#94a3b8',
+        'surface' => '#f8fafc',
+        'border' => '#e2e8f0',
+        'success' => '#16a34a',
+        'warning' => '#b45309',
+        'danger' => '#dc2626',
+        'info' => '#0369a1',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Display Timezone
+    |--------------------------------------------------------------------------
+    |
+    | Timestamps rendered inside emails are converted to this timezone and
+    | labelled with the configured abbreviation (WAT for West Africa Time).
+    |
+    */
+
+    'display_timezone' => env('MAIL_DISPLAY_TIMEZONE', 'Africa/Lagos'),
+    'display_timezone_label' => env('MAIL_DISPLAY_TIMEZONE_LABEL', 'WAT'),
+
 ];

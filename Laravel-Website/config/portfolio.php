@@ -15,7 +15,7 @@ return [
     */
 
     'meta' => [
-        'title' => 'Portfolio, Our Work & Case Studies',
+        'title' => 'Our Work & Case Studies | SMEvolve',
         'description' => 'Explore sample and concept projects from SMEvolve, websites, e-commerce stores, custom software, and more. See how we plan, design, and build digital solutions.',
     ],
 

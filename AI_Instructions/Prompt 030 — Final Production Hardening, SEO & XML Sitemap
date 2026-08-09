@@ -1,0 +1,1151 @@
+# SMEvolve
+
+# Prompt 030 — Final Production Hardening, SEO & XML Sitemap
+
+**Project:** SMEvolve
+**Environment:** Production
+**Domain:** https://smevolve.tech
+**Hosting:** Hostinger
+**Application:** Laravel
+
+---
+
+# 1. OBJECTIVE
+
+Complete the remaining production infrastructure hardening tasks identified by Prompt 027 while also implementing a proper technical SEO foundation for SMEvolve.
+
+This prompt includes:
+
+### Production infrastructure
+
+1. Purge stale Hostinger/LiteSpeed/CDN cache.
+2. Schedule automated daily database backups.
+3. Remove unnecessary `X-Powered-By` disclosure.
+4. Safely enable HSTS after HTTPS verification.
+5. Perform final production smoke testing.
+
+### Technical SEO
+
+6. Implement a proper XML sitemap.
+7. Implement a production `robots.txt`.
+8. Add canonical URLs.
+9. Review page titles and meta descriptions.
+10. Add appropriate Open Graph metadata.
+11. Add appropriate Twitter/X card metadata.
+12. Prevent admin/system/private pages from being indexed.
+13. Verify sitemap accessibility.
+14. Verify robots.txt accessibility.
+15. Verify there are no accidental `noindex` directives on public pages.
+
+Do NOT redesign the Admin Dashboard.
+
+Do NOT implement Google Analytics.
+
+Do NOT modify the AI system.
+
+Do NOT modify SMTP.
+
+Do NOT introduce Redis.
+
+Do NOT introduce AWS/S3.
+
+---
+
+# 2. CURRENT WEBSITE
+
+The production website is:
+
+```text
+https://smevolve.tech
+```
+
+The current Google/search presentation resembles:
+
+```text
+SMEvolve – Digital Solutions for SMEs in Lagos, Nigeria ...
+
+smevolve.tech
+https://smevolve.tech
+
+We design high-performing websites, AI chatbots, and automation systems that help businesses grow, scale, and operate smarter.
+```
+
+Review and improve the underlying SEO metadata so search engines receive intentional titles and descriptions.
+
+Do NOT attempt to guarantee a specific Google search-result appearance. Search engines ultimately control how snippets are displayed.
+
+---
+
+# 3. XML SITEMAP
+
+Implement:
+
+```text
+https://smevolve.tech/sitemap.xml
+```
+
+The sitemap must be valid XML and follow current sitemap standards.
+
+---
+
+# 4. PUBLIC PAGES TO INCLUDE
+
+The sitemap should include legitimate, indexable public pages such as:
+
+```text
+/
+ /about
+ /services
+ /packages
+ /portfolio
+ /faq
+ /contact
+ /quote
+```
+
+Only include routes that are genuinely intended for search-engine indexing.
+
+Do NOT blindly include every Laravel route.
+
+---
+
+# 5. PAGES NOT TO INCLUDE
+
+Do NOT include private/system routes such as:
+
+```text
+/admin/*
+/login
+/admin/login
+/api/*
+/search
+/password/*
+/forgot-password
+/reset-password/*
+```
+
+unless there is a specific SEO reason to do so.
+
+Do not include:
+
+* Authentication pages
+* Admin pages
+* API endpoints
+* Password reset pages
+* Internal tools
+* Audit pages
+* AI administration pages
+* User-specific pages
+* Temporary pages
+* Error pages
+
+---
+
+# 6. DYNAMIC CONTENT
+
+If the portfolio contains individual publicly accessible detail pages, inspect the existing routes.
+
+If individual portfolio pages are:
+
+* Public
+* Indexable
+* Canonical
+* Intended to appear in search
+
+include them in the sitemap.
+
+If portfolio content does not have public detail routes, do not invent them.
+
+---
+
+# 7. QUOTE PAGE
+
+Determine whether:
+
+```text
+/quote
+```
+
+is intended to be publicly indexed.
+
+If it is primarily a lead-generation form and there is no SEO value in indexing it, use the application's SEO strategy appropriately.
+
+Do not automatically include it simply because it is public.
+
+---
+
+# 8. CONTACT PAGE
+
+The public:
+
+```text
+/contact
+```
+
+page may be included in the sitemap if it is intended as a public business page.
+
+---
+
+# 9. FAQ PAGE
+
+Include:
+
+```text
+/faq
+```
+
+if it contains genuine public informational content.
+
+---
+
+# 10. SITEMAP IMPLEMENTATION
+
+Prefer a maintainable Laravel implementation.
+
+Do not create a manually hard-coded XML file if the application contains dynamic public content that should eventually be represented.
+
+A reasonable architecture is:
+
+```text
+GET /sitemap.xml
+        ↓
+Laravel route/controller
+        ↓
+Generate XML
+        ↓
+Public indexable URLs
+```
+
+If a static sitemap is more appropriate for the current small site, document the reasoning.
+
+Do not introduce an unnecessary sitemap package.
+
+---
+
+# 11. LAST MODIFIED
+
+Where reliable modification timestamps exist, use:
+
+```xml
+<lastmod>
+```
+
+Do not fabricate dates.
+
+Do not update every URL's `lastmod` on every request unless the page actually changed.
+
+---
+
+# 12. CHANGE FREQUENCY
+
+Do not add meaningless:
+
+```xml
+<changefreq>
+```
+
+values simply because they are traditional.
+
+Do not add unsupported SEO claims.
+
+---
+
+# 13. PRIORITY
+
+Do not add arbitrary:
+
+```xml
+<priority>
+```
+
+values purely for SEO decoration.
+
+Focus on a clean, valid sitemap.
+
+---
+
+# 14. SITEMAP INDEX
+
+A sitemap index is NOT required if the site has a small number of URLs.
+
+Use a single:
+
+```text
+/sitemap.xml
+```
+
+unless the number of URLs genuinely requires multiple sitemap files.
+
+---
+
+# 15. ROBOTS.TXT
+
+Implement:
+
+```text
+https://smevolve.tech/robots.txt
+```
+
+The production robots file should allow search engines to crawl public pages.
+
+Example architecture:
+
+```text
+User-agent: *
+Allow: /
+
+Disallow: /admin/
+Disallow: /api/
+Disallow: /storage/
+Disallow: /vendor/
+Disallow: /password/
+Disallow: /reset-password/
+
+Sitemap: https://smevolve.tech/sitemap.xml
+```
+
+Adjust the actual rules to match the application's routes.
+
+Do NOT block public CSS, JavaScript, images, or other assets required for rendering.
+
+---
+
+# 16. ADMIN PROTECTION
+
+The admin portal must not be intended for search indexing.
+
+Use both:
+
+* Appropriate robots directives
+* Appropriate HTTP/meta `noindex` strategy where necessary
+
+Do not rely exclusively on `robots.txt` to protect sensitive pages from appearing in search.
+
+---
+
+# 17. IMPORTANT SECURITY DISTINCTION
+
+`robots.txt` is NOT a security mechanism.
+
+Do not use it as protection for:
+
+* Admin pages
+* API endpoints
+* Private data
+* Backups
+* `.env`
+* Internal files
+
+Authentication and server access controls must remain responsible for security.
+
+---
+
+# 18. CANONICAL URLS
+
+Add canonical URLs to public indexable pages.
+
+For example:
+
+```html
+<link rel="canonical" href="https://smevolve.tech/" />
+```
+
+For:
+
+```text
+/about
+/services
+/packages
+/portfolio
+/faq
+/contact
+```
+
+the canonical URL should correspond to the actual production URL.
+
+---
+
+# 19. CANONICAL NORMALIZATION
+
+Ensure canonical URLs consistently use:
+
+```text
+https://smevolve.tech
+```
+
+Do not generate:
+
+```text
+http://smevolve.tech
+www.smevolve.tech
+localhost
+127.0.0.1
+```
+
+unless the application's actual canonical domain configuration explicitly requires otherwise.
+
+---
+
+# 20. QUERY PARAMETERS
+
+Review pages that accept query parameters.
+
+Avoid generating unnecessary canonical URLs containing tracking or search parameters.
+
+For example:
+
+```text
+/search?q=...
+```
+
+should not automatically create a large collection of indexable search-result URLs.
+
+---
+
+# 21. SEARCH PAGE
+
+Review:
+
+```text
+/search
+```
+
+and determine whether it should be:
+
+```text
+noindex, follow
+```
+
+or otherwise excluded from the sitemap.
+
+Internal search results generally should not be indexed.
+
+Do not break the search functionality.
+
+---
+
+# 22. META TITLES
+
+Review every important public page.
+
+Create intentional titles.
+
+Suggested structure:
+
+### Homepage
+
+```text
+SMEvolve | Digital Solutions for SMEs in Lagos, Nigeria
+```
+
+### About
+
+```text
+About SMEvolve | Digital Solutions for SMEs
+```
+
+### Services
+
+```text
+Digital Services for SMEs | SMEvolve
+```
+
+### Packages
+
+```text
+Website, AI & Automation Packages | SMEvolve
+```
+
+### Portfolio
+
+```text
+Our Work | SMEvolve
+```
+
+### FAQ
+
+```text
+Frequently Asked Questions | SMEvolve
+```
+
+### Contact
+
+```text
+Contact SMEvolve | Digital Solutions for SMEs
+```
+
+Do not blindly use these exact titles if the site's actual branding/content suggests a better title.
+
+Keep titles concise and descriptive.
+
+---
+
+# 23. META DESCRIPTIONS
+
+Create unique meta descriptions for important public pages.
+
+The homepage description should communicate the actual services.
+
+Example:
+
+```text
+SMEvolve helps businesses in Lagos and across Nigeria grow with high-performing websites, AI chatbots, automation, and practical digital solutions.
+```
+
+Do not keyword-stuff.
+
+Do not repeat the same description on every page.
+
+---
+
+# 24. SEO CONTENT ACCURACY
+
+Do not make unsupported claims such as:
+
+```text
+#1
+Best in Nigeria
+Award-winning
+Guaranteed growth
+```
+
+unless the website has evidence supporting them.
+
+SEO metadata must accurately describe the business.
+
+---
+
+# 25. OPEN GRAPH
+
+Add appropriate Open Graph metadata.
+
+At minimum:
+
+```text
+og:title
+og:description
+og:url
+og:type
+og:image
+```
+
+Use the correct SMEvolve production image/logo.
+
+Do not reference local development files.
+
+---
+
+# 26. OPEN GRAPH IMAGE
+
+Verify the selected image:
+
+* Exists in production
+* Loads over HTTPS
+* Is publicly accessible
+* Represents SMEvolve appropriately
+* Has suitable dimensions
+* Does not contain development/watermark content
+
+Do not invent a URL.
+
+---
+
+# 27. TWITTER/X CARDS
+
+Add appropriate:
+
+```text
+twitter:card
+twitter:title
+twitter:description
+twitter:image
+```
+
+Use:
+
+```text
+summary_large_image
+```
+
+where the selected image supports it.
+
+Do not create social accounts or social URLs.
+
+---
+
+# 28. STRUCTURED DATA
+
+Inspect whether structured data already exists.
+
+If appropriate, add valid Schema.org structured data for the organization/business.
+
+Use only information that actually exists.
+
+Potential types may include:
+
+```text
+Organization
+LocalBusiness
+WebSite
+Service
+FAQPage
+```
+
+Do not add every possible schema type.
+
+Do not create false business information.
+
+---
+
+# 29. WEBSITE SCHEMA
+
+If appropriate, implement:
+
+```text
+WebSite
+```
+
+structured data with the production URL.
+
+Do not invent search actions unless the site's search implementation genuinely supports them.
+
+---
+
+# 30. BUSINESS INFORMATION
+
+If adding organization/local-business schema, use only verified information already present on the website.
+
+Do not invent:
+
+* Address
+* Telephone number
+* Opening hours
+* Social profiles
+* Reviews
+* Ratings
+
+---
+
+# 31. FAQ STRUCTURED DATA
+
+Inspect the FAQ page.
+
+If the page genuinely contains visible FAQ questions and answers, determine whether FAQ structured data is appropriate.
+
+Only mark up content that is actually visible to users.
+
+Do not fabricate FAQ content.
+
+---
+
+# 32. NOINDEX RULES
+
+Review sensitive/non-SEO routes.
+
+Potential noindex pages:
+
+```text
+/admin/*
+/admin/login
+/search
+/password/*
+/reset-password/*
+```
+
+Use appropriate Laravel/meta/header handling.
+
+Do not accidentally apply `noindex` to:
+
+```text
+/
+/about
+/services
+/packages
+/portfolio
+/faq
+/contact
+```
+
+---
+
+# 33. SITEMAP URL VERIFICATION
+
+After implementation:
+
+```text
+https://smevolve.tech/sitemap.xml
+```
+
+must:
+
+* Return HTTP 200
+* Return XML
+* Have the correct content type
+* Contain only valid URLs
+* Contain HTTPS URLs
+* Contain the canonical domain
+* Not contain localhost
+* Not contain admin URLs
+* Not contain API URLs
+
+---
+
+# 34. ROBOTS VERIFICATION
+
+Verify:
+
+```text
+https://smevolve.tech/robots.txt
+```
+
+returns:
+
+```text
+HTTP 200
+```
+
+and contains the correct sitemap reference:
+
+```text
+Sitemap: https://smevolve.tech/sitemap.xml
+```
+
+---
+
+# 35. SITEMAP XML VALIDATION
+
+Validate the XML structure.
+
+Check:
+
+```text
+<urlset>
+<url>
+<loc>
+```
+
+and any optional fields used.
+
+No malformed XML.
+
+No duplicate URLs.
+
+No invalid URLs.
+
+---
+
+# 36. GOOGLE SEARCH CONSOLE
+
+Do NOT attempt to access Google Search Console unless credentials/access are already configured.
+
+However, report:
+
+```text
+Sitemap URL:
+https://smevolve.tech/sitemap.xml
+```
+
+so it can be submitted manually later.
+
+Do not claim that Google has indexed the site simply because the sitemap exists.
+
+---
+
+# 37. CACHE PURGE
+
+Prompt 027 identified stale WordPress/LiteSpeed content.
+
+Use Hostinger hPanel to purge:
+
+* LiteSpeed cache
+* CDN cache
+* Hostinger cache
+
+where applicable.
+
+After purging, verify:
+
+```text
+https://smevolve.tech/
+```
+
+serves the current SMEvolve Laravel application.
+
+---
+
+# 38. BACKUP
+
+Preserve the existing backup infrastructure:
+
+```text
+/home/u226366554/backup.sh
+/home/u226366554/backups/
+```
+
+Verify the backup script manually.
+
+Verify gzip integrity.
+
+Do not delete production backups.
+
+---
+
+# 39. CRON
+
+Inspect Hostinger cron jobs.
+
+If the backup job is not already configured, create:
+
+```text
+03:30 daily
+```
+
+using:
+
+```bash
+/bin/bash /home/u226366554/backup.sh
+```
+
+Do not create duplicates.
+
+---
+
+# 40. X-POWERED-BY
+
+Remove:
+
+```text
+X-Powered-By: PHP/8.4.19
+```
+
+if Hostinger permits it safely.
+
+Verify with:
+
+```bash
+curl -I https://smevolve.tech/
+```
+
+If Hostinger prevents removal, document:
+
+```text
+HOSTING LIMITATION
+```
+
+instead of introducing a fragile workaround.
+
+---
+
+# 41. HSTS
+
+Verify HTTPS first.
+
+Confirm:
+
+```text
+http://smevolve.tech
+```
+
+redirects correctly to HTTPS.
+
+Only then enable HSTS.
+
+Use a conservative production policy initially.
+
+Do not enable preload or `includeSubDomains` unless all relevant subdomains are confirmed HTTPS-ready.
+
+---
+
+# 42. SECURITY HEADERS
+
+Verify:
+
+```text
+X-Frame-Options
+X-Content-Type-Options
+Referrer-Policy
+Permissions-Policy
+Content-Security-Policy
+Strict-Transport-Security
+```
+
+where configured.
+
+Do not weaken existing security policies.
+
+---
+
+# 43. COOKIE SECURITY
+
+Verify production cookies remain:
+
+```text
+Secure
+HttpOnly
+SameSite=Lax
+```
+
+---
+
+# 44. PUBLIC ROUTE TEST
+
+Verify:
+
+```text
+/
+ /about
+ /services
+ /packages
+ /portfolio
+ /faq
+ /contact
+ /quote
+```
+
+return expected responses.
+
+---
+
+# 45. ADMIN TEST
+
+Verify:
+
+```text
+/admin/login
+```
+
+still works.
+
+Do not index the admin login page.
+
+Do not modify administrator credentials.
+
+---
+
+# 46. EMAIL REGRESSION
+
+Verify that the Prompt 029 branded email system remains functional.
+
+Do not redesign it in this prompt.
+
+Do not modify Brevo credentials.
+
+---
+
+# 47. CONTACT/QUOTE REGRESSION
+
+Verify:
+
+```text
+Quote submission
+Contact submission
+```
+
+remain functional after deployment.
+
+Confirm they do not expose internal errors.
+
+---
+
+# 48. PAGE-VIEW REGRESSION
+
+Verify page-view tracking continues to work.
+
+Do not modify the Prompt 027 `PageView` fix.
+
+---
+
+# 49. PERFORMANCE
+
+Verify that:
+
+```text
+/sitemap.xml
+/robots.txt
+```
+
+are lightweight and fast.
+
+Do not generate expensive database queries on every sitemap request if caching is appropriate.
+
+If dynamic sitemap generation is used, cache it appropriately.
+
+---
+
+# 50. GIT SECURITY
+
+Verify no secrets are committed.
+
+Do not commit:
+
+```text
+.env
+database dumps
+backup files
+SMTP credentials
+API keys
+logs
+```
+
+---
+
+# 51. FINAL REPORT
+
+Return:
+
+```text
+SMEvolve Production Hardening & SEO Report
+
+Infrastructure
+----------------
+CDN/cache purge:
+PASS / FAIL
+
+Backup:
+PASS / FAIL
+
+Backup integrity:
+PASS / FAIL
+
+Backup cron:
+PASS / FAIL
+
+X-Powered-By:
+REMOVED / HOSTING LIMITATION
+
+HSTS:
+PASS / FAIL / DEFERRED
+
+HTTPS:
+PASS / FAIL
+
+
+SEO
+----------------
+XML sitemap:
+PASS / FAIL
+
+Sitemap URL:
+https://smevolve.tech/sitemap.xml
+
+robots.txt:
+PASS / FAIL
+
+robots URL:
+https://smevolve.tech/robots.txt
+
+Canonical URLs:
+PASS / FAIL
+
+Meta titles:
+PASS / FAIL
+
+Meta descriptions:
+PASS / FAIL
+
+Open Graph:
+PASS / FAIL
+
+Twitter/X metadata:
+PASS / FAIL
+
+Structured data:
+PASS / FAIL / NOT IMPLEMENTED
+
+Admin noindex:
+PASS / FAIL
+
+Search noindex:
+PASS / FAIL
+
+
+Regression
+----------------
+Homepage:
+PASS / FAIL
+
+Public pages:
+PASS / FAIL
+
+Admin login:
+PASS / FAIL
+
+Quote:
+PASS / FAIL
+
+Contact:
+PASS / FAIL
+
+Email:
+PASS / FAIL
+
+Page views:
+PASS / FAIL
+
+
+Git/security:
+PASS / FAIL
+
+Files changed:
+[List]
+
+Commit:
+[hash or N/A]
+
+Manual actions:
+[List]
+
+Overall status:
+PASS / WARNING / FAIL
+```
+
+Do not include any passwords, API keys, SMTP credentials, database credentials, or `.env` contents.
+
+---
+
+# 52. COMPLETION CRITERIA
+
+Prompt 030 is complete when:
+
+✓ Production cache is purged
+✓ SMEvolve Laravel application is served publicly
+✓ Daily database backup is scheduled
+✓ Backup integrity is verified
+✓ Backup files remain outside public web access
+✓ X-Powered-By is removed or hosting limitation documented
+✓ HTTPS is verified
+✓ HSTS is safely enabled or explicitly deferred
+✓ Security headers remain intact
+✓ XML sitemap exists and validates
+✓ Sitemap contains only intended public URLs
+✓ robots.txt exists
+✓ robots.txt references sitemap.xml
+✓ Canonical URLs are present
+✓ Public page titles are intentional
+✓ Public page descriptions are intentional
+✓ Open Graph metadata exists
+✓ Twitter/X metadata exists
+✓ Admin/private pages are not intended for indexing
+✓ Search results are not intended for indexing
+✓ Public pages remain indexable
+✓ No localhost URLs exist in production metadata
+✓ No secrets are committed
+✓ Quote functionality remains operational
+✓ Contact functionality remains operational
+✓ Branded email system remains operational
+✓ Page-view tracking remains operational
+✓ Final production smoke test passes
+
+# FINAL INSTRUCTION
+
+Execute Prompt 030 against the existing SMEvolve production deployment.
+
+Preserve all functionality implemented by Prompts 027 and 029.
+
+Do not perform unrelated feature development.
+
+Do not fabricate SEO verification or Google indexing results.
+
+Do not claim Google has indexed pages simply because the sitemap exists.
+
+Return the complete production hardening and SEO report.

@@ -1,0 +1,893 @@
+# SMEvolve
+
+# Prompt 028 — Production Email, SMTP & Security Notifications
+
+**Project:** SMEvolve
+**Environment:** Production
+**Hosting:** Hostinger
+**Domain:** smevolve.tech
+**Mail Provider:** Brevo SMTP
+**Business Mailbox:** Zoho Mail
+
+---
+
+# 1. OBJECTIVE
+
+Configure and verify production email delivery for the SMEvolve Laravel application using Brevo SMTP.
+
+Then verify and, where already implemented, activate the application's security email notification system.
+
+The goal is to make production email reliable without introducing unnecessary infrastructure.
+
+Do NOT replace Brevo with another provider.
+
+Do NOT modify Zoho MX records.
+
+Do NOT expose SMTP credentials.
+
+Do NOT put secrets into GitHub.
+
+Do NOT redesign the Admin Dashboard in this prompt.
+
+Do NOT implement Google Analytics in this prompt.
+
+Do NOT introduce Redis, queues, AWS/S3, or other infrastructure unless the existing application demonstrably requires it.
+
+---
+
+# 2. CURRENT PRODUCTION STATUS
+
+Prompt 027 confirmed:
+
+* Production application is deployed.
+* Laravel is working.
+* Database is working.
+* Page-view tracking is working.
+* Security headers are present.
+* `.env` is protected.
+* Git history contains no real production secrets.
+* Authentication and rate limiting are working.
+* AI widget is present in production.
+* Current mail configuration is NOT production-ready.
+* Current `MAIL_MAILER` is `log`.
+
+Prompt 027 specifically identified:
+
+```text
+MAIL_MAILER=log
+```
+
+as the reason production email notifications are currently being written to Laravel logs instead of being delivered.
+
+---
+
+# 3. EMAIL ARCHITECTURE
+
+Use:
+
+```text
+Application
+    ↓
+Laravel Mail
+    ↓
+Brevo SMTP
+    ↓
+Recipient mailbox
+```
+
+Brevo handles transactional email delivery.
+
+Zoho remains the mailbox provider for the SMEvolve domain.
+
+Do not confuse:
+
+```text
+Zoho Mail
+```
+
+with:
+
+```text
+Brevo SMTP
+```
+
+They serve different purposes.
+
+---
+
+# 4. BREVO SMTP
+
+The production SMTP configuration is:
+
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=smtp-relay.brevo.com
+MAIL_PORT=587
+MAIL_USERNAME=<BREVO_SMTP_LOGIN>
+MAIL_PASSWORD=<BREVO_SMTP_KEY>
+MAIL_FROM_ADDRESS="hello@smevolve.tech"
+MAIL_FROM_NAME="SMEvolve"
+```
+
+The actual SMTP password/key must NEVER appear in:
+
+* GitHub
+* source code
+* documentation
+* logs
+* final reports
+* browser responses
+* screenshots
+* chat messages
+
+If the previously supplied SMTP credential is still active and was exposed, generate a new Brevo SMTP credential and use the new credential.
+
+Do not reuse an exposed credential.
+
+---
+
+# 5. ENVIRONMENT FILE
+
+Locate the production Laravel `.env`.
+
+Do not display the entire file.
+
+Inspect only the required email configuration.
+
+Update:
+
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=smtp-relay.brevo.com
+MAIL_PORT=587
+MAIL_USERNAME=<secure credential>
+MAIL_PASSWORD=<secure credential>
+MAIL_FROM_ADDRESS="hello@smevolve.tech"
+MAIL_FROM_NAME="SMEvolve"
+```
+
+Preserve all unrelated production configuration.
+
+Do not accidentally modify:
+
+```env
+APP_KEY
+DB_*
+GROQ_API_KEY
+SESSION_*
+FILESYSTEM_*
+```
+
+unless required by a demonstrated issue.
+
+---
+
+# 6. MAIL SCHEME
+
+If the Laravel version/configuration requires it, ensure the mail configuration is compatible with SMTP over port 587.
+
+Do not introduce an unsupported custom mail scheme.
+
+Use Laravel's normal SMTP transport.
+
+---
+
+# 7. CONFIGURATION CACHE
+
+After updating `.env`, clear stale configuration:
+
+```bash
+php artisan config:clear
+php artisan cache:clear
+```
+
+Then verify the configuration is correct without printing the password.
+
+After successful verification, build production configuration cache:
+
+```bash
+php artisan config:cache
+```
+
+Do NOT run destructive cache commands that remove unrelated application data.
+
+---
+
+# 8. SMTP CONNECTIVITY TEST
+
+Test the SMTP connection.
+
+Verify:
+
+```text
+SMTP host reachable
+Port reachable
+Authentication succeeds
+TLS works
+Laravel mail transport initializes
+```
+
+Do not expose the SMTP password in error output.
+
+If authentication fails, report:
+
+```text
+SMTP authentication failed
+```
+
+without printing the credential.
+
+---
+
+# 9. REAL EMAIL TEST
+
+Send a controlled test email from:
+
+```text
+hello@smevolve.tech
+```
+
+to an approved test recipient.
+
+Verify:
+
+* SMTP accepted the message.
+* Laravel reports successful dispatch.
+* Brevo accepts the message.
+* Recipient receives it.
+* Sender displays correctly.
+* Subject is correct.
+* Email is not corrupted.
+* No credentials are exposed.
+
+Do not use fake success responses.
+
+---
+
+# 10. EMAIL HEADERS
+
+Verify the email contains appropriate sender information:
+
+```text
+From: SMEvolve <hello@smevolve.tech>
+```
+
+Do not create unnecessary sender addresses.
+
+Do not modify Zoho MX records.
+
+---
+
+# 11. REPLY-TO
+
+If the application requires replies to reach a specific mailbox, configure an appropriate Reply-To address.
+
+Do not invent a mailbox that does not exist.
+
+---
+
+# 12. EMAIL FAILURE HANDLING
+
+If SMTP delivery fails:
+
+* The application must not expose SMTP credentials.
+* Users must not see stack traces.
+* The error should be logged safely.
+* Security events should still be recorded.
+* A failed email must not break authentication.
+
+For example:
+
+```text
+Admin login
+    ↓
+Authentication succeeds
+    ↓
+Audit event recorded
+    ↓
+Email attempted
+    ↓
+Email fails
+    ↓
+Login still succeeds
+    ↓
+Failure logged safely
+```
+
+Email delivery must not become a single point of failure for authentication.
+
+---
+
+# 13. EXISTING SECURITY NOTIFICATIONS
+
+Inspect the existing notification implementation.
+
+Determine whether these events already generate notifications:
+
+```text
+Successful administrator login
+Failed administrator login
+Password change
+Password reset
+New administrator
+Administrator disabled
+Role change
+Permission change
+Important security event
+```
+
+Do not assume they exist.
+
+Verify the actual code.
+
+---
+
+# 14. SUCCESSFUL LOGIN NOTIFICATION
+
+If already implemented, verify successful administrator login notification.
+
+Expected information:
+
+```text
+SMEvolve Security Alert
+
+Administrator:
+Action:
+Date:
+Time:
+IP:
+Device:
+Browser:
+Operating System:
+Location:
+```
+
+Location should say:
+
+```text
+Not determined
+```
+
+when no geolocation provider is configured.
+
+Do not include:
+
+* Password
+* Password hash
+* Session ID
+* API key
+* SMTP key
+* Database credentials
+* Authentication token
+
+---
+
+# 15. FAILED LOGIN NOTIFICATION
+
+Verify the failed administrator login event.
+
+A failed login should be auditable.
+
+Where the existing security design requires an email notification, verify the email contains useful security context.
+
+Do not send an email for every ordinary typo if the application's notification design already uses threshold/risk-based logic.
+
+Avoid creating an email flood.
+
+---
+
+# 16. LOGIN NOTIFICATION RATE LIMITING
+
+Do not create a system that sends unlimited emails on repeated attacks.
+
+Use appropriate rate limiting/debouncing.
+
+For example:
+
+```text
+Repeated failed attempts
+        ↓
+Audit every attempt
+        ↓
+Email only when threshold/risk condition is met
+```
+
+If the existing implementation already has a notification policy, preserve it.
+
+---
+
+# 17. AUDIT INFORMATION
+
+Use the audit data already captured by the application.
+
+Where available, notification metadata should include:
+
+```text
+IP
+Timestamp
+User
+Action
+Browser
+OS
+Device
+Approximate location
+```
+
+Do not make geolocation a prerequisite for sending email.
+
+---
+
+# 18. GEOLOCATION
+
+The approved architecture from the previous implementation decision is:
+
+```env
+GEOLOCATION_ENABLED=false
+```
+
+by default.
+
+Do NOT call an external geolocation service for every login unless explicitly configured.
+
+When disabled:
+
+```text
+Location: Not determined
+```
+
+When later enabled:
+
+```text
+Approximate location only
+```
+
+Never store exact GPS coordinates for this notification system.
+
+Geolocation failure must never prevent login or audit logging.
+
+---
+
+# 19. ADMIN EMAIL RECIPIENT
+
+Determine the configured security notification recipient from the application.
+
+Do not invent a recipient.
+
+If the application has no configurable security recipient, inspect the existing administrator configuration and document the safest implementation for the follow-up task.
+
+Do not hard-code personal email addresses into source code.
+
+---
+
+# 20. NOTIFICATION TEMPLATES
+
+Use professional SMEvolve-branded email templates.
+
+Security notification emails should clearly indicate:
+
+```text
+SMEvolve
+Security Notification
+```
+
+and provide the relevant event details.
+
+Do not include unnecessary technical information.
+
+---
+
+# 21. HTML + TEXT EMAIL
+
+Where the existing Laravel mail implementation supports it, provide:
+
+* HTML email
+* Plain-text fallback
+
+Ensure emails remain readable on mobile devices.
+
+Do not add a frontend framework solely for email templates.
+
+---
+
+# 22. EMAIL LOGGING
+
+After SMTP configuration, ensure logs do not contain:
+
+```text
+SMTP password
+SMTP authentication token
+API key
+```
+
+Normal email logs may record:
+
+```text
+mail sent
+mail failed
+recipient
+message ID
+```
+
+where appropriate.
+
+Avoid excessive sensitive logging.
+
+---
+
+# 23. BREVO VERIFICATION
+
+If accessible, verify the message appears in Brevo's transactional email activity.
+
+Confirm:
+
+```text
+Accepted
+Delivered
+```
+
+or accurately report:
+
+```text
+Accepted but delivery pending
+```
+
+Do not claim delivery solely from Laravel's successful send response.
+
+---
+
+# 24. DOMAIN AUTHENTICATION
+
+Verify that `smevolve.tech` remains authenticated in Brevo.
+
+Do not modify:
+
+* Zoho MX
+* unrelated Namecheap DNS records
+* unrelated subdomains
+
+Only change Brevo-related DNS records if Brevo explicitly reports an authentication problem.
+
+---
+
+# 25. FROM DOMAIN
+
+The production sender should be:
+
+```text
+hello@smevolve.tech
+```
+
+Do not use:
+
+```text
+hello@example.com
+```
+
+Do not leave the Laravel default sender in production.
+
+---
+
+# 26. DEVELOPMENT MAIL CONFIGURATION
+
+Do not alter local development configuration unnecessarily.
+
+Production and development environments may use different mail drivers.
+
+Production must use Brevo SMTP.
+
+---
+
+# 27. QUEUES
+
+Current production configuration uses:
+
+```env
+QUEUE_CONNECTION=sync
+```
+
+Do not introduce Redis or a queue worker during this prompt.
+
+If email sending is currently synchronous, verify that it works reliably.
+
+Document queue-based email delivery as a future scalability option if needed.
+
+---
+
+# 28. SECURITY
+
+Ensure:
+
+```text
+SMTP credentials
+API credentials
+Database credentials
+APP_KEY
+GROQ_API_KEY
+```
+
+remain outside Git.
+
+Run an appropriate Git check to confirm no new secrets have been committed.
+
+Do not print secrets during the check.
+
+---
+
+# 29. GITHUB VERIFICATION
+
+Verify:
+
+```text
+.env
+production secrets
+SMTP credentials
+```
+
+remain ignored.
+
+If any real credential has accidentally entered Git:
+
+STOP.
+
+Do not simply delete it from the current working tree.
+
+Report the exposure and recommend credential rotation and history cleanup.
+
+---
+
+# 30. TEST ADMIN LOGIN
+
+After SMTP configuration:
+
+1. Open `/admin/login`.
+2. Perform a successful login.
+3. Verify the audit event.
+4. Verify the security notification if implemented.
+5. Confirm the admin dashboard loads.
+
+Do not record passwords.
+
+---
+
+# 31. TEST FAILED LOGIN
+
+Perform one controlled invalid login.
+
+Verify:
+
+```text
+Authentication fails
+Audit event recorded
+No stack trace
+No credentials exposed
+Notification policy works
+```
+
+Do not perform excessive failed attempts.
+
+---
+
+# 32. TEST PASSWORD-RELATED EVENTS
+
+If password change/reset functionality exists, inspect the notification behavior.
+
+Do not reset production administrator passwords unnecessarily.
+
+Do not include passwords in notifications.
+
+---
+
+# 33. ADMIN ACCESS PROBLEM
+
+If `/admin/login` or administrator authentication fails during this prompt:
+
+STOP feature work.
+
+Diagnose:
+
+```text
+Application logs
+Authentication configuration
+Database connection
+Admin record
+is_active
+Guard
+Session configuration
+Cache
+```
+
+Do not create a new administrator account as a workaround without first identifying the cause.
+
+Do not reset or modify the production database destructively.
+
+---
+
+# 34. AI CONFIGURATION
+
+Do not use this prompt to redesign AI.
+
+However, verify that the SMTP changes do not break:
+
+```text
+AI status
+AI chat
+AI endpoints
+```
+
+If AI remains disabled, record it separately.
+
+Do not print `GROQ_API_KEY`.
+
+---
+
+# 35. FINAL EMAIL TEST MATRIX
+
+Complete:
+
+```text
+SMTP configuration        PASS / FAIL
+SMTP authentication       PASS / FAIL
+TLS                        PASS / FAIL
+Laravel mail transport    PASS / FAIL
+Test email accepted       PASS / FAIL
+Test email delivered      PASS / FAIL
+From address              PASS / FAIL
+Brevo authentication      PASS / FAIL
+Admin success email       PASS / FAIL / NOT IMPLEMENTED
+Admin failed-login email  PASS / FAIL / NOT IMPLEMENTED
+Email failure handling    PASS / FAIL
+Secrets protected         PASS / FAIL
+```
+
+---
+
+# 36. DO NOT IMPLEMENT
+
+Do NOT implement:
+
+```text
+Dashboard redesign
+Analytics redesign
+Google Analytics
+AI Dashboard redesign
+Server-side page-view tracking
+Chart.js
+Redis
+AWS/S3
+New hosting infrastructure
+```
+
+These belong to later prompts.
+
+---
+
+# 37. PRODUCTION SAFETY
+
+Do not:
+
+```text
+migrate:fresh
+db:wipe
+truncate production tables
+delete production users
+delete production audit records
+delete production analytics
+```
+
+Do not modify unrelated production functionality.
+
+---
+
+# 38. FINAL REPORT
+
+Return:
+
+```text
+SMEvolve Production Email Status
+
+SMTP:
+PASS / FAIL
+
+Brevo:
+PASS / FAIL
+
+Domain authentication:
+PASS / FAIL
+
+Test email:
+PASS / FAIL
+
+Delivery:
+PASS / FAIL
+
+Security notifications:
+PASS / FAIL / PARTIAL / NOT IMPLEMENTED
+
+Successful login notification:
+PASS / FAIL / NOT IMPLEMENTED
+
+Failed login notification:
+PASS / FAIL / NOT IMPLEMENTED
+
+Password notifications:
+PASS / FAIL / NOT IMPLEMENTED
+
+Secrets:
+PASS / FAIL
+
+Admin login:
+PASS / FAIL
+
+Outstanding issues:
+[List]
+
+Manual actions required:
+[List]
+
+Files changed:
+[List]
+
+Commit:
+[commit hash]
+
+Deployment status:
+PASS / WARNING / FAIL
+```
+
+Never include:
+
+```text
+SMTP password
+GROQ API key
+APP_KEY
+Database password
+Session secrets
+```
+
+in the final report.
+
+---
+
+# 39. COMPLETION CRITERIA
+
+Prompt 028 is complete only when:
+
+```text
+✓ Brevo SMTP configured
+✓ Laravel recognizes SMTP configuration
+✓ Test email successfully accepted
+✓ Test email delivery verified
+✓ hello@smevolve.tech is used as sender
+✓ SMTP secrets are protected
+✓ Security notification system has been verified
+✓ Failed email does not break authentication
+✓ Admin login still works
+✓ No secrets committed to GitHub
+✓ Production configuration cached correctly
+✓ Changes committed and pushed
+✓ Production deployment verified
+```
+
+If any item cannot be verified, clearly report:
+
+```text
+NOT VERIFIED
+```
+
+rather than assuming success.
+
+# FINAL INSTRUCTION
+
+Execute Prompt 028 against the existing SMEvolve production deployment.
+
+Preserve all working functionality from Prompt 027.
+
+Do not perform unrelated feature development.
+
+Do not expose credentials.
+
+Do not fabricate email delivery results.
+
+Fix only issues directly required to make production email and security notifications operational.
+
+After completion, provide the final production email/security notification report.

@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\AdminAnalyticsController;
 use App\Http\Controllers\Admin\AdminAuditController;
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminChatbotController;
+use App\Http\Controllers\Admin\AdminContactController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminNotificationController;
 use App\Http\Controllers\Admin\AdminPasswordResetController;
@@ -85,6 +86,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::post('/{quote}/status', [AdminQuoteController::class, 'updateStatus'])
                 ->middleware('admin.permission:quotes.update_status')
                 ->name('status');
+        });
+
+        Route::prefix('contact')->name('contact.')->group(function () {
+            Route::get('/', [AdminContactController::class, 'index'])
+                ->middleware('admin.permission:contact.view')
+                ->name('index');
+            Route::get('/{contactMessage}', [AdminContactController::class, 'show'])
+                ->middleware('admin.permission:contact.view')
+                ->name('show');
         });
 
         Route::get('/chatbot', [AdminChatbotController::class, 'index'])

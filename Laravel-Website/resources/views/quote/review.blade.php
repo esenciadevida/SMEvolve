@@ -40,6 +40,7 @@
     :title="'Review Your Quote Details'"
     description="Check your details before sending your request to SMEvolve."
     :canonical="route('quote')"
+    robots="noindex, follow"
 >
     <div class="bg-gray-50 py-10 dark:bg-dark lg:py-14">
         <div class="mx-auto max-w-site px-6 lg:px-8">

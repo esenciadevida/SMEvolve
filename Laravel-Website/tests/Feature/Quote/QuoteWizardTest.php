@@ -3,6 +3,7 @@
 namespace Tests\Feature\Quote;
 
 use App\Http\Controllers\QuoteController;
+use App\Mail\QuoteRequest;
 use App\Models\QuoteSession;
 use App\Models\QuoteSubmission;
 use App\Services\Quote\QuoteSessionService;
@@ -10,6 +11,7 @@ use Database\Seeders\QuoteRequirementSeeder;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
@@ -216,6 +218,27 @@ class QuoteWizardTest extends TestCase
         $this->get(route('quote.confirmation', $submission->reference))
             ->assertOk()
             ->assertSee($submission->reference);
+    }
+
+    public function test_submission_records_admin_notification_and_sends_quote_email(): void
+    {
+        Mail::fake();
+
+        $session = $this->completeSession();
+
+        $this->post(route('quote.submit', $session->uuid), [
+            'session_id' => $this->sessionId,
+            'preferred_contact_method' => 'whatsapp',
+        ])->assertRedirect();
+
+        $submission = QuoteSubmission::where('quote_session_id', $session->id)->firstOrFail();
+
+        $this->assertDatabaseHas('admin_notifications', [
+            'event' => 'business.quote_requested',
+            'subject' => 'New quote request',
+        ]);
+
+        Mail::assertSent(QuoteRequest::class, fn (QuoteRequest $mail) => $mail->submission->is($submission));
     }
 
     public function test_submitted_session_redirects_to_confirmation(): void

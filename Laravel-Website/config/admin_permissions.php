@@ -55,6 +55,12 @@ return [
         'risk' => 'medium',
     ],
 
+    'contact.view' => [
+        'label' => 'View Contact Messages',
+        'description' => 'View and read contact messages submitted on the website.',
+        'risk' => 'medium',
+    ],
+
     'portfolio.view' => [
         'label' => 'View Portfolio',
         'description' => 'View portfolio projects and their categories.',

@@ -2,6 +2,7 @@
     'title' => null,
     'description' => null,
     'canonical' => null,
+    'robots' => null,
 ])
 
 @php
@@ -9,7 +10,8 @@
         ? (str_contains($title, config('app.name')) ? $title : $title.', '.config('app.name'))
         : config('app.name');
     $pageDescription = filled($description) ? $description : config('seo.default_description');
-    $canonicalUrl = $canonical ?: url()->current();
+    $canonicalUrl = $canonical ?: (request()->path() === '' ? route('home') : url(request()->path()));
+    $robotsValue = $robots ?: config('seo.robots');
 
     $seo = config('seo');
     $ogImage = $seo['og']['image'] ? url($seo['og']['image']) : null;
@@ -24,7 +26,7 @@
         <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
         <title>{{ $pageTitle }}</title>
         <meta name="description" content="{{ $pageDescription }}">
-        <meta name="robots" content="{{ $seo['robots'] }}">
+        <meta name="robots" content="{{ $robotsValue }}">
 
         <link rel="icon" type="image/png" sizes="64x64" href="{{ asset('favicon.png') }}">
         <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">

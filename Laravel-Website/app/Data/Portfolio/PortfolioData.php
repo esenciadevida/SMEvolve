@@ -81,6 +81,7 @@ class PortfolioData
             'features' => $project->features ?? [],
             'outcome' => $project->outcome ?? [],
             'meta' => $project->meta ?? [],
+            'updated_at' => $project->updated_at?->toIso8601String(),
         ];
     }
 

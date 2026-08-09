@@ -5,6 +5,7 @@
 <x-layouts.app
     :title="'Request Received'"
     description="Thank you, your quote request has been received. SMEvolve will get back to you shortly."
+    robots="noindex, follow"
 >
     <div class="bg-gray-50 py-16 dark:bg-dark lg:py-24">
         <div class="mx-auto max-w-3xl px-6 lg:px-8">

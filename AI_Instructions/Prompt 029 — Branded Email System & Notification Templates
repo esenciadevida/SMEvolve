@@ -1,0 +1,1122 @@
+# SMEvolve
+
+# Prompt 029 — Branded Email System & Notification Templates
+
+**Project:** SMEvolve
+**Environment:** Production
+**Hosting:** Hostinger
+**Domain:** smevolve.tech
+**Mail Provider:** Brevo SMTP
+**Primary Sender:** [hello@smevolve.tech](mailto:hello@smevolve.tech)
+
+---
+
+# 1. OBJECTIVE
+
+Upgrade the SMEvolve email system into a professional, branded, responsive transactional email system.
+
+The current email infrastructure should remain intact.
+
+This prompt focuses on:
+
+* Email branding
+* Email layout
+* Email templates
+* Security notification presentation
+* Business notification presentation
+* Responsive design
+* Consistent typography
+* SMEvolve logo/branding
+* Reusable Blade email components
+* Plain-text fallbacks
+* Consistent CTA buttons
+* Professional footer
+* Email client compatibility
+
+Do NOT redesign the Admin Dashboard in this prompt.
+
+Do NOT change the SMTP provider.
+
+Do NOT introduce a new email provider.
+
+Do NOT modify DNS unless absolutely required.
+
+---
+
+# 2. EXISTING EMAIL INFRASTRUCTURE
+
+The application uses:
+
+```text
+Laravel Mail
+     ↓
+Brevo SMTP
+     ↓
+Recipient
+```
+
+The production sender is:
+
+```text
+hello@smevolve.tech
+```
+
+Preserve the existing SMTP configuration.
+
+Do not replace Brevo.
+
+Do not expose:
+
+```text
+MAIL_PASSWORD
+SMTP credentials
+GROQ_API_KEY
+APP_KEY
+DB credentials
+```
+
+---
+
+# 3. DESIGN OBJECTIVE
+
+Emails must look like they were produced by a professional technology company.
+
+They must NOT look like:
+
+* Raw Laravel emails
+* Plain PHP emails
+* Generic Bootstrap emails
+* Development/debug emails
+* Unstyled notification dumps
+
+The design should communicate:
+
+```text
+Professional
+Modern
+Clean
+Trustworthy
+Technical
+Business-oriented
+```
+
+---
+
+# 4. BRANDING
+
+Use the existing SMEvolve brand identity from the website.
+
+Do not invent a completely different visual identity.
+
+Use:
+
+* Existing SMEvolve logo where available
+* Existing brand colors
+* Existing typography direction
+* Existing visual language
+* Appropriate whitespace
+* Consistent button styling
+
+If the exact brand color values are already defined in the application, reuse them.
+
+Do not introduce arbitrary colors that conflict with the website.
+
+---
+
+# 5. SHARED EMAIL LAYOUT
+
+Create one reusable email layout.
+
+Preferred structure:
+
+```text
+resources/views/emails/
+├── layouts/
+│   └── smevolve.blade.php
+├── components/
+│   ├── header.blade.php
+│   ├── footer.blade.php
+│   ├── button.blade.php
+│   ├── info-card.blade.php
+│   ├── alert.blade.php
+│   └── divider.blade.php
+├── security/
+├── quotes/
+├── contact/
+└── system/
+```
+
+Use Laravel Blade components where appropriate.
+
+Do not duplicate the entire email HTML structure in every notification.
+
+---
+
+# 6. EMAIL STRUCTURE
+
+The shared layout should contain:
+
+```text
+Header
+↓
+Logo / SMEvolve branding
+↓
+Email title
+↓
+Optional subtitle
+↓
+Main content
+↓
+Information cards
+↓
+CTA
+↓
+Security/business note
+↓
+Footer
+```
+
+---
+
+# 7. HEADER
+
+Create a clean SMEvolve header.
+
+Example:
+
+```text
+SMEvolve
+```
+
+with the official logo if available.
+
+The header must be visually distinct but not oversized.
+
+Avoid excessive graphics that increase email size.
+
+---
+
+# 8. LOGO
+
+If the SMEvolve logo is available as a production asset, use it appropriately.
+
+Prefer an email-safe hosted image URL or an appropriately embedded asset.
+
+Do not use a local development path.
+
+Do not reference:
+
+```text
+localhost
+127.0.0.1
+file://
+```
+
+The email must render correctly for an external recipient.
+
+If the logo cannot reliably be hosted, use a clean text-based SMEvolve wordmark fallback.
+
+---
+
+# 9. EMAIL WIDTH
+
+Use a conservative email width suitable for major clients.
+
+Target approximately:
+
+```text
+600–680px
+```
+
+with responsive behavior for smaller screens.
+
+Do not create excessively wide emails.
+
+---
+
+# 10. RESPONSIVE DESIGN
+
+Emails must work on:
+
+* Desktop
+* Mobile
+* Tablet
+
+Use email-compatible techniques.
+
+Do not rely on JavaScript.
+
+Do not use unsupported interactive browser features.
+
+---
+
+# 11. EMAIL CLIENT COMPATIBILITY
+
+Design for:
+
+```text
+Gmail
+Outlook
+Apple Mail
+Yahoo Mail
+Zoho Mail
+Mobile Gmail
+```
+
+Prefer:
+
+```text
+tables
+inline styles
+safe fonts
+simple CSS
+```
+
+where required for compatibility.
+
+Do not assume modern CSS support.
+
+---
+
+# 12. TYPOGRAPHY
+
+Use a professional system font stack.
+
+Example:
+
+```css
+font-family:
+-apple-system,
+BlinkMacSystemFont,
+"Segoe UI",
+Roboto,
+Arial,
+sans-serif;
+```
+
+Do not depend on a remote web font.
+
+---
+
+# 13. COLOR SYSTEM
+
+Use the existing SMEvolve brand colors.
+
+Create semantic email states:
+
+```text
+Primary
+Success
+Warning
+Danger
+Neutral
+```
+
+Do not use bright colors excessively.
+
+Security warnings should be visually noticeable without appearing alarming unless the event is genuinely high risk.
+
+---
+
+# 14. CTA BUTTON
+
+Create a reusable CTA component.
+
+Example:
+
+```text
+[ Review Activity ]
+```
+
+The button must:
+
+* Have strong contrast
+* Be touch-friendly
+* Have rounded corners consistent with the website
+* Work in major email clients
+* Have a text-link fallback
+
+Do not use JavaScript buttons.
+
+---
+
+# 15. INFORMATION CARD
+
+Create a reusable information-card component.
+
+Example:
+
+```text
+Action
+Administrator Login
+
+Date
+09 August 2026
+
+Time
+03:42 WAT
+
+IP Address
+xxx.xxx.xxx.xxx
+
+Device
+Windows Desktop
+
+Browser
+Chrome
+
+Operating System
+Windows
+
+Location
+Lagos, Nigeria
+```
+
+Use semantic labels.
+
+Do not expose sensitive credentials.
+
+---
+
+# 16. SECURITY EMAIL DESIGN
+
+Security notifications should have a distinct but consistent style.
+
+Use:
+
+```text
+SMEvolve Security
+```
+
+or equivalent branding.
+
+Security emails should clearly communicate:
+
+* What happened
+* When it happened
+* Who performed the action
+* Where it came from
+* What the recipient should do if it was unexpected
+
+---
+
+# 17. SUCCESSFUL LOGIN EMAIL
+
+Create/update:
+
+```text
+New Administrator Login
+```
+
+Suggested structure:
+
+```text
+New administrator login detected
+
+A new login to your SMEvolve administrator account was detected.
+
+Activity details
+
+Administrator
+Date
+Time
+IP address
+Device
+Browser
+Operating system
+Location
+
+If you recognize this activity, no action is required.
+
+If you do not recognize this activity, review your administrator account immediately.
+```
+
+CTA:
+
+```text
+Review Admin Activity
+```
+
+Only include a CTA if the application has a valid destination.
+
+Do not invent a URL.
+
+---
+
+# 18. FAILED LOGIN EMAIL
+
+Create/update:
+
+```text
+Failed Administrator Login Attempt
+```
+
+Include:
+
+```text
+Administrator/account
+Date
+Time
+IP
+Device
+Browser
+OS
+Location
+```
+
+If the security system tracks repeated attempts, display:
+
+```text
+Attempt count
+```
+
+only when the value is reliable.
+
+Do not exaggerate threat severity.
+
+---
+
+# 19. PASSWORD CHANGED EMAIL
+
+Create:
+
+```text
+Administrator Password Changed
+```
+
+Content:
+
+```text
+Your SMEvolve administrator password was successfully changed.
+
+Details:
+Date
+Time
+IP
+Device
+Browser
+Location
+```
+
+Security notice:
+
+```text
+If you did not make this change, secure your account immediately.
+```
+
+Never include:
+
+* Old password
+* New password
+* Password hash
+
+---
+
+# 20. PASSWORD RESET EMAIL
+
+If the application has password reset functionality, create a professional password reset email.
+
+Include:
+
+```text
+Reset your SMEvolve password
+```
+
+CTA:
+
+```text
+Reset Password
+```
+
+Include an expiration notice if the reset token has an expiration.
+
+Never expose the actual token in visible text except as part of the required secure reset URL.
+
+Do not log the reset token.
+
+---
+
+# 21. NEW ADMINISTRATOR EMAIL
+
+Create:
+
+```text
+New Administrator Added
+```
+
+Include:
+
+```text
+Administrator name
+Email
+Role
+Created by
+Date
+Time
+```
+
+CTA:
+
+```text
+View Administrator
+```
+
+Only include if a valid authorized admin URL exists.
+
+---
+
+# 22. ROLE CHANGE EMAIL
+
+Create:
+
+```text
+Administrator Role Updated
+```
+
+Include:
+
+```text
+Administrator
+Previous role
+New role
+Changed by
+Date
+Time
+```
+
+Do not include unnecessary permission dumps.
+
+---
+
+# 23. PERMISSION CHANGE EMAIL
+
+Create:
+
+```text
+Administrator Permissions Updated
+```
+
+Include a clean summary of what changed.
+
+For example:
+
+```text
+Added:
+Quotes — View
+Portfolio — Edit
+
+Removed:
+Analytics — View
+```
+
+Only show actual changes.
+
+Do not expose internal permission IDs.
+
+---
+
+# 24. ADMINISTRATOR DISABLED EMAIL
+
+Create:
+
+```text
+Administrator Account Disabled
+```
+
+Include:
+
+```text
+Administrator
+Action performed by
+Date
+Time
+Reason
+```
+
+only if a legitimate reason exists.
+
+---
+
+# 25. QUOTE EMAIL
+
+Create a business-focused template:
+
+```text
+New Quote Request
+```
+
+Use a clean summary card:
+
+```text
+Customer
+Company
+Email
+Phone
+Service
+Budget
+Submitted
+```
+
+CTA:
+
+```text
+View Quote
+```
+
+Only use a valid production URL.
+
+Do not include unnecessary internal database information.
+
+---
+
+# 26. CONTACT MESSAGE EMAIL
+
+Create:
+
+```text
+New Contact Message
+```
+
+Include:
+
+```text
+Name
+Email
+Phone if supplied
+Subject
+Message
+Date
+Time
+```
+
+CTA:
+
+```text
+View Message
+```
+
+where supported.
+
+---
+
+# 27. SYSTEM EMAIL
+
+Create a general-purpose system notification template for future use.
+
+It should support:
+
+```text
+Title
+Summary
+Details
+Status
+CTA
+Additional note
+```
+
+---
+
+# 28. FOOTER
+
+Create a reusable SMEvolve footer.
+
+Include where appropriate:
+
+```text
+SMEvolve
+smevolve.tech
+© 2026 SMEvolve. All rights reserved.
+```
+
+Do not invent:
+
+* Physical addresses
+* Phone numbers
+* Social media URLs
+* Legal claims
+
+Only include information that actually exists in the application/company configuration.
+
+---
+
+# 29. UNSUBSCRIBE
+
+Do NOT add an unsubscribe link to mandatory security notifications.
+
+These are transactional/security emails.
+
+If marketing emails are implemented in the future, create a separate marketing email system with appropriate unsubscribe functionality.
+
+---
+
+# 30. PRIVACY
+
+Do not include unnecessary personal information.
+
+For security emails, only include information required to help the administrator identify the event.
+
+For example:
+
+```text
+IP
+Device
+Browser
+Location
+```
+
+are acceptable when already captured by the security/audit system.
+
+Do not include:
+
+```text
+Password
+Session ID
+API key
+SMTP credential
+Database credentials
+Authentication token
+```
+
+---
+
+# 31. LOCATION
+
+Use the existing location value.
+
+If geolocation is unavailable:
+
+```text
+Not determined
+```
+
+Do not make a live geolocation API request merely to render an email.
+
+---
+
+# 32. DATE/TIME
+
+Display dates and times in a human-readable format.
+
+Use the application's configured timezone.
+
+Where appropriate, clearly identify:
+
+```text
+WAT
+```
+
+for West Africa Time.
+
+Do not display raw database timestamps.
+
+---
+
+# 33. PLAIN TEXT FALLBACK
+
+Every important transactional email should have a plain-text representation.
+
+The plain-text version should contain the same essential information.
+
+Example:
+
+```text
+SMEvolve Security Alert
+
+A new administrator login was detected.
+
+Administrator: ...
+Date: ...
+Time: ...
+IP: ...
+Device: ...
+Browser: ...
+Location: ...
+
+If you do not recognize this activity, review your account.
+```
+
+---
+
+# 34. ACCESSIBILITY
+
+Emails should:
+
+* Use meaningful heading hierarchy
+* Have readable contrast
+* Have descriptive link text
+* Not rely exclusively on color
+* Have appropriate alt text for meaningful images
+* Remain understandable without images
+
+---
+
+# 35. DARK MODE
+
+Where practical, ensure the email remains readable in dark mode.
+
+Do not make dark-mode behavior dependent on unsupported CSS.
+
+The email must remain functional even if the email client ignores dark-mode styling.
+
+---
+
+# 36. SECURITY
+
+Do not place secrets in email templates.
+
+Do not expose:
+
+```text
+SMTP password
+GROQ API key
+APP_KEY
+DB password
+session secrets
+internal tokens
+```
+
+Do not log rendered emails if doing so could expose sensitive data.
+
+---
+
+# 37. URL HANDLING
+
+All URLs must be generated from the application's production configuration.
+
+Do not hard-code:
+
+```text
+localhost
+127.0.0.1
+development domains
+```
+
+Verify:
+
+```env
+APP_URL=https://smevolve.tech
+```
+
+or the appropriate existing production configuration.
+
+---
+
+# 38. EMAIL PREVIEW / TESTING
+
+Create a safe way to preview templates during development without exposing production data.
+
+Do not add an unauthenticated production email preview route.
+
+If a preview route already exists, ensure it is protected or disabled in production.
+
+---
+
+# 39. TESTING MATRIX
+
+Test at minimum:
+
+```text
+✓ Successful login email
+✓ Failed login email
+✓ Password changed email
+✓ Password reset email if implemented
+✓ New administrator email
+✓ Role change email
+✓ Permission change email
+✓ Administrator disabled email
+✓ New quote email
+✓ Contact message email
+```
+
+Only test events that actually exist in the application.
+
+---
+
+# 40. EMAIL CONTENT TEST
+
+For each email verify:
+
+```text
+✓ Correct branding
+✓ Correct logo/wordmark
+✓ Correct sender
+✓ Correct subject
+✓ Correct recipient
+✓ Correct timestamp
+✓ Correct dynamic data
+✓ Responsive layout
+✓ CTA works
+✓ No broken links
+✓ No missing variables
+✓ No secrets
+✓ Plain-text fallback
+```
+
+---
+
+# 41. SMTP PRESERVATION
+
+Do not modify working SMTP credentials or transport configuration unnecessarily.
+
+If SMTP is already working from Prompt 028:
+
+```text
+KEEP IT WORKING
+```
+
+Only change the email presentation/template layer.
+
+---
+
+# 42. PRODUCTION SAFETY
+
+Do not perform:
+
+```text
+migrate:fresh
+db:wipe
+truncate
+production user deletion
+production audit deletion
+```
+
+Do not delete existing notification functionality before verifying the replacement.
+
+---
+
+# 43. GIT
+
+After implementation:
+
+```text
+git status
+git diff
+```
+
+Review all changes.
+
+Do not commit:
+
+```text
+.env
+SMTP credentials
+API keys
+production secrets
+```
+
+Commit only the email branding/template implementation.
+
+---
+
+# 44. DEPLOYMENT
+
+After successful local/testing verification:
+
+1. Commit the changes.
+2. Push to the approved GitHub branch.
+3. Deploy to Hostinger using the existing deployment workflow.
+4. Clear/cache Laravel configuration only if necessary.
+5. Verify production email rendering and delivery.
+
+Do not reset production to an unrelated commit.
+
+---
+
+# 45. FINAL REPORT
+
+Return:
+
+```text
+SMEvolve Email Branding Report
+
+Shared layout:
+PASS / FAIL
+
+Branding:
+PASS / FAIL
+
+Logo:
+PASS / FAIL
+
+Responsive design:
+PASS / FAIL
+
+Plain-text fallback:
+PASS / FAIL
+
+Security templates:
+PASS / FAIL / PARTIAL
+
+Business templates:
+PASS / FAIL / PARTIAL
+
+SMTP:
+PASS / FAIL
+
+Test delivery:
+PASS / FAIL
+
+Production URLs:
+PASS / FAIL
+
+Secrets protected:
+PASS / FAIL
+
+Git:
+PASS / FAIL
+
+Deployment:
+PASS / FAIL
+
+Files changed:
+[List]
+
+Commit:
+[hash]
+
+Outstanding issues:
+[List]
+```
+
+Do not include credentials.
+
+---
+
+# 46. COMPLETION CRITERIA
+
+This prompt is complete when:
+
+```text
+✓ Shared SMEvolve email layout exists
+✓ Branding matches website
+✓ Professional header exists
+✓ Logo/wordmark works
+✓ Professional footer exists
+✓ Security emails are styled
+✓ Business emails are styled
+✓ Responsive design works
+✓ Plain-text fallback exists
+✓ Dynamic variables render correctly
+✓ Production URLs work
+✓ SMTP continues working
+✓ Test email delivered
+✓ No secrets committed
+✓ Changes committed
+✓ Production deployment verified
+```
+
+# FINAL INSTRUCTION
+
+Implement the SMEvolve branded transactional email system while preserving all existing SMTP, notification, audit, and authentication functionality.
+
+Do not introduce unrelated application features.
+
+Do not expose credentials.
+
+Do not fabricate email delivery results.
+
+Do not create fake notification events.
+
+Use real application data and existing routes.
+
+After implementation, provide the complete email branding/testing report.

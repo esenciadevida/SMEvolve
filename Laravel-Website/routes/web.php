@@ -10,6 +10,7 @@ use App\Http\Controllers\PortfolioController;
 use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\ServicesController;
+use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
 
 require __DIR__.'/ai.php';
@@ -37,6 +38,15 @@ Route::get('/search/autocomplete', [SearchController::class, 'autocomplete'])
 
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store')->middleware('throttle:contact');
+
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
+
+Route::get('/robots.txt', function () {
+    return response(file_get_contents(public_path('robots.txt')), 200, [
+        'Content-Type' => 'text/plain; charset=UTF-8',
+        'Cache-Control' => 'public, max-age=86400',
+    ]);
+})->name('robots');
 
 Route::prefix('quote')->group(function () {
     Route::get('/', [QuoteController::class, 'index'])->name('quote');

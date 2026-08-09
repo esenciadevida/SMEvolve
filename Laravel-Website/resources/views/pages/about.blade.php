@@ -3,9 +3,9 @@
 @endphp
 
 <x-layouts.app
-    :title="'About'"
+    :title="'About SMEvolve'"
     :description="$aboutDescription"
-    :canonical="url()->current()"
+    :canonical="route('about')"
 >
     <x-slot name="structuredData">
         <script type="application/ld+json">

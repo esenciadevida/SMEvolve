@@ -10,6 +10,7 @@
     :title="'Get a Free Quote'"
     description="Share a few details about your project and SMEvolve will prepare a clear, tailored proposal, including scope, timeline and next steps."
     :canonical="route('quote')"
+    robots="noindex, follow"
 >
     <x-sections.page-hero
         id="quote"

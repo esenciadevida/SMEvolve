@@ -7,8 +7,10 @@ use App\Exceptions\Quote\QuoteSubmissionException;
 use App\Http\Requests\Quote\QuoteAiActionRequest;
 use App\Http\Requests\Quote\StoreQuoteStepRequest;
 use App\Http\Requests\Quote\SubmitQuoteWizardRequest;
+use App\Mail\QuoteRequest;
 use App\Models\QuoteSession;
 use App\Models\QuoteSubmission;
+use App\Services\Admin\AdminNotificationService;
 use App\Services\AI\AIException;
 use App\Services\AI\QuoteAiService;
 use App\Services\Quote\QuoteReviewService;
@@ -29,6 +31,7 @@ class QuoteController extends Controller
         private readonly QuoteSubmissionService $submissionService,
         private readonly QuoteReviewService $reviewService,
         private readonly QuoteAiService $quoteAiService,
+        private readonly AdminNotificationService $notifications,
     ) {}
 
     public function index(Request $request): View
@@ -150,6 +153,15 @@ class QuoteController extends Controller
                 ->withErrors(['submit' => $e->getMessage()])
                 ->withInput();
         }
+
+        $this->notifications->notify(
+            event: 'business.quote_requested',
+            subject: 'New quote request',
+            messageLines: [sprintf('A new quote request (reference %s) has been submitted.', $result['reference'])],
+            actionUrl: route('admin.quotes.show', $result['submission']),
+            actionText: 'View quote request',
+            mail: new QuoteRequest($result['submission']),
+        );
 
         return redirect()->route('quote.confirmation', $result['reference']);
     }

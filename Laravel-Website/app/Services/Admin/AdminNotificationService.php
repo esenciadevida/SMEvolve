@@ -6,6 +6,7 @@ use App\Mail\SecurityAlert;
 use App\Models\Administrator;
 use App\Models\AdminNotification;
 use App\Models\AdminNotificationPreference;
+use Illuminate\Mail\Mailable;
 use Illuminate\Support\Facades\Mail;
 
 /**
@@ -101,6 +102,8 @@ class AdminNotificationService
         ?string $actionUrl = null,
         ?string $actionText = null,
         array $details = [],
+        ?Mailable $mail = null,
+        ?string $note = null,
     ): void {
         if (! isset($this->events()[$event])) {
             return;
@@ -121,15 +124,18 @@ class AdminNotificationService
             ]);
 
             try {
+                $mail ??= new SecurityAlert(
+                    event: $event,
+                    subjectLine: $subject,
+                    messageLines: $messageLines,
+                    actionUrl: $actionUrl,
+                    actionText: $actionText,
+                    details: $details,
+                    note: $note,
+                );
+
                 Mail::to($administrator->email)
-                    ->send(new SecurityAlert(
-                        event: $event,
-                        subjectLine: $subject,
-                        messageLines: $messageLines,
-                        actionUrl: $actionUrl,
-                        actionText: $actionText,
-                        details: $details,
-                    ));
+                    ->send($mail);
 
                 $notification->update([
                     'status' => AdminNotification::STATUS_SENT,

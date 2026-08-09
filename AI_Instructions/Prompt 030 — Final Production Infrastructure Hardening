@@ -1,0 +1,783 @@
+# SMEvolve
+
+# Prompt 030 — Final Production Infrastructure Hardening
+
+**Project:** SMEvolve
+**Environment:** Production
+**Domain:** smevolve.tech
+**Hosting:** Hostinger
+**Application:** Laravel
+
+---
+
+## 1. OBJECTIVE
+
+Complete the remaining production infrastructure and security hardening tasks identified by Prompt 027.
+
+The following items remain:
+
+1. Purge stale Hostinger/LiteSpeed/CDN cache.
+2. Schedule automated daily database backups.
+3. Remove the exposed `X-Powered-By: PHP/8.4.19` response header.
+4. Enable HSTS safely after verifying HTTPS.
+5. Perform a final production smoke test.
+6. Verify that existing functionality remains intact.
+
+Do NOT redesign the Admin Dashboard.
+
+Do NOT implement Google Analytics.
+
+Do NOT modify the AI system.
+
+Do NOT change SMTP.
+
+Do NOT introduce Redis.
+
+Do NOT introduce AWS/S3.
+
+Do NOT make unrelated application changes.
+
+---
+
+# 2. CURRENT BACKUP INFRASTRUCTURE
+
+Prompt 027 created:
+
+```text
+/home/u226366554/backup.sh
+```
+
+and:
+
+```text
+/home/u226366554/backups/
+```
+
+The backup script:
+
+* Reads credentials from Laravel configuration.
+* Uses `mysqldump`.
+* Uses `--single-transaction`.
+* Compresses with gzip.
+* Retains 14 backups.
+* Successfully produced a verified backup.
+* Backup contained 35 tables.
+
+Do NOT rewrite the backup system unless testing demonstrates a problem.
+
+---
+
+# 3. VERIFY BACKUP SCRIPT
+
+Run a controlled backup manually:
+
+```bash
+/bin/bash /home/u226366554/backup.sh
+```
+
+Verify:
+
+```text
+Exit status = 0
+New .sql.gz file exists
+File is not empty
+gzip integrity is valid
+Database dump is readable
+Old backups are retained according to policy
+```
+
+Do not expose database credentials.
+
+---
+
+# 4. VERIFY BACKUP INTEGRITY
+
+Test the latest backup:
+
+```bash
+gzip -t /home/u226366554/backups/<latest-backup>.sql.gz
+```
+
+Expected:
+
+```text
+PASS
+```
+
+Do not restore over the production database.
+
+If a restore test is desired, use a separate temporary database only if the hosting environment safely supports it.
+
+Do not modify the production database.
+
+---
+
+# 5. HOSTINGER CRON
+
+Hostinger did not expose a usable `crontab` binary through SSH during Prompt 027.
+
+Therefore configure the scheduled task through:
+
+```text
+hPanel
+→ Websites
+→ smevolve.tech
+→ Advanced
+→ Cron Jobs
+```
+
+Create a daily cron job.
+
+Recommended schedule:
+
+```text
+03:30
+```
+
+Command:
+
+```bash
+/bin/bash /home/u226366554/backup.sh
+```
+
+Use the appropriate Hostinger cron configuration for the account.
+
+Do not create duplicate cron jobs.
+
+Before adding a new job, inspect existing cron jobs.
+
+---
+
+# 6. BACKUP RETENTION
+
+Maintain approximately:
+
+```text
+14 backups
+```
+
+Do not allow unlimited backup accumulation.
+
+Do not delete the backup directory.
+
+Do not store backups inside:
+
+```text
+public_html
+```
+
+Backups must remain outside the web-accessible document root.
+
+---
+
+# 7. BACKUP SECURITY
+
+Verify:
+
+```text
+/home/u226366554/backups/
+```
+
+is not publicly accessible.
+
+Do not create a public download endpoint.
+
+Do not expose:
+
+```text
+database password
+database dump
+.env
+backup credentials
+```
+
+through HTTP.
+
+---
+
+# 8. CACHE PURGE
+
+Prompt 027 identified stale WordPress/LiteSpeed content at:
+
+```text
+https://smevolve.tech/
+```
+
+even though Laravel was correctly deployed at the origin.
+
+Use Hostinger hPanel to purge the relevant cache.
+
+Navigate to the current Hostinger cache/CDN controls for:
+
+```text
+smevolve.tech
+```
+
+Purge:
+
+* LiteSpeed cache
+* CDN cache
+* Hostinger cache
+
+where applicable.
+
+Do NOT modify DNS.
+
+Do NOT change the domain's hosting configuration unless required.
+
+---
+
+# 9. VERIFY CACHE PURGE
+
+After purging cache:
+
+```text
+https://smevolve.tech/
+```
+
+must serve the SMEvolve Laravel application.
+
+Verify:
+
+```text
+Title = SMEvolve
+Laravel homepage = visible
+No WordPress placeholder
+```
+
+Also verify:
+
+```text
+https://smevolve.tech/about
+https://smevolve.tech/services
+https://smevolve.tech/portfolio
+https://smevolve.tech/contact
+https://smevolve.tech/admin/login
+```
+
+---
+
+# 10. CACHE-BUSTED VERIFICATION
+
+Do not rely solely on a browser's cached result.
+
+Test with:
+
+```text
+curl
+```
+
+or another cache-busting mechanism.
+
+Confirm the response originates from the current Laravel application.
+
+---
+
+# 11. X-POWERED-BY HEADER
+
+Prompt 027 reported:
+
+```text
+X-Powered-By: PHP/8.4.19
+```
+
+This reveals unnecessary implementation information.
+
+Remove it if safely possible.
+
+Preferred approach:
+
+Configure the production PHP/Hostinger environment so PHP does not expose:
+
+```text
+X-Powered-By
+```
+
+Do not modify application behavior unnecessarily.
+
+---
+
+# 12. VERIFY HEADER REMOVAL
+
+Run:
+
+```bash
+curl -I https://smevolve.tech/
+```
+
+Confirm:
+
+```text
+X-Powered-By
+```
+
+is absent.
+
+If Hostinger prevents removal at the account level, document the limitation instead of introducing a fragile workaround.
+
+---
+
+# 13. HSTS
+
+Enable HTTP Strict Transport Security only after confirming HTTPS is fully operational.
+
+First verify:
+
+```text
+http://smevolve.tech
+```
+
+redirects safely to:
+
+```text
+https://smevolve.tech
+```
+
+Verify all important application routes work correctly over HTTPS.
+
+---
+
+# 14. HSTS CONFIGURATION
+
+If Hostinger provides a safe HSTS configuration through hPanel, enable it.
+
+Use an appropriate production policy.
+
+Do not immediately use:
+
+```text
+includeSubDomains
+preload
+```
+
+unless all current and future subdomains are confirmed to support HTTPS.
+
+Prefer a conservative initial policy.
+
+---
+
+# 15. HSTS VERIFICATION
+
+After enabling HSTS:
+
+```bash
+curl -I https://smevolve.tech/
+```
+
+Confirm:
+
+```text
+Strict-Transport-Security
+```
+
+is present.
+
+Do not enable HSTS if HTTPS has unresolved problems.
+
+---
+
+# 16. SECURITY HEADER REGRESSION TEST
+
+Verify existing headers remain present:
+
+```text
+X-Frame-Options
+X-Content-Type-Options
+Referrer-Policy
+Permissions-Policy
+Content-Security-Policy
+```
+
+Do not remove existing security headers.
+
+---
+
+# 17. COOKIE SECURITY
+
+Verify production cookies remain:
+
+```text
+Secure
+HttpOnly
+SameSite=Lax
+```
+
+Do not weaken cookie security.
+
+---
+
+# 18. HTTPS REGRESSION
+
+Verify:
+
+```text
+HTTP → HTTPS
+HTTPS → Laravel
+```
+
+No redirect loops.
+
+No mixed-content errors.
+
+No HTTP assets.
+
+---
+
+# 19. PUBLIC ROUTES
+
+Verify:
+
+```text
+/
+ /about
+ /services
+ /packages
+ /portfolio
+ /faq
+ /search
+ /quote
+ /contact
+ /privacy
+ /terms
+ /cookies
+```
+
+Expected:
+
+```text
+HTTP 200
+```
+
+where applicable.
+
+---
+
+# 20. ERROR HANDLING
+
+Verify:
+
+```text
+/nonexistent-route
+```
+
+returns:
+
+```text
+404
+```
+
+and does not expose:
+
+* Stack traces
+* File paths
+* Database credentials
+* Environment variables
+* Debug information
+
+---
+
+# 21. ADMIN LOGIN
+
+Verify:
+
+```text
+/admin/login
+```
+
+returns successfully.
+
+Do not reset administrator credentials.
+
+Do not create additional accounts.
+
+If authentication fails, stop and diagnose rather than changing credentials blindly.
+
+---
+
+# 22. AI
+
+Verify only that the infrastructure changes have not broken:
+
+```text
+/api/v1/ai/status
+```
+
+Do not change AI configuration in this prompt.
+
+Do not expose:
+
+```text
+GROQ_API_KEY
+```
+
+---
+
+# 23. EMAIL
+
+Verify only that the infrastructure changes have not broken production email.
+
+Do not modify SMTP credentials.
+
+Do not redesign email templates.
+
+Send a test only if necessary.
+
+---
+
+# 24. PAGE-VIEW TRACKING
+
+Verify that the Prompt 027 fix remains active.
+
+Load several public pages and confirm new `page_views` records are created.
+
+Do not modify the existing `PageView` implementation.
+
+---
+
+# 25. DATABASE
+
+Do not run:
+
+```text
+migrate:fresh
+db:wipe
+truncate
+```
+
+Only inspect database connectivity and backup functionality.
+
+---
+
+# 26. FILE EXPOSURE
+
+Verify these remain inaccessible:
+
+```text
+/.env
+/.env.example
+/.git/config
+/.git/HEAD
+/composer.json
+/vendor/
+/storage/logs/
+```
+
+Expected behavior should remain:
+
+```text
+403 or 404
+```
+
+as appropriate.
+
+---
+
+# 27. BACKUP CRON DUPLICATE CHECK
+
+Before creating the cron job:
+
+1. Inspect existing cron jobs.
+2. Search for `backup.sh`.
+3. If already scheduled, do not create another one.
+4. If absent, create the daily 03:30 job.
+
+---
+
+# 28. PERFORMANCE
+
+Run a basic production performance check.
+
+Verify approximately:
+
+```text
+Homepage cached response
+Admin login response
+Search response
+```
+
+Do not introduce performance dependencies.
+
+Record any major regression.
+
+---
+
+# 29. GIT STATUS
+
+Verify the working tree.
+
+Do not commit:
+
+```text
+.env
+backups
+database dumps
+credentials
+logs
+temporary files
+```
+
+Ensure `.gitignore` continues protecting sensitive files.
+
+---
+
+# 30. DEPLOYMENT
+
+If application code changes are required:
+
+1. Review changes.
+2. Commit.
+3. Push to the approved branch.
+4. Deploy using the existing workflow.
+5. Verify production.
+
+If only Hostinger configuration changes are required, do not create an unnecessary application commit.
+
+---
+
+# 31. FINAL SECURITY TEST
+
+Run a final check covering:
+
+```text
+HTTPS
+Security headers
+Cookie security
+Sensitive file protection
+Debug mode
+Authentication
+Rate limiting
+AI status
+Email
+Page views
+Database
+Backups
+Cron
+Cache
+X-Powered-By
+HSTS
+```
+
+---
+
+# 32. FINAL REPORT
+
+Return:
+
+```text
+SMEvolve Production Infrastructure Hardening Report
+
+CDN/cache purge:
+PASS / FAIL
+
+Homepage serves Laravel:
+PASS / FAIL
+
+Backup script:
+PASS / FAIL
+
+Backup integrity:
+PASS / FAIL
+
+Backup cron:
+PASS / FAIL
+
+Backup retention:
+PASS / FAIL
+
+Backup security:
+PASS / FAIL
+
+X-Powered-By removed:
+PASS / FAIL / HOSTING LIMITATION
+
+HSTS:
+PASS / FAIL / NOT ENABLED
+
+HTTPS:
+PASS / FAIL
+
+Security headers:
+PASS / FAIL
+
+Cookie security:
+PASS / FAIL
+
+Sensitive files protected:
+PASS / FAIL
+
+Admin login:
+PASS / FAIL
+
+AI:
+PASS / FAIL / NOT TESTED
+
+Email:
+PASS / FAIL / NOT TESTED
+
+Page-view tracking:
+PASS / FAIL
+
+Performance:
+PASS / FAIL
+
+Git:
+PASS / FAIL
+
+Outstanding issues:
+[List]
+
+Manual actions:
+[List]
+
+Files changed:
+[List]
+
+Commit:
+[hash or N/A]
+
+Overall status:
+PASS / WARNING / FAIL
+```
+
+Never include passwords, API keys, database credentials, SMTP credentials, or `.env` contents.
+
+---
+
+# 33. COMPLETION CRITERIA
+
+Prompt 030 is complete when:
+
+✓ Stale production cache is purged
+✓ SMEvolve Laravel homepage is served publicly
+✓ Daily database backup is scheduled
+✓ Backup integrity is verified
+✓ Backup files remain outside public web access
+✓ `X-Powered-By` is removed or hosting limitation documented
+✓ HSTS is safely enabled or explicitly deferred
+✓ HTTPS works correctly
+✓ Existing security headers remain intact
+✓ Cookies remain secure
+✓ Sensitive files remain inaccessible
+✓ Admin login works
+✓ AI remains functional according to its current configuration
+✓ Email remains functional
+✓ Page-view tracking remains functional
+✓ No production data is deleted
+✓ No secrets are committed
+✓ Final production smoke test passes
+
+# FINAL INSTRUCTION
+
+Execute this prompt against the existing SMEvolve production deployment.
+
+Preserve everything already verified by Prompt 027 and Prompt 029.
+
+Make only the changes required for final production infrastructure hardening.
+
+Do not perform unrelated feature development.
+
+Do not expose credentials.
+
+Do not fabricate verification results.
+
+Return the complete final infrastructure hardening report.

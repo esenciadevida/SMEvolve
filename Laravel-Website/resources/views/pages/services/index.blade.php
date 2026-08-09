@@ -1,5 +1,5 @@
 <x-layouts.app
-    title="Services"
+    title="Digital Services for SMEs | SMEvolve"
     description="Explore the digital services SMEvolve offers, websites, e-commerce, custom software, mobile apps, AI, automation, and more, built to help your business grow."
     :canonical="route('services.index')"
 >

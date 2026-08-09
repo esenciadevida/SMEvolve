@@ -15,6 +15,7 @@
     :title="'Get a Quote, '.($step['label'] ?? 'Your Project')"
     :description="($step['description'] ?? null) ?: 'Answer a few quick questions and SMEvolve will prepare a tailored proposal for you.'"
     :canonical="route('quote')"
+    robots="noindex, follow"
 >
     <div class="bg-gray-50 py-10 dark:bg-dark lg:py-14">
         <div class="mx-auto max-w-site px-6 lg:px-8">
