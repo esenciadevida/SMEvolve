@@ -89,15 +89,11 @@
 
         <x-navigation.header />
 
-        <main id="main" class="flex-1 pt-22">
+        <main id="main" class="flex-1 pt-20">
             {{ $slot }}
         </main>
 
         <x-navigation.footer />
-
-        @unless (request()->routeIs('quote', 'quote.*', 'privacy-policy.index', 'terms.index', 'cookies.index'))
-            <x-floating-action-hub />
-        @endunless
 
         @unless (request()->routeIs('quote', 'quote.*', 'privacy-policy.index', 'terms.index', 'cookies.index'))
             <x-ai.chat-widget />

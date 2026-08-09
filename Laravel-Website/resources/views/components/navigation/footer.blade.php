@@ -131,11 +131,11 @@
             </nav>
         </div>
 
-        <div class="mt-12 flex flex-col items-start justify-between gap-4 border-t border-white/10 pt-8 text-sm sm:flex-row sm:items-center">
+        <div class="mt-12 flex flex-col items-start justify-between gap-6 border-t border-white/10 pt-8 text-sm sm:flex-row sm:items-center">
             <p>© {{ date('Y') }} {{ config('app.name') }}. All rights reserved.</p>
 
-            <div class="flex flex-wrap items-center gap-6">
-                <ul class="flex items-center gap-6">
+            <div class="flex flex-wrap items-center gap-x-6 gap-y-3">
+                <ul class="flex flex-wrap items-center gap-x-6 gap-y-3">
                     @foreach ($footerConfig['bottom_links'] as $link)
                         <li>
                             <a href="{{ route($link['route']) }}" class="transition hover:text-white" data-track="footer:link">{{ $link['label'] }}</a>
@@ -145,11 +145,12 @@
 
                 <a
                     href="#top"
-                    class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white/5 text-slate-300 ring-1 ring-white/10 transition hover:bg-primary-600 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/60"
+                    class="inline-flex h-9 items-center gap-1.5 rounded-full bg-white/5 px-3.5 text-slate-300 ring-1 ring-white/10 transition hover:bg-primary-600 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/60"
                     aria-label="Back to top"
                     data-track="footer:back-to-top"
                 >
-                    <x-icon name="arrow-up" class="h-5 w-5" />
+                    <x-icon name="arrow-up" class="h-4 w-4" />
+                    <span class="hidden sm:inline">Back to top</span>
                 </a>
             </div>
         </div>

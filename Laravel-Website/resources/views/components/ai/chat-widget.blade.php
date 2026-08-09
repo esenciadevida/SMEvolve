@@ -23,9 +23,8 @@
             csrfToken: '{{ csrf_token() }}',
         })"
         x-cloak
-        x-show="! $store.fab.hubOpen"
         @keydown.escape.window="close()"
-        class="fixed bottom-24 right-6 z-50"
+        class="fixed inset-x-4 bottom-4 z-50 flex flex-col items-end sm:inset-x-auto sm:bottom-6 sm:right-6"
     >
         <div
             x-show="open"
@@ -35,7 +34,7 @@
             x-transition:leave="transition ease-in duration-150"
             x-transition:leave-start="opacity-100 translate-y-0 scale-100"
             x-transition:leave-end="opacity-0 translate-y-4 scale-95"
-            class="mb-3 flex h-[35rem] w-[25rem] min-h-[20rem] max-h-[calc(100dvh-8rem)] max-w-[calc(100vw-2.5rem)] flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-card-hover ring-1 ring-black/5 dark:border-slate-700 dark:bg-slate-900 dark:ring-white/5"
+            class="mb-3 flex h-[min(70dvh,38rem)] w-full min-h-[20rem] max-h-[calc(100dvh-7rem)] flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-card-hover ring-1 ring-black/5 dark:border-slate-700 dark:bg-slate-900 dark:ring-white/5 sm:w-[25rem]"
             role="dialog"
             aria-modal="true"
             aria-labelledby="ai-chat-title"
@@ -248,17 +247,17 @@
             @click="toggle()"
             :aria-expanded="open.toString()"
             :aria-label="open ? 'Close AI assistant' : 'Open AI assistant'"
-            class="group relative flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-primary-600 to-secondary-600 text-white shadow-glow ring-1 ring-white/20 transition duration-200 hover:scale-110 hover:shadow-card-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 focus-visible:ring-offset-2"
+            class="group relative flex h-14 w-14 touch-manipulation items-center justify-center rounded-full bg-gradient-to-br from-primary-600 to-secondary-600 text-white shadow-glow ring-1 ring-white/20 transition duration-200 hover:scale-110 hover:shadow-card-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 focus-visible:ring-offset-2 sm:h-16 sm:w-16"
         >
-            <span x-show="! open" class="absolute inset-0 animate-ping rounded-full bg-primary-400/30" aria-hidden="true"></span>
-            <svg x-show="! open" xmlns="http://www.w3.org/2000/svg" class="relative h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <span x-show="! open" class="absolute inset-0 animate-ping rounded-full bg-primary-500/25" aria-hidden="true"></span>
+            <svg x-show="! open" xmlns="http://www.w3.org/2000/svg" class="relative h-6 w-6 sm:h-7 sm:w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
             </svg>
-            <x-icon name="x-mark" x-show="open" x-cloak class="relative h-6 w-6" />
+            <x-icon name="x-mark" x-show="open" x-cloak class="relative h-6 w-6 sm:h-7 sm:w-7" />
             <span
                 x-show="! open"
                 x-cloak
-                class="pointer-events-none absolute right-16 top-1/2 hidden -translate-y-1/2 whitespace-nowrap rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 opacity-0 shadow-md transition duration-200 group-hover:opacity-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 sm:block"
+                class="pointer-events-none absolute right-16 top-1/2 hidden -translate-y-1/2 whitespace-nowrap rounded-full border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 opacity-0 shadow-lg transition duration-200 group-hover:opacity-100 group-focus-visible:opacity-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 sm:block sm:right-20"
             >Chat with us</span>
         </button>
     </div>

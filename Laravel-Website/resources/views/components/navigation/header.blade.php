@@ -1,16 +1,20 @@
 <div
-    x-data="{ mobileOpen: false }"
+    x-data="{ mobileOpen: false, scrolled: false }"
+    @scroll.window="scrolled = window.scrollY > 8"
     @keydown.escape.window="mobileOpen = false"
     class="relative z-50"
 >
     <header
-        class="fixed inset-x-0 top-0 z-50 border-b border-gray-200/60 bg-white/80 shadow-sm shadow-slate-900/5 backdrop-blur-xl transition duration-300 dark:border-gray-600/50 dark:bg-dark-card/80"
+        class="fixed inset-x-0 top-0 z-50 border-b transition duration-300"
+        :class="scrolled
+            ? 'border-gray-200/70 bg-white/95 shadow-md shadow-slate-900/5 backdrop-blur-xl dark:border-gray-600/50 dark:bg-dark-card/95'
+            : 'border-gray-200/60 bg-white/80 shadow-sm shadow-slate-900/5 backdrop-blur-xl dark:border-gray-600/50 dark:bg-dark-card/80'"
     >
         <div aria-hidden="true" class="h-0.5 bg-gradient-to-r from-primary-600 via-secondary-500 to-accent-500"></div>
 
-        <div class="mx-auto flex h-22 max-w-site items-center justify-between gap-6 px-6 lg:px-8">
+        <div class="mx-auto flex h-20 max-w-site items-center justify-between gap-6 px-6 lg:px-8">
             <div class="shrink-0">
-                <x-logo />
+                <x-logo size="h-16" />
             </div>
 
             <x-navigation.menu variant="desktop" />

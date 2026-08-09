@@ -62,47 +62,6 @@ document.addEventListener('alpine:init', () => {
         },
     }));
 
-    Alpine.data('actionHub', () => ({
-        open: false,
-        showTop: false,
-
-        init() {
-            this.showTop = window.scrollY > 500;
-
-            window.addEventListener('scroll', () => {
-                this.showTop = window.scrollY > 500;
-            }, { passive: true });
-
-            document.addEventListener('click', (event) => {
-                if (! this.$el.contains(event.target)) {
-                    this.close();
-                }
-            });
-        },
-
-        toggle() {
-            if (this.open) {
-                this.close();
-            } else {
-                this.open = true;
-                Alpine.store('fab').openHub();
-            }
-        },
-
-        close() {
-            this.open = false;
-            Alpine.store('fab').closeHub();
-        },
-
-        scrollTop() {
-            window.scrollTo(smoothScroll({ top: 0, behavior: 'smooth' }));
-        },
-
-        track(event, payload = {}) {
-            window.SMEvolve.track(event, payload);
-        },
-    }));
-
     Alpine.data('aiChat', (config = {}) => ({
         open: false,
         messages: [],
@@ -177,7 +136,6 @@ document.addEventListener('alpine:init', () => {
         },
 
         ensure() {
-            Alpine.store('fab').openChat();
             this.open = true;
 
             if (! this.enabled) {
@@ -201,7 +159,6 @@ document.addEventListener('alpine:init', () => {
 
         close() {
             this.open = false;
-            Alpine.store('fab').closeChat();
             this.$nextTick(() => this.$refs.launcher?.focus());
         },
 
@@ -709,29 +666,6 @@ document.addEventListener('alpine:init', () => {
             window.SMEvolve.track(event, payload);
         },
     }));
-
-    Alpine.store('fab', {
-        chatOpen: false,
-        hubOpen: false,
-
-        openChat() {
-            this.chatOpen = true;
-            this.hubOpen = false;
-        },
-
-        closeChat() {
-            this.chatOpen = false;
-        },
-
-        openHub() {
-            this.hubOpen = true;
-            this.chatOpen = false;
-        },
-
-        closeHub() {
-            this.hubOpen = false;
-        },
-    });
 
     Alpine.store('theme', {
         dark: false,
