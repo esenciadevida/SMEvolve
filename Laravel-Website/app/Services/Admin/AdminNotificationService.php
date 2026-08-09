@@ -37,6 +37,19 @@ class AdminNotificationService
     }
 
     /**
+     * Whether a notification for the given event was recorded within the
+     * trailing window. Used to debounce alert emails during repeated attacks;
+     * the underlying events remain fully audit-logged.
+     */
+    public function hasRecent(string $event, int $minutes = 15): bool
+    {
+        return AdminNotification::query()
+            ->where('event', $event)
+            ->where('created_at', '>=', now()->subMinutes($minutes))
+            ->exists();
+    }
+
+    /**
      * Merge stored preferences with the defaults for an administrator.
      *
      * @return array<string, bool>

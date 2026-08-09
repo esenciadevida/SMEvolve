@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Models\AdminAuditLog;
+
 class AdminAuthTest extends AdminTestCase
 {
     public function test_login_page_is_public(): void
@@ -64,6 +66,44 @@ class AdminAuthTest extends AdminTestCase
 
         $this->assertDatabaseMissing('admin_audit_logs', [
             'action' => 'admin.login',
+        ]);
+    }
+
+    public function test_failed_login_is_audited_every_attempt_but_alert_is_debounced(): void
+    {
+        $this->from(route('admin.login'))
+            ->post(route('admin.login.store'), [
+                'email' => 'nobody@example.com',
+                'password' => 'wrong-password',
+            ])
+            ->assertRedirect(route('admin.login'))
+            ->assertSessionHasErrors('email');
+
+        $this->from(route('admin.login'))
+            ->post(route('admin.login.store'), [
+                'email' => 'nobody@example.com',
+                'password' => 'wrong-password-again',
+            ])
+            ->assertRedirect(route('admin.login'))
+            ->assertSessionHasErrors('email');
+
+        $this->assertSame(2, AdminAuditLog::where('action', 'admin.login.failed')->count());
+        $this->assertSame(1, \App\Models\AdminNotification::where('event', 'security.login_failed')->count());
+    }
+
+    public function test_successful_login_creates_security_notification(): void
+    {
+        $role = $this->superAdminRole();
+        $admin = $this->createAdmin($role, 'boss@smevolve.tech');
+
+        $this->post(route('admin.login.store'), [
+            'email' => 'boss@smevolve.tech',
+            'password' => 'password',
+        ])->assertRedirect(route('admin.dashboard'));
+
+        $this->assertDatabaseHas('admin_notifications', [
+            'administrator_id' => $admin->id,
+            'event' => 'security.login_success',
         ]);
     }
 
