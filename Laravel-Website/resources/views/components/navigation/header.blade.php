@@ -43,7 +43,7 @@
 
                 <x-search.site-search-box class="hidden xl:block" />
 
-                <x-buttons.button href="{{ route('quote') }}" class="hidden sm:inline-flex" data-track="cta:quote:header">
+                <x-buttons.button href="{{ route('quote') }}" display="hidden sm:inline-flex" data-track="cta:quote:header">
                     Get a Free Quote
                 </x-buttons.button>
 

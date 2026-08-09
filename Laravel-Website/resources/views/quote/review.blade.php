@@ -124,7 +124,7 @@
                         <x-buttons.button
                             variant="secondary"
                             :href="route('quote.show', [$session->uuid, 'step' => 'project_type'])"
-                            class="hidden sm:inline-flex"
+                            display="hidden sm:inline-flex"
                         >
                             Edit answers
                         </x-buttons.button>

@@ -182,7 +182,7 @@
                                     <x-buttons.button
                                         variant="secondary"
                                         :href="route('quote.show', [$session->uuid, 'step' => $step_key])"
-                                        class="hidden sm:inline-flex"
+                                        display="hidden sm:inline-flex"
                                     >
                                         Save &amp; continue later
                                     </x-buttons.button>

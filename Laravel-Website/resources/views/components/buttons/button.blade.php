@@ -2,6 +2,7 @@
     'variant' => 'primary',
     'href' => null,
     'type' => 'button',
+    'display' => null,
 ])
 
 @php
@@ -12,8 +13,10 @@
         'outline-white' => 'border border-white/40 text-white hover:border-white/70 hover:bg-white/10 focus-visible:ring-white',
     ];
 
+    $displayClass = $display ? trim($display).' ' : 'inline-flex ';
+
     $classes = trim(
-        'inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold transition duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 '
+        $displayClass.'items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold transition duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 '
         .$variantClasses[$variant]
     );
 @endphp
