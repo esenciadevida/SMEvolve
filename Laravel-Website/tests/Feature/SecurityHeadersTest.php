@@ -23,6 +23,12 @@ class SecurityHeadersTest extends TestCase
             ->assertHeader('Strict-Transport-Security', 'max-age=31536000');
     }
 
+    public function test_x_powered_by_header_is_removed(): void
+    {
+        $this->get('/')
+            ->assertHeaderMissing('X-Powered-By');
+    }
+
     public function test_hsts_is_not_emitted_outside_production(): void
     {
         $this->get('/')

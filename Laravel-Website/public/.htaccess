@@ -60,4 +60,6 @@
     <FilesMatch "\.(php|html)$">
         Header set Cache-Control "no-cache, private, must-revalidate"
     </FilesMatch>
+
+    Header always unset X-Powered-By
 </IfModule>
