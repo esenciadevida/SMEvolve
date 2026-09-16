@@ -86,9 +86,47 @@ document.addEventListener('alpine:init', () => {
         },
 
         get showSuggestions() {
-            return this.available
-                && ! this.loading
-                && this.messages.filter((message) => message.role === 'user').length === 0;
+            if (! this.available || this.loading || this.error) {
+                return false;
+            }
+
+            const last = this.messages[this.messages.length - 1];
+
+            return ! last || last.role === 'assistant';
+        },
+
+        formatTime(iso) {
+            if (! iso) {
+                return '';
+            }
+
+            const date = new Date(iso);
+
+            if (Number.isNaN(date.getTime())) {
+                return '';
+            }
+
+            return date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+        },
+
+        escapeHtml(content) {
+            return String(content ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        },
+
+        linkify(content) {
+            if (! content) {
+                return content;
+            }
+
+            return this.escapeHtml(content).replace(
+                /(https?:\/\/[^\s<>]+)/gi,
+                '<a href="$1" target="_blank" rel="noopener nofollow" class="break-all font-medium text-primary-700 underline underline-offset-2 hover:text-primary-600 dark:text-primary-400 dark:hover:text-primary-300">$1</a>'
+            );
         },
 
         init() {
@@ -139,7 +177,12 @@ document.addEventListener('alpine:init', () => {
             this.open = true;
 
             if (! this.enabled) {
-                this.messages = [{ id: this.newId(), role: 'assistant', content: config.availabilityMessage }];
+                this.messages = [{
+                    id: this.newId(),
+                    role: 'assistant',
+                    content: config.availabilityMessage,
+                    time: new Date().toISOString(),
+                }];
                 this.available = false;
                 this.$nextTick(() => this.focusInput());
                 return;
@@ -148,7 +191,12 @@ document.addEventListener('alpine:init', () => {
             this.available = true;
 
             if (this.messages.length === 0) {
-                this.messages.push({ id: this.newId(), role: 'assistant', content: config.welcomeMessage });
+                this.messages.push({
+                    id: this.newId(),
+                    role: 'assistant',
+                    content: config.welcomeMessage,
+                    time: new Date().toISOString(),
+                });
             }
 
             this.$nextTick(() => {
@@ -186,7 +234,7 @@ document.addEventListener('alpine:init', () => {
                 return;
             }
 
-            this.messages.push({ id: this.newId(), role: 'user', content });
+            this.messages.push({ id: this.newId(), role: 'user', content, time: new Date().toISOString() });
             this.input = '';
             this.error = null;
             this.loading = true;
@@ -197,7 +245,12 @@ document.addEventListener('alpine:init', () => {
 
                 const data = await this.postMessage(content);
 
-                this.messages.push({ id: this.newId(), role: 'assistant', content: data.reply });
+                this.messages.push({
+                    id: this.newId(),
+                    role: 'assistant',
+                    content: data.reply,
+                    time: new Date().toISOString(),
+                });
                 this.detectHandoff(content, data.reply);
             } catch (error) {
                 this.error = error.message || 'Something went wrong. Please try again.';
@@ -254,6 +307,7 @@ document.addEventListener('alpine:init', () => {
                     role: 'assistant',
                     content: 'Would you like me to pass you to a member of the SMEvolve team?',
                     handoff: true,
+                    time: new Date().toISOString(),
                 });
             }
         },
@@ -270,7 +324,12 @@ document.addEventListener('alpine:init', () => {
 
                 this.lastReason = null;
 
-                this.messages.push({ id: this.newId(), role: 'assistant', content: data.message });
+                this.messages.push({
+                    id: this.newId(),
+                    role: 'assistant',
+                    content: data.message,
+                    time: new Date().toISOString(),
+                });
 
                 const contacts = data.contact || {};
 
@@ -280,6 +339,7 @@ document.addEventListener('alpine:init', () => {
                         role: 'assistant',
                         content: 'You can also reach us directly:',
                         contactOptions: contacts,
+                        time: new Date().toISOString(),
                     });
                 }
             } catch (error) {

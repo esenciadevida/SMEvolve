@@ -120,7 +120,8 @@
     .animate-ping,
     .animate-bounce,
     .animate-spin,
-    .animate-pulse {
+    .animate-pulse,
+    .chat-message-in {
         animation: none !important;
     }
 
@@ -160,6 +161,24 @@
 
 .chat-scroll::-webkit-scrollbar-track {
     background: transparent;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .chat-message-in {
+        animation: chat-in 0.22s ease-out both;
+    }
+
+    @keyframes chat-in {
+        from {
+            opacity: 0;
+            transform: translateY(6px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
 }
 
 @layer components {

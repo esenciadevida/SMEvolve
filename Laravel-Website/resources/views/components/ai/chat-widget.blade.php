@@ -42,7 +42,7 @@
             <div class="relative flex items-center justify-between gap-2 bg-gradient-to-br from-primary-600 via-primary-600 to-secondary-700 px-4 py-3.5 text-white">
                 <div class="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-white/15"></div>
                 <div class="flex min-w-0 items-center gap-3">
-                    <span class="relative flex h-10 w-10 flex-none items-center justify-center rounded-full bg-white/15 text-white shadow-inner ring-1 ring-white/20">
+                    <span class="relative flex h-10 w-10 flex-none items-center justify-center rounded-full bg-white/15 shadow-inner ring-1 ring-white/20">
                         <x-icon name="sparkles" class="h-5 w-5" />
                         <span x-show="available" class="absolute -right-0.5 -top-0.5 flex h-3 w-3" x-cloak>
                             <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-500 opacity-75"></span>
@@ -62,7 +62,8 @@
                         @click="newChat()"
                         aria-label="Start a new chat"
                         title="New chat"
-                        class="rounded-lg p-1.5 transition hover:bg-white/20"
+                        class="rounded-lg p-1.5 transition hover:bg-white/20 disabled:opacity-40 disabled:hover:bg-transparent"
+                        :disabled="loading"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
@@ -82,28 +83,35 @@
 
             <div
                 x-ref="messages"
-                class="chat-scroll flex flex-1 flex-col space-y-1.5 overflow-y-auto bg-slate-50 px-2.5 py-2.5 dark:bg-slate-950"
+                aria-live="polite"
+                class="chat-scroll flex flex-1 flex-col space-y-2 overflow-y-auto bg-slate-50 px-3 py-3 dark:bg-slate-950"
             >
                 <template x-for="(message, index) in messages" :key="message.id">
-                    <div
-                        class="flex w-full"
-                        :class="(message.role === 'user' ? 'justify-end items-end' : 'justify-start items-start') + (index === 0 ? ' mt-auto' : '')"
-                    >
+                    <div class="chat-message-in flex w-full items-end" :class="(message.role === 'user' ? 'justify-end' : 'justify-start') + (index === 0 ? ' mt-auto' : '')">
                         <span
                             x-show="message.role !== 'user'"
-                            class="mr-2 mt-1 flex h-7 w-7 flex-none items-center justify-center rounded-full bg-gradient-to-br from-primary-600 to-secondary-600 text-white shadow-sm"
+                            class="mr-2 flex h-7 w-7 flex-none items-center justify-center rounded-full bg-gradient-to-br from-primary-600 to-secondary-600 text-white shadow-sm ring-1 ring-primary-700/20"
                         >
                             <x-icon name="sparkles" class="h-3.5 w-3.5" />
                         </span>
                         <div
-                            class="w-fit min-w-0 max-w-[85%] rounded-2xl px-2.5 py-1.5 text-sm leading-relaxed"
+                            class="w-fit min-w-0 max-w-[82%] rounded-2xl px-3 py-2 text-sm leading-relaxed"
                             :class="message.role === 'user'
-                                ? 'rounded-br-md bg-primary-600 text-white shadow-sm'
+                                ? 'rounded-br-md bg-gradient-to-br from-primary-600 to-secondary-600 text-white shadow-md shadow-primary-600/20'
                                 : 'rounded-bl-md border border-slate-200/80 bg-white text-slate-800 shadow-sm dark:border-slate-700/70 dark:bg-slate-800 dark:text-slate-100'"
                         >
-                            <p class="whitespace-pre-wrap break-words" x-text="message.content"></p>
+                            <p
+                                class="whitespace-pre-wrap break-words"
+                                x-html="message.role === 'user' ? escapeHtml(message.content) : linkify(message.content)"
+                            ></p>
 
-                            <div x-show="message.contactOptions" class="mt-3 space-y-2">
+                            <p
+                                class="mt-1 text-[10px] font-medium leading-none"
+                                :class="message.role === 'user' ? 'text-right text-white/60' : 'text-slate-400 dark:text-slate-500'"
+                                x-text="formatTime(message.time)"
+                            ></p>
+
+                            <div x-show="message.contactOptions" class="mt-2.5 space-y-1.5">
                                 <template x-if="message.contactOptions?.phone">
                                     <a
                                         :href="`tel:${String(message.contactOptions.phone).replace(/\s+/g, '')}`"
@@ -159,7 +167,7 @@
                     </div>
                 </template>
 
-                <div x-show="showSuggestions" class="space-y-2.5">
+                <div x-show="showSuggestions" x-cloak class="chat-message-in space-y-2">
                     <p class="px-0.5 text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">Try asking</p>
                     <div class="flex flex-wrap gap-2">
                         <template x-for="suggestion in suggestions" :key="suggestion">
@@ -177,20 +185,21 @@
                     </div>
                 </div>
 
-                <div x-show="loading" class="flex w-full items-start justify-start">
-                    <span class="mr-2 mt-1 flex h-7 w-7 flex-none items-center justify-center rounded-full bg-gradient-to-br from-primary-600 to-secondary-600 text-white shadow-sm">
+                <div x-show="loading" class="chat-message-in flex w-full items-start justify-start">
+                    <span class="mr-2 flex h-7 w-7 flex-none items-center justify-center rounded-full bg-gradient-to-br from-primary-600 to-secondary-600 text-white shadow-sm ring-1 ring-primary-700/20">
                         <x-icon name="sparkles" class="h-3.5 w-3.5" />
                     </span>
-                    <div class="rounded-2xl rounded-bl-md border border-slate-200/80 bg-white px-3 py-2 text-sm text-slate-500 shadow-sm dark:border-slate-700/70 dark:bg-slate-800 dark:text-slate-400">
-                        <span class="inline-flex items-center gap-1">
+                    <div class="rounded-2xl rounded-bl-md border border-slate-200/80 bg-white px-3.5 py-2.5 text-sm shadow-sm dark:border-slate-700/70 dark:bg-slate-800">
+                        <p class="inline-flex items-center gap-1">
                             <span class="h-1.5 w-1.5 animate-bounce rounded-full bg-primary-500 [animation-delay:-0.3s]"></span>
                             <span class="h-1.5 w-1.5 animate-bounce rounded-full bg-primary-500 [animation-delay:-0.15s]"></span>
                             <span class="h-1.5 w-1.5 animate-bounce rounded-full bg-primary-500"></span>
-                        </span>
+                        </p>
+                        <p class="mt-1.5 text-[10px] font-medium text-slate-400 dark:text-slate-500">SMEvolve is thinking&hellip;</p>
                     </div>
                 </div>
 
-                <div x-show="error" class="flex items-start gap-2.5 rounded-xl border border-error-500/25 bg-error-500/10 px-3 py-2.5 text-sm text-error-700 dark:text-error-500">
+                <div x-show="error" class="chat-message-in flex items-start gap-2.5 rounded-xl border border-error-500/25 bg-error-500/10 px-3 py-2.5 text-sm text-error-700 dark:text-error-500">
                     <x-icon name="exclamation-triangle" class="mt-0.5 h-4 w-4 flex-none" />
                     <div class="min-w-0 flex-1">
                         <p class="text-sm leading-snug" x-text="error"></p>
@@ -201,7 +210,7 @@
 
             <form
                 @submit.prevent="send"
-                class="border-t border-slate-200/80 bg-white p-3 dark:border-slate-700 dark:bg-slate-900"
+                class="border-t border-slate-200/80 bg-white p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] dark:border-slate-700 dark:bg-slate-900"
             >
                 <div class="flex items-end gap-2">
                     <div class="relative flex-1">
@@ -212,7 +221,7 @@
                             @keydown.enter.prevent="send"
                             rows="1"
                             :maxlength="maxLength"
-                            :placeholder="available ? 'Ask us anything...' : 'Assistant is unavailable'"
+                            :placeholder="available ? 'Ask us anything&hellip;' : 'Assistant is unavailable'"
                             class="chat-scroll max-h-32 w-full resize-none rounded-2xl border border-slate-200 bg-slate-100 px-4 py-3 text-sm text-slate-800 transition placeholder:text-slate-400 focus:border-primary-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500/30 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:focus:bg-slate-800"
                             :disabled="loading || ! available"
                         ></textarea>
@@ -234,9 +243,15 @@
                         </svg>
                     </button>
                 </div>
-                <p class="mt-2 flex items-center justify-center gap-1 text-center text-[10px] text-slate-400 dark:text-slate-500">
-                    <x-icon name="information-circle" class="h-3 w-3" />
-                    AI assistant &middot; replies may occasionally be imperfect
+                <p class="mt-2 flex items-center justify-between gap-2 px-0.5 text-[10px] text-slate-400 dark:text-slate-500">
+                    <span class="inline-flex items-center gap-1">
+                        <x-icon name="information-circle" class="h-3 w-3" />
+                        AI assistant &middot; replies may occasionally be imperfect
+                    </span>
+                    <span class="hidden sm:inline-flex items-center gap-1">
+                        <kbd class="rounded border border-slate-300/80 bg-slate-100 px-1 py-px font-sans text-[9px] font-semibold text-slate-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-400">Enter</kbd>
+                        to send
+                    </span>
                 </p>
             </form>
         </div>
