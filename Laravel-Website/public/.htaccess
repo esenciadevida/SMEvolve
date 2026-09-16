@@ -26,6 +26,9 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
+
+    # Flag served storage files so mod_headers can add X-Robots-Tag.
+    RewriteRule ^storage/ - [E=NOINDEX:1]
 </IfModule>
 
 <IfModule mod_deflate.c>
@@ -67,4 +70,9 @@
     <FilesMatch "\.(php|html)$">
         Header set Cache-Control "no-cache, private, must-revalidate"
     </FilesMatch>
+</IfModule>
+
+<IfModule mod_headers.c>
+    # Storage files must never be indexed (defence-in-depth on top of robots).
+    Header set X-Robots-Tag "noindex, nofollow" env=NOINDEX
 </IfModule>

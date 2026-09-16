@@ -34,4 +34,20 @@ class SecurityHeadersTest extends TestCase
         $this->get('/')
             ->assertHeaderMissing('Strict-Transport-Security');
     }
+
+    public function test_noindex_header_is_set_on_api_and_admin_paths(): void
+    {
+        $this->get('/api/v1/ai/status')
+            ->assertHeader('X-Robots-Tag', 'noindex, nofollow');
+
+        $this->get('/admin/login')
+            ->assertHeader('X-Robots-Tag', 'noindex, nofollow');
+    }
+
+    public function test_noindex_header_is_not_set_on_public_pages(): void
+    {
+        $this->get('/')
+            ->assertOk()
+            ->assertHeaderMissing('X-Robots-Tag');
+    }
 }

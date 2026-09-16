@@ -12,6 +12,10 @@
         'url' => url('/'),
     ];
 
+    if (! empty(config('seo.organization.social'))) {
+        $organization['sameAs'] = config('seo.organization.social');
+    }
+
     $webPageSchema = [
         '@context' => 'https://schema.org',
         '@type' => 'WebPage',
@@ -42,6 +46,9 @@
         </script>
         <script type="application/ld+json">
         {!! json_encode(\App\Support\Breadcrumbs::schema($breadcrumbTrail), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+        </script>
+        <script type="application/ld+json">
+        {!! json_encode($organization, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
         </script>
         @if (collect($faqSchema['mainEntity'])->isNotEmpty())
             <script type="application/ld+json">

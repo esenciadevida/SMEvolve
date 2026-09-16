@@ -5,6 +5,7 @@ use App\Http\Middleware\AdminAuthenticate;
 use App\Http\Middleware\EnsureAdminHasPermission;
 use App\Http\Middleware\SecurityHeaders;
 use App\Http\Middleware\TrackPageViews;
+use App\Http\Middleware\Noindex;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -28,6 +29,8 @@ return Application::configure(basePath: dirname(__DIR__))
             SecurityHeaders::class,
             TrackPageViews::class,
         ]);
+
+        $middleware->append(Noindex::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
