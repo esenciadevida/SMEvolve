@@ -40,7 +40,7 @@
 
     <div class="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
         @if ($projects->isEmpty())
-            <p class="p-6 text-sm text-slate-500">No projects found. Add your first portfolio project to replace the built-in samples.</p>
+            <p class="p-6 text-sm text-slate-500">No projects found. Add your first portfolio project to start sharing your work.</p>
         @else
             <table class="w-full min-w-[720px] text-sm">
                 <thead class="border-b border-slate-200 bg-slate-50 text-left text-xs uppercase text-slate-500 dark:border-slate-800 dark:bg-slate-900">

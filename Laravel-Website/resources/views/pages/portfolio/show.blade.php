@@ -77,10 +77,6 @@
                         <div class="relative aspect-[4/3] w-full overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200">
                             @if ($item['image'])
                                 <x-media.image :src="$item['image']" :alt="$item['label'].', '.$project['title']" wrapperClass="h-full w-full" imgClass="h-full w-full object-cover" />
-                            @else
-                                <div class="flex h-full items-center justify-center" role="img" aria-label="{{ $item['label'] }}, placeholder preview">
-                                    <x-icon name="photo" class="h-10 w-10 text-slate-300" />
-                                </div>
                             @endif
                         </div>
                         <figcaption class="p-4">

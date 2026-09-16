@@ -13,34 +13,26 @@ class PortfolioData
     /**
      * Project content providers.
      *
-     * Database projects (when present) take precedence so portfolio
-     * content is managed from the admin portal. The code providers remain
-     * as a fallback for a fresh install with no projects yet.
+     * Portfolio content is managed exclusively from the database so the
+     * admin portal is the single source of truth. When no published
+     * projects exist yet, an empty set is returned and the public views
+     * fall back to their empty-state messaging.
      *
-     * @return array<int, PortfolioProject|object>
+     * @return array<int, PortfolioProject>
      */
     public function providers(): array
     {
-        $dbProjects = collect();
-
-        if (Schema::hasTable((new PortfolioProject)->getTable())) {
-            $dbProjects = PortfolioProject::query()
-                ->with('category')
-                ->where('is_published', true)
-                ->orderBy('sort_order')
-                ->orderBy('id')
-                ->get();
+        if (! Schema::hasTable((new PortfolioProject)->getTable())) {
+            return [];
         }
 
-        if ($dbProjects->isNotEmpty()) {
-            return $dbProjects->all();
-        }
-
-        return [
-            new Projects\SampleInventorySystem,
-            new Projects\ConceptClinicWebsite,
-            new Projects\ConceptRetailStore,
-        ];
+        return PortfolioProject::query()
+            ->with('category')
+            ->where('is_published', true)
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->get()
+            ->all();
     }
 
     /**
@@ -49,7 +41,7 @@ class PortfolioData
     public function projects(): Collection
     {
         return collect($this->providers())
-            ->map(fn ($provider) => $provider instanceof PortfolioProject ? $this->toArray($provider) : $provider->content())
+            ->map(fn (PortfolioProject $provider) => $this->toArray($provider))
             ->values();
     }
 

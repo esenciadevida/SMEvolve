@@ -14,8 +14,6 @@
     $statusColors = [
         'Completed' => 'bg-accent-500',
         'Ongoing' => 'bg-primary-400',
-        'Concept Project' => 'bg-secondary-500',
-        'Sample Project' => 'bg-primary-400',
     ];
 @endphp
 
@@ -83,10 +81,6 @@
                 <div class="relative aspect-video w-full overflow-hidden rounded-3xl bg-gradient-to-br from-primary-800 to-secondary-700 shadow-2xl shadow-black/30 ring-1 ring-inset ring-white/15">
                     @if ($image)
                         <x-media.image :src="$image" :alt="$title.' project screenshot'" loading="eager" fetchpriority="high" wrapperClass="h-full w-full" imgClass="h-full w-full object-cover" />
-                    @else
-                        <div class="absolute inset-0 flex items-center justify-center" role="img" aria-label="{{ $title }} project preview placeholder">
-                            <x-icon name="photo" class="h-16 w-16 text-white/25" />
-                        </div>
                     @endif
 
                     @if (filled($technologies))

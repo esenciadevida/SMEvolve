@@ -18,8 +18,6 @@
     $statusColors = [
         'Completed' => 'bg-accent-500',
         'Ongoing' => 'bg-primary-500',
-        'Concept Project' => 'bg-secondary-500',
-        'Sample Project' => 'bg-primary-500',
     ];
 @endphp
 
@@ -60,9 +58,15 @@
                             class="group block rounded-2xl bg-white p-3 shadow-xl shadow-black/20 dark:bg-dark-card ring-1 ring-white/20 backdrop-blur transition duration-300 hover:-translate-y-1 hover:shadow-2xl"
                         >
                             <div class="relative aspect-[16/9] overflow-hidden rounded-xl bg-gradient-to-br {{ $gradients[$loop->index] }}">
-                                <div class="absolute inset-0 flex items-center justify-center">
-                                    <x-icon name="photo" class="h-10 w-10 text-white/50" />
-                                </div>
+                                @if ($project['image'] ?? null)
+                                    <x-media.image
+                                        :src="$project['image']"
+                                        :alt="$project['title'].' project screenshot'"
+                                        icon="photo"
+                                        wrapperClass="h-full w-full"
+                                        imgClass="h-full w-full object-cover"
+                                    />
+                                @endif
                             </div>
 
                             <div class="flex items-center justify-between gap-3 px-1 pb-1 pt-3">

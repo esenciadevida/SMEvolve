@@ -63,13 +63,15 @@
         </dl>
     </x-sections.section>
 
-    <x-sections.section id="featured-projects" heading="Featured Projects" description="A selection of projects that show how we approach challenges, design solutions, and build for the long term.">
-        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            @foreach ($featured as $project)
-                <x-cards.featured-project-card :item="$project" />
-            @endforeach
-        </div>
-    </x-sections.section>
+    @if ($featured->isNotEmpty())
+        <x-sections.section id="featured-projects" heading="Featured Projects" description="A selection of projects that show how we approach challenges, design solutions, and build for the long term.">
+            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                @foreach ($featured as $project)
+                    <x-cards.featured-project-card :item="$project" />
+                @endforeach
+            </div>
+        </x-sections.section>
+    @endif
 
     <x-sections.section id="categories" heading="What We Build" description="From marketing websites to custom business software, every project fits within one of our service areas." variant="surface">
         <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -79,13 +81,26 @@
         </div>
     </x-sections.section>
 
-    <x-sections.section id="all-projects" heading="All Projects" description="Browse the full collection. Each project is shared as a sample or concept to illustrate our approach.">
-        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            @foreach ($projects as $project)
-                <x-cards.portfolio-card :item="$project" />
-            @endforeach
-        </div>
-    </x-sections.section>
+    @if ($projects->isNotEmpty())
+        <x-sections.section id="all-projects" heading="All Projects" description="Browse the full collection of projects we plan, design, and build.">
+            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                @foreach ($projects as $project)
+                    <x-cards.portfolio-card :item="$project" />
+                @endforeach
+            </div>
+        </x-sections.section>
+    @else
+        <x-sections.section id="all-projects" heading="All Projects" description="Browse the full collection of projects we plan, design, and build.">
+            <div class="mx-auto max-w-2xl rounded-2xl border border-dashed border-gray-300 bg-white px-6 py-12 text-center dark:border-gray-600 dark:bg-dark-card">
+                <x-icon name="briefcase" class="mx-auto h-12 w-12 text-gray-300" />
+                <h3 class="mt-4 text-lg font-semibold text-gray-900">We're Preparing Our Case Studies</h3>
+                <p class="mx-auto mt-2 max-w-md text-sm leading-relaxed text-gray-600">We're currently preparing our first public case studies. Check back soon to see the projects we've been building.</p>
+                <div class="mt-6 flex justify-center">
+                    <x-buttons.primary-button href="{{ route('quote') }}">Start Your Project</x-buttons.primary-button>
+                </div>
+            </div>
+        </x-sections.section>
+    @endif
 
     <x-sections.final-cta
         heading="Let's Build Your Next Digital Solution"

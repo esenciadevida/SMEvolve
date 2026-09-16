@@ -1,7 +1,7 @@
 @props([
     'id' => 'portfolio-preview',
     'heading' => 'Recent Projects',
-    'description' => 'Explore sample and concept projects that show how we plan, design, and build digital solutions for growing businesses.',
+    'description' => 'Explore real projects that show how we plan, design, and build digital solutions for growing businesses.',
     'items' => null,
 ])
 

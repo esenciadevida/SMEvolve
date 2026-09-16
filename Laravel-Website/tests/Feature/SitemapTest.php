@@ -2,6 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Data\Portfolio\PortfolioData;
+use App\Models\PortfolioCategory;
+use App\Models\PortfolioProject;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use SimpleXMLElement;
@@ -34,8 +37,10 @@ class SitemapTest extends TestCase
 
     public function test_sitemap_contains_service_and_portfolio_urls(): void
     {
+        $this->seedProject();
+
         $service = app(\App\Data\ServicesData::class)->catalog()->first();
-        $project = app(\App\Data\Portfolio\PortfolioData::class)->projects()->first();
+        $project = app(PortfolioData::class)->projects()->first();
 
         $this->get('/sitemap.xml')
             ->assertOk()
@@ -81,5 +86,22 @@ class SitemapTest extends TestCase
         foreach (config('seo.sitemap.static_routes') as $routeName) {
             $this->assertTrue(Route::has($routeName), "Route [$routeName] does not exist");
         }
+    }
+
+    private function seedProject(): void
+    {
+        $category = PortfolioCategory::factory()->create([
+            'slug' => 'custom-software',
+            'name' => 'Custom Software',
+            'is_published' => true,
+        ]);
+
+        PortfolioProject::factory()->create([
+            'slug' => 'sample-inventory-system',
+            'title' => 'Inventory Management System',
+            'short_description' => 'A custom inventory platform for tracking stock and orders.',
+            'portfolio_category_id' => $category->id,
+            'is_published' => true,
+        ]);
     }
 }

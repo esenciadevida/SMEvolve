@@ -15,10 +15,6 @@
                 wrapperClass="h-full w-full"
                 imgClass="group-hover:scale-105"
             />
-        @else
-            <div class="flex h-full items-center justify-center" role="img" aria-label="{{ $item['title'] }} project preview placeholder">
-                <x-icon name="photo" class="h-12 w-12 text-white/20" />
-            </div>
         @endif
     </div>
 
