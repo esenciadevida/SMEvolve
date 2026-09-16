@@ -114,6 +114,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/status', [AdminAiController::class, 'status'])
                 ->middleware('admin.permission:ai.view')
                 ->name('status');
+            Route::post('/check', [AdminAiController::class, 'check'])
+                ->middleware(['admin.permission:ai.view', 'throttle:admin:ai-check'])
+                ->name('check');
 
             Route::get('/', [AiAdminDashboardController::class, 'index'])
                 ->middleware('admin.permission:ai.view')

@@ -2,8 +2,8 @@
 
 namespace App\Services\Admin;
 
-use App\Models\Administrator;
 use App\Models\AdminAuditLog;
+use App\Models\Administrator;
 use App\Models\PageView;
 use App\Models\QuoteSubmission;
 use App\Services\AI\AiConfigService;
@@ -66,7 +66,7 @@ class AdminDashboardService
 
         if ($administrator->hasPermission('chatbot.view')) {
             $data['kpis']['conversations'] = $this->analytics->chatbotStats()['conversations'];
-            $data['chatbotStatus'] = ['enabled' => (bool) config('ai.enabled') && $this->aiConfigService->assistantEnabled()];
+            $data['chatbotStatus'] = ['enabled' => $this->aiConfigService->enabled() && $this->aiConfigService->assistantEnabled()];
         }
 
         if ($administrator->hasPermission('ai.view')) {
@@ -119,7 +119,7 @@ class AdminDashboardService
     {
         $warnings = [];
 
-        if ((bool) config('ai.enabled') && ! $this->provider->isConfigured()) {
+        if ($this->aiConfigService->enabled() && ! $this->provider->isConfigured()) {
             $warnings[] = 'The AI service is enabled but no provider key is configured.';
         }
 

@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Ai;
 
+use App\Services\AI\AiConfigService;
 use App\Services\AI\AIProviderException;
 use App\Services\AI\Providers\GroqProvider;
 use Illuminate\Support\Facades\Http;
@@ -103,5 +104,24 @@ class GroqProviderTest extends TestCase
         $this->expectException(AIProviderException::class);
 
         app(GroqProvider::class)->generate([['role' => 'user', 'content' => 'Hi']]);
+    }
+
+    public function test_generate_uses_database_model_override(): void
+    {
+        config()->set('ai.groq.model', 'env-model');
+
+        app(AiConfigService::class)->set('groq.model', 'db-model');
+
+        Http::fake([
+            'api.groq.com/*' => Http::response([
+                'model' => 'db-model',
+                'choices' => [['message' => ['role' => 'assistant', 'content' => 'ok']]],
+                'usage' => ['prompt_tokens' => 1, 'completion_tokens' => 1],
+            ], 200),
+        ]);
+
+        app(GroqProvider::class)->generate([['role' => 'user', 'content' => 'Hi']]);
+
+        Http::assertSent(fn ($request) => $request->data()['model'] === 'db-model');
     }
 }

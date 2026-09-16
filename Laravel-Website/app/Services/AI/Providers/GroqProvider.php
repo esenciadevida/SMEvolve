@@ -2,6 +2,7 @@
 
 namespace App\Services\AI\Providers;
 
+use App\Services\AI\AiConfigService;
 use App\Services\AI\AIProviderException;
 use App\Services\AI\AIProviderInterface;
 use App\Services\AI\AIResponse;
@@ -10,6 +11,10 @@ use Illuminate\Support\Facades\Http;
 
 class GroqProvider implements AIProviderInterface
 {
+    public function __construct(
+        private readonly AiConfigService $config,
+    ) {}
+
     public function name(): string
     {
         return 'groq';
@@ -33,10 +38,10 @@ class GroqProvider implements AIProviderInterface
         }
 
         $payload = [
-            'model' => $options['model'] ?? config('ai.groq.model'),
+            'model' => $options['model'] ?? $this->config->model(),
             'messages' => $messages,
-            'temperature' => (float) ($options['temperature'] ?? config('ai.groq.temperature')),
-            'max_tokens' => (int) ($options['max_output_tokens'] ?? config('ai.groq.max_output_tokens')),
+            'temperature' => (float) ($options['temperature'] ?? $this->config->temperature()),
+            'max_tokens' => (int) ($options['max_output_tokens'] ?? $this->config->maxOutputTokens()),
         ];
 
         try {
@@ -69,7 +74,7 @@ class GroqProvider implements AIProviderInterface
         return new AIResponse(
             content: $content,
             provider: $this->name(),
-            model: (string) data_get($data, 'model', config('ai.groq.model')),
+            model: (string) data_get($data, 'model', $this->config->model()),
             inputTokens: (int) data_get($usage, 'prompt_tokens', 0),
             outputTokens: (int) data_get($usage, 'completion_tokens', 0),
             requestId: data_get($data, 'id') ? (string) data_get($data, 'id') : null,

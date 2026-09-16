@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AdminAiUpdateRequest;
 use App\Services\Admin\AdminAuditService;
 use App\Services\AI\AiConfigService;
+use App\Services\AI\AIException;
 use App\Services\AI\AIProviderInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,10 +24,10 @@ class AdminAiController extends Controller
         $this->authorize('admin.ai.view');
 
         return view('admin.ai.settings', [
-            'enabled' => (bool) config('ai.enabled'),
-            'model' => (string) config('ai.groq.model'),
-            'max_output_tokens' => (int) config('ai.groq.max_output_tokens'),
-            'temperature' => (float) config('ai.groq.temperature'),
+            'enabled' => $this->aiConfigService->enabled(),
+            'model' => $this->aiConfigService->model(),
+            'max_output_tokens' => $this->aiConfigService->maxOutputTokens(),
+            'temperature' => $this->aiConfigService->temperature(),
             'approved_models' => config('ai.groq.approved_models', []),
             'canUpdate' => Auth::guard('admin')->user()->hasPermission('ai.update'),
         ]);
@@ -72,12 +73,28 @@ class AdminAiController extends Controller
 
         return view('admin.ai.status', [
             'provider' => $this->provider->name(),
-            'model' => (string) config('ai.groq.model'),
+            'model' => $this->aiConfigService->model(),
             'configured' => $configured,
-            'aiEnabled' => (bool) config('ai.enabled'),
+            'aiEnabled' => $this->aiConfigService->enabled(),
             'assistantEnabled' => $this->aiConfigService->assistantEnabled(),
             'quoteEnabled' => $this->aiConfigService->quoteEnabled(),
             'lastCheckAt' => now(),
         ]);
+    }
+
+    public function check(Request $request)
+    {
+        $this->authorize('admin.ai.view');
+
+        try {
+            $response = $this->provider->generate([
+                ['role' => 'system', 'content' => 'You are a brief assistant.'],
+                ['role' => 'user', 'content' => 'Reply with the single word OK.'],
+            ], ['max_output_tokens' => 16, 'temperature' => 0]);
+
+            return back()->with('status', "Live connection OK. Model: {$response->model} ({$response->totalTokens()} tokens, {$response->inputTokens} in / {$response->outputTokens} out).");
+        } catch (AIException $e) {
+            return back()->withErrors(['check' => 'Live connection failed: '.$e->getMessage()]);
+        }
     }
 }

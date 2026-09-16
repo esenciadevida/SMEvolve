@@ -106,7 +106,7 @@ return [
 
         'model' => env(
             'GROQ_MODEL',
-            'llama-3.3-70b-versatile'
+            'openai/gpt-oss-120b'
         ),
 
         'base_url' => env(
@@ -516,7 +516,7 @@ The model must be configurable.
 Example:
 
 ```env
-GROQ_MODEL=llama-3.3-70b-versatile
+GROQ_MODEL=openai/gpt-oss-120b
 ```
 
 Do not assume a model will remain available forever.

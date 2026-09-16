@@ -3,7 +3,7 @@
 
     @unless ($globalEnabled)
         <div class="mt-6 max-w-3xl rounded-xl border border-warning-500/30 bg-warning-500/10 px-4 py-3 text-sm text-warning-700 dark:text-warning-400">
-            <strong>Global AI switch is off.</strong> The environment-level switch (<code>AI_ENABLED</code>) is currently disabled (or its configuration cache is stale), so the toggles below are saved but the assistant will not appear until the switch is enabled and <code>php artisan config:clear &amp;&amp; php artisan config:cache</code> is run on the server.
+            <strong>Global AI switch is off.</strong> The global toggle (on the <a href="{{ route('admin.ai.settings') }}" class="underline">AI Settings</a> page) is currently off, so the toggles below are saved but the assistant will not appear until the global switch is enabled.
         </div>
     @endunless
 

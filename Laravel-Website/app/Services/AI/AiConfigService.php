@@ -41,6 +41,26 @@ class AiConfigService
         Cache::forget($this->cacheKey($key));
     }
 
+    public function enabled(): bool
+    {
+        return (bool) $this->get('enabled', config('ai.enabled', true));
+    }
+
+    public function model(): string
+    {
+        return (string) $this->get('groq.model', config('ai.groq.model'));
+    }
+
+    public function maxOutputTokens(): int
+    {
+        return (int) $this->get('groq.max_output_tokens', config('ai.groq.max_output_tokens'));
+    }
+
+    public function temperature(): float
+    {
+        return (float) $this->get('groq.temperature', config('ai.groq.temperature'));
+    }
+
     public function assistantEnabled(): bool
     {
         return $this->featureEnabled('assistant');
@@ -53,7 +73,7 @@ class AiConfigService
 
     public function featureEnabled(string $feature): bool
     {
-        if (! (bool) config('ai.enabled')) {
+        if (! $this->enabled()) {
             return false;
         }
 
@@ -94,7 +114,13 @@ class AiConfigService
 
     private function row(string $key): ?AiConfiguration
     {
-        return Cache::remember($this->cacheKey($key), self::CACHE_TTL, fn () => AiConfiguration::where('key', $key)->first());
+        try {
+            return Cache::remember($this->cacheKey($key), self::CACHE_TTL, fn () => AiConfiguration::where('key', $key)->first());
+        } catch (\Throwable) {
+            // Graceful degradation: if the configuration store is unreachable,
+            // fall back to the environment/config defaults.
+            return null;
+        }
     }
 
     private function cacheKey(string $key): string

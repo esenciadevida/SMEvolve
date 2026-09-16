@@ -44,4 +44,15 @@ class PromptServiceTest extends TestCase
         $this->assertStringContainsString('JSON', $content);
         $this->assertStringContainsString('recommended_service', $content);
     }
+
+    public function test_assistant_feature_maps_to_website_assistant_prompt(): void
+    {
+        $prompt = app(PromptService::class);
+
+        $system = $prompt->systemPrompt('assistant');
+
+        $this->assertStringContainsString('Global AI Assistant Rules', $system);
+        $this->assertStringContainsString('SMEvolve Business Context', $system);
+        $this->assertStringContainsString('Website Assistant Instructions', $system);
+    }
 }

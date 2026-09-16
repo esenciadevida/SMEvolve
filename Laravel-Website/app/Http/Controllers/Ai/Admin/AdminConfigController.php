@@ -28,7 +28,7 @@ class AdminConfigController extends Controller
             'values' => $values,
             'assistantEnabled' => $this->configService->assistantEnabled(),
             'quoteEnabled' => $this->configService->quoteEnabled(),
-            'globalEnabled' => (bool) config('ai.enabled'),
+            'globalEnabled' => $this->configService->enabled(),
         ]);
     }
 

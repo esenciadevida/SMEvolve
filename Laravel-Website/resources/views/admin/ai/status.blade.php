@@ -23,4 +23,26 @@
             </div>
         @endforeach
     </div>
+
+    @if (session('status'))
+        <div class="mt-4 rounded-lg border border-success-500/30 bg-success-500/10 px-4 py-3 text-sm text-success-700 dark:text-success-500">
+            {{ session('status') }}
+        </div>
+    @endif
+
+    @if ($errors->has('check'))
+        <div class="mt-4 rounded-lg border border-error-500/30 bg-error-500/10 px-4 py-3 text-sm text-error-700 dark:text-error-500">
+            {{ $errors->first('check') }}
+        </div>
+    @endif
+
+    <div class="mt-6">
+        <form method="POST" action="{{ route('admin.ai.check') }}">
+            @csrf
+            <button type="submit" class="rounded-lg bg-primary-600 px-4 py-2 text-sm font-semibold text-white hover:bg-primary-700">
+                Run live connection check
+            </button>
+        </form>
+        <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">Sends a real (costing) request to {{ $provider }} to verify the configured model works.</p>
+    </div>
 </x-layouts.admin-portal>

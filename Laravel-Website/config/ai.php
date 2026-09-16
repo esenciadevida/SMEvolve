@@ -40,7 +40,7 @@ return [
 
     'groq' => [
         'api_key' => env('GROQ_API_KEY'),
-        'model' => env('GROQ_MODEL', 'llama-3.3-70b-versatile'),
+        'model' => env('GROQ_MODEL', 'openai/gpt-oss-120b'),
         'base_url' => env('GROQ_BASE_URL', 'https://api.groq.com/openai/v1'),
         'timeout' => (int) env('GROQ_TIMEOUT', 30),
         'max_output_tokens' => (int) env('GROQ_MAX_OUTPUT_TOKENS', 1024),
@@ -48,6 +48,7 @@ return [
         // Approved models an administrator may select. The API key and other
         // credentials are never exposed through the Admin Portal.
         'approved_models' => [
+            'openai/gpt-oss-120b' => 'GPT-OSS 120B',
             'llama-3.3-70b-versatile' => 'Llama 3.3 70B Versatile',
             'llama-3.1-8b-instant' => 'Llama 3.1 8B Instant',
         ],

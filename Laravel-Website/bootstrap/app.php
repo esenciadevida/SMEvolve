@@ -1,5 +1,6 @@
 <?php
 
+use App\Console\Commands\AiTestConnectionCommand;
 use App\Http\Middleware\AdminAuthenticate;
 use App\Http\Middleware\EnsureAdminHasPermission;
 use App\Http\Middleware\SecurityHeaders;
@@ -14,6 +15,9 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
+    ->withCommands([
+        AiTestConnectionCommand::class,
+    ])
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'admin.auth' => AdminAuthenticate::class,

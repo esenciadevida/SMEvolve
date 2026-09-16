@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Ai\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Conversation;
 use App\Models\QuoteSession;
+use App\Services\AI\AiConfigService;
 use App\Services\AI\AIProviderInterface;
 use App\Services\AI\AiUsageService;
 
@@ -13,6 +14,7 @@ class AdminUsageController extends Controller
     public function __construct(
         private readonly AiUsageService $usageService,
         private readonly AIProviderInterface $provider,
+        private readonly AiConfigService $configService,
     ) {}
 
     public function index()
@@ -32,11 +34,11 @@ class AdminUsageController extends Controller
         return view('admin.ai.health', [
             'providerConfigured' => $this->provider->isConfigured(),
             'providerName' => $this->provider->name(),
-            'model' => config('ai.groq.model'),
+            'model' => $this->configService->model(),
             'baseUrl' => config('ai.groq.base_url'),
             'timeout' => config('ai.groq.timeout'),
-            'assistantEnabled' => (bool) config('ai.assistant.enabled'),
-            'quoteEnabled' => (bool) config('ai.quote.enabled'),
+            'assistantEnabled' => $this->configService->assistantEnabled(),
+            'quoteEnabled' => $this->configService->quoteEnabled(),
             'limits' => config('ai.limits'),
             'rateLimits' => config('ai.rate_limits'),
         ]);

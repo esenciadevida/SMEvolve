@@ -13,6 +13,8 @@ class AiPromptSeeder extends Seeder
         ['key' => 'business', 'name' => 'Business Context', 'description' => 'Core SMEvolve positioning and contact information.'],
         ['key' => 'website_assistant', 'name' => 'Website Assistant', 'description' => 'Instructions for the public website chat assistant.'],
         ['key' => 'quote_assistant', 'name' => 'Quote Wizard AI', 'description' => 'Structured analysis engine for the Quote Wizard.'],
+        ['key' => 'quote_feature_suggestions', 'name' => 'Quote Feature Suggestions', 'description' => 'Suggests feature ideas from Quote Wizard answers.'],
+        ['key' => 'quote_description_assistance', 'name' => 'Quote Description Assistance', 'description' => 'Helps polish service descriptions in the Quote Wizard.'],
     ];
 
     public function run(): void

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\AI\AiConfigService;
 use App\Services\AI\AIProviderInterface;
 use App\Services\AI\Providers\GroqProvider;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -16,14 +17,19 @@ class AiServiceProvider extends ServiceProvider
             $provider = config('ai.provider', 'groq');
 
             return match ($provider) {
-                'groq' => new GroqProvider,
-                default => new GroqProvider,
+                'groq' => new GroqProvider($this->app->make(AiConfigService::class)),
+                default => throw new \RuntimeException("Unsupported AI provider \"{$provider}\" configured in AI_PROVIDER."),
             };
         });
     }
 
     public function boot(): void
     {
+        RateLimiter::for('admin:ai-check', fn ($job) => Limit::perMinutes(
+            1,
+            3
+        )->by($job->ip() ?? 'unknown'));
+
         RateLimiter::for('ai:conversations', fn ($job) => Limit::perMinutes(
             (int) config('ai.rate_limits.decay_minutes', 1),
             (int) config('ai.rate_limits.create_conversation', 10)

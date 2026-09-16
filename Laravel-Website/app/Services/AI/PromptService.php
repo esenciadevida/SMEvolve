@@ -8,8 +8,14 @@ use Illuminate\Support\Facades\File;
 
 class PromptService
 {
+    private const FEATURE_PROMPT_MAP = [
+        'assistant' => 'website_assistant',
+    ];
+
     public function systemPrompt(string $feature): string
     {
+        $feature = $this->resolveKey($feature);
+
         $parts = [
             $this->content('global'),
             $this->content('business'),
@@ -25,6 +31,8 @@ class PromptService
      */
     public function content(string $key): string
     {
+        $key = $this->resolveKey($key);
+
         $version = $this->activeVersion($key);
 
         if ($version !== null) {
@@ -36,14 +44,19 @@ class PromptService
 
     public function activeVersion(string $key): ?AiPromptVersion
     {
-        $prompt = AiPrompt::where('key', $key)->with('activeVersion')->first();
+        $prompt = AiPrompt::where('key', $this->resolveKey($key))->with('activeVersion')->first();
 
         return $prompt?->activeVersion;
     }
 
     public function prompt(string $key): ?AiPrompt
     {
-        return AiPrompt::where('key', $key)->with('activeVersion')->first();
+        return AiPrompt::where('key', $this->resolveKey($key))->with('activeVersion')->first();
+    }
+
+    private function resolveKey(string $key): string
+    {
+        return self::FEATURE_PROMPT_MAP[$key] ?? $key;
     }
 
     public function fallbackContent(string $key): string

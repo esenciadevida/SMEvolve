@@ -2,6 +2,7 @@
 
 namespace App\Services\Admin;
 
+use App\Services\AI\AiConfigService;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
@@ -12,9 +13,16 @@ use Illuminate\Support\Facades\DB;
 class SystemHealthService
 {
     public const STATUS_OK = 'operational';
+
     public const STATUS_WARNING = 'warning';
+
     public const STATUS_UNAVAILABLE = 'unavailable';
+
     public const STATUS_NOT_CONFIGURED = 'not_configured';
+
+    public function __construct(
+        private readonly AiConfigService $aiConfigService,
+    ) {}
 
     /**
      * @return array<int, array{key: string, label: string, status: string, message: string}>
@@ -121,7 +129,7 @@ class SystemHealthService
      */
     private function ai(): array
     {
-        $enabled = (bool) config('ai.enabled');
+        $enabled = $this->aiConfigService->enabled();
         $configured = (bool) config('ai.groq.api_key');
 
         if (! $enabled) {
