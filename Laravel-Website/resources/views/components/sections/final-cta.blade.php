@@ -32,8 +32,12 @@
 @endphp
 
 <section id="{{ $id }}" class="mx-auto w-full max-w-site px-6 pb-16 lg:px-8 lg:pb-24" aria-labelledby="{{ $id }}-heading">
-    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary-800 via-primary-700 to-primary-600 px-6 py-16 text-center text-white shadow-2xl shadow-primary-700/30 ring-1 ring-inset ring-white/15 sm:px-16 lg:py-20">
-        <div aria-hidden="true" class="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:2.25rem_2.25rem]"></div>
+    <div data-reveal class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary-800 via-primary-700 to-primary-600 px-6 py-16 text-center text-white shadow-2xl shadow-primary-700/30 ring-1 ring-inset ring-white/15 sm:px-16 lg:py-20">
+        <div aria-hidden="true" class="pointer-events-none absolute inset-0 overflow-hidden">
+            <div class="absolute inset-0 bg-aurora opacity-50"></div>
+            <div class="absolute inset-0 bg-grid-dark opacity-40"></div>
+        </div>
+        <div aria-hidden="true" class="pointer-events-none absolute inset-0 bg-noise"></div>
         <div class="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" aria-hidden="true"></div>
         <div class="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-primary-400/20 blur-3xl" aria-hidden="true"></div>
 

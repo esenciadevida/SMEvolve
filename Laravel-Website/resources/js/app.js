@@ -1237,3 +1237,11 @@ document.addEventListener('click', (event) => {
 
     window.SMEvolve.track(target.dataset.track, payload);
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (! document.querySelector('[data-hero], [data-reveal], [data-process-path]')) {
+        return;
+    }
+
+    import('./animations').then((module) => module.initAnimations()).catch(() => {});
+});

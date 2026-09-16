@@ -9,8 +9,8 @@
     $categories = $categories ?? config('website.technologies');
 @endphp
 
-<x-sections.section :id="$id" :heading="$heading" :description="$description" variant="surface" align="center">
-    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+<x-sections.section :id="$id" :heading="$heading" :description="$description" variant="surface" align="center" background="grid-glow">
+    <div data-reveal-group class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         @foreach ($categories as $category)
             <x-cards.technology-card
                 :title="$category['title']"

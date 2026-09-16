@@ -9,9 +9,9 @@
     $items = $items ?? (count(config('portfolio.items', [])) > 0 ? config('portfolio.items', []) : app(\App\Data\Portfolio\PortfolioData::class)->featured(3)->all());
 @endphp
 
-<x-sections.section :id="$id" :heading="$heading" :description="$description" align="center">
+<x-sections.section :id="$id" :heading="$heading" :description="$description" align="center" background="dots">
     @if (count($items) > 0)
-        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div data-reveal-group class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             @foreach ($items as $item)
                 <x-cards.portfolio-card :item="$item" />
             @endforeach

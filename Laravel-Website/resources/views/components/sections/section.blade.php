@@ -5,6 +5,7 @@
     'eyebrow' => null,
     'align' => 'left',
     'variant' => 'white',
+    'background' => null,
 ])
 
 @php
@@ -21,11 +22,15 @@
 
 <section
     @if ($id) id="{{ $id }}" @endif
-    {{ $attributes->class($variantClasses[$variant]) }}
+    {{ $attributes->class(['relative overflow-hidden', $variantClasses[$variant]]) }}
 >
-    <div class="mx-auto w-full max-w-site px-6 py-16 lg:px-8 lg:py-24">
+    @if ($background)
+        <x-sections.background :name="$background" :variant="$variant" />
+    @endif
+
+    <div class="relative mx-auto w-full max-w-site px-6 py-16 lg:px-8 lg:py-24">
         @if ($eyebrow || $heading || $description)
-            <header @class(['max-w-3xl', $align === 'center' ? 'mx-auto text-center' : 'text-left'])>
+            <header data-reveal @class(['max-w-3xl', $align === 'center' ? 'mx-auto text-center' : 'text-left'])>
                 @if ($eyebrow)
                     <p class="text-sm font-semibold uppercase tracking-widest {{ $eyebrowClasses }}">{{ $eyebrow }}</p>
                 @endif

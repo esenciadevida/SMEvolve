@@ -17,8 +17,8 @@
         ->values();
 @endphp
 
-<x-sections.section :id="$id" :heading="$heading" :description="$description" :variant="$variant" align="center">
-    <div class="mx-auto max-w-3xl space-y-4 text-left">
+<x-sections.section :id="$id" :heading="$heading" :description="$description" :variant="$variant" align="center" background="contours">
+    <div data-reveal-group class="mx-auto max-w-3xl space-y-4 text-left">
         @foreach ($items as $item)
             <x-faq.accordion
                 :question="$item['question']"

@@ -15,6 +15,7 @@ export default defineConfig({
             output: {
                 manualChunks: {
                     alpine: ['alpinejs'],
+                    gsap: ['gsap'],
                 },
             },
         },

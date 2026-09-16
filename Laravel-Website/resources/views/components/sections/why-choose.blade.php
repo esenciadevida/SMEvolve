@@ -10,8 +10,8 @@
     $benefits = $benefits ?? app(\App\Services\Content\ContentService::class)->benefits();
 @endphp
 
-<x-sections.section :id="$id" :heading="$heading" :description="$description" :variant="$variant" align="center">
-    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+<x-sections.section :id="$id" :heading="$heading" :description="$description" :variant="$variant" align="center" background="mesh">
+    <div data-reveal-group class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         @foreach ($benefits as $benefit)
             <x-cards.benefit-card
                 :title="$benefit['title']"

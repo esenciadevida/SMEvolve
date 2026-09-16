@@ -376,3 +376,123 @@
         }
     }
 }
+
+@layer utilities {
+    /* ---------------------------------------------------------------
+       Section background textures
+       --------------------------------------------------------------- */
+
+    .bg-grid-dark {
+        background-image:
+            linear-gradient(to right, rgb(255 255 255 / 0.05) 1px, transparent 1px),
+            linear-gradient(to bottom, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+        background-size: 3rem 3rem;
+    }
+
+    .bg-grid-light {
+        background-image:
+            linear-gradient(to right, rgb(15 23 42 / 0.05) 1px, transparent 1px),
+            linear-gradient(to bottom, rgb(15 23 42 / 0.05) 1px, transparent 1px);
+        background-size: 3rem 3rem;
+    }
+
+    .bg-dot-grid-dark {
+        background-image: radial-gradient(rgb(255 255 255 / 0.13) 1px, transparent 1px);
+        background-size: 1.5rem 1.5rem;
+    }
+
+    .bg-dot-grid-light {
+        background-image: radial-gradient(rgb(15 23 42 / 0.13) 1px, transparent 1px);
+        background-size: 1.5rem 1.5rem;
+    }
+
+    .mask-fade-edges {
+        -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 55%, transparent 100%);
+        mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 55%, transparent 100%);
+    }
+
+    .mask-fade-top {
+        -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+        mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+    }
+
+    .mask-fade-bottom {
+        -webkit-mask-image: linear-gradient(to top, #000 55%, transparent 100%);
+        mask-image: linear-gradient(to top, #000 55%, transparent 100%);
+    }
+
+    /* ---------------------------------------------------------------
+       Organic glow / mesh / aurora layers
+       --------------------------------------------------------------- */
+
+    .bg-mesh {
+        background-image:
+            radial-gradient(42% 46% at 18% 22%, rgb(139 92 246 / 0.18) 0%, transparent 60%),
+            radial-gradient(38% 42% at 82% 18%, rgb(56 189 248 / 0.16) 0%, transparent 62%),
+            radial-gradient(46% 50% at 70% 82%, rgb(236 72 153 / 0.12) 0%, transparent 65%);
+    }
+
+    .bg-aurora {
+        background-image:
+            radial-gradient(40% 55% at 12% 30%, rgb(139 92 246 / 0.45) 0%, transparent 60%),
+            radial-gradient(38% 50% at 50% 10%, rgb(56 189 248 / 0.38) 0%, transparent 62%),
+            radial-gradient(44% 58% at 88% 40%, rgb(236 72 153 / 0.35) 0%, transparent 64%),
+            radial-gradient(50% 60% at 50% 100%, rgb(16 185 129 / 0.25) 0%, transparent 70%);
+        background-size: 180% 180%, 160% 160%, 190% 190%, 170% 170%;
+        animation: aurora-drift 22s ease-in-out infinite alternate;
+    }
+
+    @keyframes aurora-drift {
+        0% {
+            background-position: 0% 50%, 100% 0%, 50% 100%, 0% 0%;
+        }
+        100% {
+            background-position: 100% 50%, 0% 20%, 20% 0%, 100% 100%;
+        }
+    }
+
+    /* Fine film grain to add depth to flat surfaces. */
+    .bg-noise::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.5;
+        mix-blend-mode: soft-light;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* ---------------------------------------------------------------
+       Signature dashed paths
+       --------------------------------------------------------------- */
+
+    .dashed-path {
+        fill: none;
+        stroke-linecap: round;
+        stroke-dasharray: 2 14;
+    }
+
+    .dashed-path-drift {
+        animation: dash-drift 3.5s linear infinite;
+    }
+
+    @keyframes dash-drift {
+        to {
+            stroke-dashoffset: -16;
+        }
+    }
+
+    .text-gradient {
+        background-image: linear-gradient(110deg, #fff 20%, var(--color-primary-200) 55%, var(--color-secondary-200) 90%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .bg-aurora,
+    .dashed-path-drift {
+        animation: none;
+    }
+}

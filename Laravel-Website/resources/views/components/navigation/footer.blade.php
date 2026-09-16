@@ -9,10 +9,11 @@
     $location = $footerConfig['location'] ?? null;
 @endphp
 
-<footer class="bg-dark text-slate-400">
-    <div aria-hidden="true" class="h-px bg-gradient-to-r from-transparent via-primary-500/60 to-transparent"></div>
+<footer class="relative overflow-hidden bg-dark text-slate-400">
+    <div aria-hidden="true" class="pointer-events-none absolute inset-0 bg-grid-dark mask-fade-top opacity-50"></div>
+    <div aria-hidden="true" class="relative h-px bg-gradient-to-r from-transparent via-primary-500/60 to-transparent"></div>
 
-    <div class="mx-auto max-w-site px-6 py-16 lg:px-8 lg:py-20">
+    <div class="relative mx-auto max-w-site px-6 py-16 lg:px-8 lg:py-20">
         <div class="rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.06] to-transparent p-6 sm:p-8">
             <div class="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
                 <div>
