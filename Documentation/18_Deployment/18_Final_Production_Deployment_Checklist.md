@@ -1096,7 +1096,7 @@ Production Status:
 
 ☐ READY FOR SOFT LAUNCH
 
-☐ READY FOR FULL PRODUCTION
+☒ READY FOR FULL PRODUCTION
 ```
 
 ---
@@ -1107,34 +1107,43 @@ Complete this section when the application is actually deployed.
 
 ```text
 Production Domain:
-[DOMAIN]
+https://smevolve.tech
 
 Deployment Date:
-[DATE]
+2026-09-16
 
 Deployment Time:
-[TIME]
+02:28 UTC (server time)
 
 Git Commit:
-[COMMIT SHA]
+4039129 chore: bump league/commonmark and nanoid to patched versions
+(deployed fast-forward from 8b85afb; includes 5e81461 AI settings fixes and
+c9308da html sitemap / local SEO / responsive UI work)
 
 Release Version:
-[VERSION]
+No semantic version scheme; tracked by Git commit SHA
 
 Hostinger Environment:
-[SERVER / PLAN]
+Shared hosting (CloudLinux + CageFS), uk-fast-web2073.main-hosting.eu
+User u226366554, SSH port 65002, LiteSpeed 6.3.6, PHP 8.4 (CLI + web)
+App path: /home/u226366554/domains/smevolve.tech/smevolve/Laravel-Website
+public_html -> symlink to Laravel public/
 
 Database Backup:
-[BACKUP REFERENCE]
+backups/smevolve_20260916_022930.sql.gz (37 tables, verified)
 
 Deployed By:
-[NAME]
+SMEvolve AI agent via SSH (u226366554)
 
 Verified By:
-[NAME]
+SMEvolve AI agent (live smoke tests + dedicated admin review)
 
 Final Status:
-[STATUS]
+Deployed and verified — 2026-09-16
+- Homepage, /sitemap.xml, /robots.txt, /sitemap (HTML), /admin/login all HTTP 200
+- php artisan ai:test OK (openai/gpt-oss-120b, 87 in / 36 out)
+- All 6 AI prompt profiles seeded; no pending migrations
+- 5 GitHub Dependabot alerts resolved (commonmark 2.10.1, nanoid 3.3.19)
 ```
 
 ---
