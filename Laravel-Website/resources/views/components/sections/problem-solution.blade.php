@@ -4,20 +4,20 @@
     'description' => "Most businesses know technology can help — they just don't know where to start. Here's how we turn your challenges into measurable results.",
 ])
 
-<section data-reveal id="{{ $id }}" class="relative overflow-hidden bg-dark text-white">
+<section id="{{ $id }}" class="relative overflow-hidden bg-dark text-white">
     <div aria-hidden="true" class="pointer-events-none absolute inset-0">
         <div class="absolute inset-0 bg-mesh opacity-70"></div>
         <div class="absolute inset-0 bg-noise"></div>
     </div>
 
-    <div class="relative mx-auto w-full max-w-site px-6 py-16 lg:px-8 lg:py-24">
-        <header data-reveal class="max-w-3xl text-center mx-auto">
+    <div class="relative mx-auto w-full max-w-site px-6 py-12 lg:px-8 lg:py-16">
+        <header class="max-w-3xl text-center mx-auto">
             <p class="text-sm font-semibold uppercase tracking-widest text-primary-400">How We Work</p>
             <h2 class="mt-3 text-3xl font-bold tracking-tight text-balance sm:text-4xl">{{ $heading }}</h2>
             <p class="mt-4 text-lg leading-relaxed text-slate-400">{{ $description }}</p>
         </header>
 
-        <div data-reveal class="mt-14 space-y-0">
+        <div class="mt-12 space-y-0">
             @php
                 $examples = [
                     [
@@ -99,7 +99,7 @@
             @endforeach
         </div>
 
-        <div class="mt-14 flex justify-center" data-reveal>
+        <div class="mt-12 flex justify-center">
             <x-buttons.button variant="outline-white" href="{{ route('quote') }}">
                 Discuss Your Challenge
                 <x-icon name="arrow-right" class="h-4 w-4" />

@@ -28,9 +28,9 @@
         <x-sections.background :name="$background" :variant="$variant" />
     @endif
 
-    <div class="relative mx-auto w-full max-w-site px-6 py-16 lg:px-8 lg:py-24">
+    <div class="relative mx-auto w-full max-w-site px-6 py-12 lg:px-8 lg:py-16">
         @if ($eyebrow || $heading || $description)
-            <header data-reveal @class(['max-w-3xl', $align === 'center' ? 'mx-auto text-center' : 'text-left'])>
+            <header @class(['max-w-3xl', $align === 'center' ? 'mx-auto text-center' : 'text-left'])>
                 @if ($eyebrow)
                     <p class="text-sm font-semibold uppercase tracking-widest {{ $eyebrowClasses }}">{{ $eyebrow }}</p>
                 @endif
@@ -46,7 +46,7 @@
         @endif
 
         @if (! $slot->isEmpty())
-            <div class="mt-12 {{ $contentClasses }}">
+            <div class="mt-10 {{ $contentClasses }}">
                 {{ $slot }}
             </div>
         @endif

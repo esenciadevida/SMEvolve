@@ -71,6 +71,202 @@
         <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
         <link rel="preload" as="font" type="font/woff2" href="{{ asset('fonts/inter-var-latin.woff2') }}" crossorigin>
 
+        <style>
+            /* First-paint page skeleton. Markup lives in x-skeleton-loader. */
+            #site-skeleton {
+                position: fixed;
+                inset: 0;
+                z-index: 9999;
+                display: flex;
+                flex-direction: column;
+                background: #ffffff;
+                transition: opacity 0.35s ease, visibility 0.35s ease;
+            }
+
+            #site-skeleton.sm-skeleton--done {
+                opacity: 0;
+                visibility: hidden;
+                pointer-events: none;
+            }
+
+            html.sm-skeleton-lock {
+                overflow: hidden;
+            }
+
+            .sm-skeleton__inner {
+                width: 100%;
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 24px;
+                flex: 1 1 auto;
+            }
+
+            .sm-skeleton__nav {
+                display: flex;
+                align-items: center;
+                gap: 32px;
+                padding-bottom: 24px;
+                border-bottom: 1px solid #f1f5f9;
+            }
+
+            .sm-skeleton__logo {
+                width: 120px;
+                height: 20px;
+                border-radius: 6px;
+            }
+
+            .sm-skeleton__nav-links {
+                display: flex;
+                gap: 24px;
+                margin-left: auto;
+            }
+
+            .sm-skeleton__nav-link {
+                width: 72px;
+                height: 10px;
+                border-radius: 5px;
+            }
+
+            .sm-skeleton__cta {
+                width: 96px;
+                height: 36px;
+                border-radius: 10px;
+            }
+
+            .sm-skeleton__hero {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 48px;
+                align-items: center;
+                margin-top: 64px;
+            }
+
+            .sm-skeleton__eyebrow {
+                width: 140px;
+                height: 12px;
+                border-radius: 6px;
+            }
+
+            .sm-skeleton__title {
+                width: 90%;
+                height: 28px;
+                border-radius: 8px;
+                margin-top: 20px;
+            }
+
+            .sm-skeleton__title--narrow {
+                width: 62%;
+            }
+
+            .sm-skeleton__copy {
+                width: 100%;
+                height: 12px;
+                border-radius: 6px;
+                margin-top: 16px;
+            }
+
+            .sm-skeleton__copy--narrow {
+                width: 72%;
+                margin-top: 10px;
+            }
+
+            .sm-skeleton__buttons {
+                display: flex;
+                gap: 12px;
+                margin-top: 32px;
+            }
+
+            .sm-skeleton__button {
+                width: 150px;
+                height: 44px;
+                border-radius: 12px;
+                background: rgb(79 70 229 / 0.9) !important;
+            }
+
+            .sm-skeleton__button--ghost {
+                background: rgb(226 232 240) !important;
+            }
+
+            .sm-skeleton__media {
+                aspect-ratio: 4 / 3;
+                border-radius: 20px;
+            }
+
+            .sm-skeleton__cards {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 24px;
+                margin-top: 56px;
+            }
+
+            .sm-skeleton__card {
+                padding: 18px;
+                border: 1px solid #f1f5f9;
+                border-radius: 16px;
+            }
+
+            .sm-skeleton__card-media {
+                aspect-ratio: 16 / 9;
+                border-radius: 12px;
+            }
+
+            .sm-skeleton__card-title {
+                width: 60%;
+                height: 16px;
+                border-radius: 6px;
+                margin-top: 16px;
+            }
+
+            .sm-skeleton__card-line {
+                width: 100%;
+                height: 10px;
+                border-radius: 5px;
+                margin-top: 12px;
+            }
+
+            .sm-skeleton__card-line--narrow {
+                width: 70%;
+            }
+
+            html.dark #site-skeleton {
+                background: #0b1220;
+            }
+
+            html.dark .sm-skeleton__nav,
+            html.dark .sm-skeleton__card {
+                border-color: rgb(255 255 255 / 0.08);
+            }
+
+            html.dark .sm-skeleton__card {
+                background: rgb(255 255 255 / 0.03);
+            }
+
+            html.dark .sm-skeleton__button--ghost {
+                background: rgb(51 65 85 / 0.6) !important;
+            }
+
+            @media (max-width: 767px) {
+                .sm-skeleton__nav-links {
+                    gap: 16px;
+                }
+
+                .sm-skeleton__nav-link--optional {
+                    display: none;
+                }
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+                #site-skeleton,
+                #site-skeleton.sm-skeleton--done {
+                    transition: none;
+                }
+
+                #site-skeleton .skeleton::after {
+                    animation: none;
+                }
+            }
+        </style>
+
         <link rel="canonical" href="{{ $canonicalUrl }}">
 
         <meta property="og:site_name" content="{{ $seo['site_name'] ?? config('app.name') }}">
@@ -119,6 +315,8 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body id="top" class="flex min-h-screen flex-col bg-white font-sans text-gray-900 antialiased dark:bg-dark">
+        <x-skeleton-loader />
+
         <a
             href="#main"
             class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[80] focus:rounded-xl focus:bg-primary-600 focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white focus:shadow-lg"

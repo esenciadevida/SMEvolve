@@ -31,8 +31,8 @@
     $secondaryHref = $secondaryHref ?? ($whatsapp ?: route('contact'));
 @endphp
 
-<section id="{{ $id }}" class="mx-auto w-full max-w-site px-6 pb-16 lg:px-8 lg:pb-24" aria-labelledby="{{ $id }}-heading">
-    <div data-reveal class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary-800 via-primary-700 to-primary-600 px-6 py-16 text-center text-white shadow-2xl shadow-primary-700/30 ring-1 ring-inset ring-white/15 sm:px-16 lg:py-20">
+<section id="{{ $id }}" class="mx-auto w-full max-w-site px-6 pb-12 lg:px-8 lg:pb-16" aria-labelledby="{{ $id }}-heading">
+    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary-800 via-primary-700 to-primary-600 px-6 py-14 text-center text-white shadow-2xl shadow-primary-700/30 ring-1 ring-inset ring-white/15 sm:px-16 lg:py-16">
         <div aria-hidden="true" class="pointer-events-none absolute inset-0 overflow-hidden">
             <div class="absolute inset-0 bg-aurora opacity-50"></div>
             <div class="absolute inset-0 bg-grid-dark opacity-40"></div>

@@ -72,7 +72,7 @@ return [
         'coverage' => [
             ['title' => 'Lagos, Nigeria', 'description' => 'Serving businesses in Lagos with websites, software, AI, and automation solutions.', 'icon' => 'map-pin'],
             ['title' => 'Across Nigeria', 'description' => 'Working with businesses throughout Nigeria on digital transformation projects.', 'icon' => 'globe-alt'],
-            ['title' => 'Remote Collaboration', 'description' => 'Delivering projects remotely using modern tools and clear communication.', 'icon' => 'computer-desktop'],
+            ['title' => 'Remote Collaboration', 'description' => 'Delivering projects remotely using modern tools and clear communication.', 'icon' => 'device-desktop'],
         ],
     ],
 

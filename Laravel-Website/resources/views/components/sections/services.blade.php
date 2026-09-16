@@ -38,17 +38,17 @@
     ];
 @endphp
 
-<section data-reveal-group id="{{ $id }}" class="relative overflow-hidden bg-white dark:bg-dark">
-    <div class="relative mx-auto w-full max-w-site px-6 py-16 lg:px-8 lg:py-24">
-        <header data-reveal class="max-w-3xl text-center mx-auto">
+<section id="{{ $id }}" class="relative overflow-hidden bg-white dark:bg-dark">
+    <div class="relative mx-auto w-full max-w-site px-6 py-12 lg:px-8 lg:py-16">
+        <header class="max-w-3xl text-center mx-auto">
             <p class="text-sm font-semibold uppercase tracking-widest text-primary-600">Our Expertise</p>
             <h2 class="mt-3 text-3xl font-bold tracking-tight text-balance text-gray-900 sm:text-4xl">{{ $heading }}</h2>
             <p class="mt-4 text-lg leading-relaxed text-gray-600">{{ $description }}</p>
         </header>
 
-        <div class="mt-14 space-y-16">
+        <div class="mt-12 space-y-12">
             @foreach ($groups as $group)
-                <div data-reveal class="relative rounded-2xl border border-gray-100 bg-gray-50/60 p-6 sm:p-8 dark:border-white/5 dark:bg-white/[0.02]">
+                <div class="relative rounded-2xl border border-gray-100 bg-gray-50/60 p-6 sm:p-8 dark:border-white/5 dark:bg-white/[0.02]">
                     <div class="lg:grid lg:grid-cols-[1fr_2fr] lg:gap-10">
                         <div class="mb-6 lg:mb-0">
                             <h3 class="text-xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $group['heading'] }}</h3>
@@ -78,7 +78,7 @@
             @endforeach
         </div>
 
-        <div class="mt-14 flex flex-wrap justify-center gap-4" data-reveal>
+        <div class="mt-12 flex flex-wrap justify-center gap-4">
             <x-buttons.primary-button href="{{ route('quote') }}">Get a Free Quote</x-buttons.primary-button>
             <x-buttons.secondary-button href="{{ route('services.index') }}">View All Services</x-buttons.secondary-button>
         </div>

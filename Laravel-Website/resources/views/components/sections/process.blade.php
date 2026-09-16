@@ -15,7 +15,7 @@
             <path data-process-path class="dashed-path" d="M-20 70 C 280 20, 320 200, 620 130 S 940 30, 1220 150" stroke="rgb(139 92 246 / 0.5)" stroke-width="1.5" />
         </svg>
 
-        <div data-reveal-group class="relative grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="relative grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             @foreach ($steps as $step)
                 <x-cards.process-step-card
                     :step="$step['step'] ?? null"

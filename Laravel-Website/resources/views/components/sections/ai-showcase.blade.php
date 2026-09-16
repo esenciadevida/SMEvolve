@@ -33,15 +33,15 @@
     ];
 @endphp
 
-<section data-reveal id="{{ $id }}" class="relative overflow-hidden bg-dark text-white">
+<section id="{{ $id }}" class="relative overflow-hidden bg-dark text-white">
     <div aria-hidden="true" class="pointer-events-none absolute inset-0">
         <div class="absolute inset-0 bg-aurora opacity-40"></div>
         <div class="absolute inset-0 bg-dark/50"></div>
         <div class="absolute inset-0 bg-grid-dark mask-fade-edges opacity-50"></div>
     </div>
 
-    <div class="relative mx-auto w-full max-w-site px-6 py-16 lg:px-8 lg:py-24">
-        <header data-reveal class="max-w-3xl text-center mx-auto">
+    <div class="relative mx-auto w-full max-w-site px-6 py-12 lg:px-8 lg:py-16">
+        <header class="max-w-3xl text-center mx-auto">
             <span class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-secondary-300">
                 <x-icon name="sparkles" class="h-3.5 w-3.5" />
                 AI-Powered Solutions
@@ -50,7 +50,7 @@
             <p class="mt-4 text-lg leading-relaxed text-slate-400">{{ $description }}</p>
         </header>
 
-        <div data-reveal-group class="mt-14 grid gap-6 sm:grid-cols-2">
+        <div class="mt-12 grid gap-6 sm:grid-cols-2">
             @foreach ($capabilities as $cap)
                 <article class="group relative rounded-2xl border border-white/10 bg-white/[0.04] p-6 transition duration-300 hover:border-white/20 hover:bg-white/[0.07] sm:p-8">
                     <div class="flex items-start justify-between">
@@ -65,7 +65,7 @@
             @endforeach
         </div>
 
-        <div data-reveal class="mt-14 grid gap-8 lg:grid-cols-[1.4fr_1fr] lg:items-center">
+        <div class="mt-12 grid gap-8 lg:grid-cols-[1.4fr_1fr] lg:items-center">
             <div>
                 <h3 class="text-2xl font-bold tracking-tight">Start With One Problem. Scale From There.</h3>
                 <p class="mt-3 text-base leading-relaxed text-slate-400">Most AI projects fail because they try to do everything at once. We take a different approach: identify your highest-impact pain point, build a focused solution, measure the results, and expand from there.</p>

@@ -52,38 +52,6 @@ function initHero() {
 }
 
 /**
- * Reveal-on-scroll. Elements carry `data-reveal`. When wrapped in a
- * `data-reveal-group`, descendants animate together with a stagger.
- */
-function initReveals() {
-    const defaults = { opacity: 0, y: 24, duration: 0.65, ease: 'power2.out' };
-
-    gsap.utils.toArray('[data-reveal-group]').forEach((group) => {
-        const items = Array.from(group.children);
-
-        if (!items.length) {
-            return;
-        }
-
-        gsap.from(items, {
-            ...defaults,
-            stagger: 0.08,
-            scrollTrigger: { trigger: group, start: 'top 82%' },
-        });
-    });
-
-    gsap.utils.toArray('[data-reveal]').forEach((el) => {
-        const delay = Number.parseFloat(el.dataset.revealDelay ?? '') || 0;
-
-        gsap.from(el, {
-            ...defaults,
-            delay,
-            scrollTrigger: { trigger: el, start: 'top 86%' },
-        });
-    });
-}
-
-/**
  * Draws the process connector path as the visitor scrolls through the section.
  */
 function initProcessPath() {
@@ -125,9 +93,9 @@ export function initAnimations() {
 
     initialised = true;
 
-    // Each step is isolated so a single failure cannot leave other content
-    // stuck in its hidden "from" state.
-    [initHero, initReveals, initProcessPath].forEach((fn) => {
+    // Content containers are never opacity-animated; only the one-time hero
+    // entrance and the decorative process connector path use animation.
+    [initHero, initProcessPath].forEach((fn) => {
         try {
             fn();
         } catch (error) {
@@ -142,6 +110,6 @@ export function initAnimations() {
     } else {
         requestAnimationFrame(refresh);
     }
-    
+
     requestAnimationFrame(refresh);
 }
