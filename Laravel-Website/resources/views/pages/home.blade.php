@@ -45,9 +45,13 @@
 
     <x-sections.why-choose />
 
+    <x-sections.problem-solution />
+
     <x-sections.industries />
 
     <x-sections.process />
+
+    <x-sections.ai-showcase />
 
     <x-sections.portfolio-preview />
 
