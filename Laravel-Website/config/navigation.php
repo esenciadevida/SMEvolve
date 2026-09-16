@@ -32,7 +32,6 @@ return [
         ],
         'resources' => [
             ['label' => 'FAQ', 'route' => 'faq'],
-            ['label' => 'Sitemap', 'route' => 'sitemap.page'],
             ['label' => 'Privacy Policy', 'route' => 'privacy-policy.index'],
             ['label' => 'Terms & Conditions', 'route' => 'terms.index'],
             ['label' => 'Cookie Policy', 'route' => 'cookies.index'],

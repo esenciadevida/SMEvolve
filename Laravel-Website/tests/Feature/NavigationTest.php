@@ -14,10 +14,10 @@ class NavigationTest extends TestCase
         $this->assertContains('contact', $routes, 'Contact must remain the final main nav item.');
     }
 
-    public function test_footer_resources_keep_linking_to_the_html_sitemap(): void
+    public function test_footer_resources_do_not_link_to_the_html_sitemap(): void
     {
         $routes = collect(config('navigation.footer.resources'))->pluck('route')->all();
 
-        $this->assertContains('sitemap.page', $routes);
+        $this->assertNotContains('sitemap.page', $routes);
     }
 }
