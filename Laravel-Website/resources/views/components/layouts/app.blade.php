@@ -30,6 +30,7 @@
 
     $seo = config('seo');
     $ogImage = $seo['og']['image'] ? url($seo['og']['image']) : null;
+    $siteVerification = $seo['google_site_verification'] ?? null;
 @endphp
 
 <!DOCTYPE html>
@@ -43,12 +44,25 @@
         <meta name="description" content="{{ $pageDescription }}">
         <meta name="robots" content="{{ $robotsValue }}">
 
+        @if (filled($siteVerification))
+            <meta name="google-site-verification" content="{{ $siteVerification }}">
+        @endif
+
         @if ($analyticsEnabled)
             <script async src="https://www.googletagmanager.com/gtag/js?id={{ $analyticsId }}"></script>
             <script>
                 window.dataLayer = window.dataLayer || [];
                 function gtag() { dataLayer.push(arguments); }
                 gtag('js', new Date());
+
+                // Consent Mode v2: collection is denied until the visitor opts in.
+                gtag('consent', 'default', {
+                    ad_storage: 'denied',
+                    ad_user_data: 'denied',
+                    ad_personalization: 'denied',
+                    analytics_storage: 'denied',
+                });
+
                 gtag('config', '{{ $analyticsId }}', { anonymize_ip: true });
             </script>
         @endif
@@ -121,6 +135,8 @@
         </main>
 
         <x-navigation.footer />
+
+        <x-consent-banner :tracked="$analyticsEnabled" />
 
         @unless (request()->routeIs('quote', 'quote.*', 'privacy-policy.index', 'terms.index', 'cookies.index'))
             <x-ai.chat-widget />

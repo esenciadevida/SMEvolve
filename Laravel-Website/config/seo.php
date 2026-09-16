@@ -18,6 +18,13 @@ return [
 
     'robots' => 'index, follow',
 
+    /*
+    | Google site verification token (Google Search Console). Server-side only;
+    | leave empty to disable. Used for a URL-prefix property until the
+    | preferred Domain-property DNS TXT record is added.
+    */
+    'google_site_verification' => env('GOOGLE_SITE_VERIFICATION'),
+
     'og' => [
         'type' => 'website',
         'image' => 'assets/og-default.png',

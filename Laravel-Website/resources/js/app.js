@@ -129,6 +129,71 @@ document.addEventListener('alpine:init', () => {
         },
     }));
 
+    Alpine.data('cookieConsent', (config = {}) => ({
+        visible: false,
+
+        init() {
+            if (! config.tracked) {
+                return;
+            }
+
+            const choice = this.read();
+
+            if (choice) {
+                this.apply(choice.analytics);
+
+                return;
+            }
+
+            this.visible = true;
+        },
+
+        read() {
+            try {
+                const raw = localStorage.getItem('smevolve_cookie_consent');
+
+                return raw ? JSON.parse(raw) : null;
+            } catch {
+                return null;
+            }
+        },
+
+        persist(analytics) {
+            const value = JSON.stringify({
+                essential: true,
+                analytics,
+                updated_at: new Date().toISOString(),
+            });
+
+            try {
+                localStorage.setItem('smevolve_cookie_consent', value);
+            } catch {
+                // Storage unavailable (private browsing/reduced storage): the
+                // banner just keeps asking; no analytics will be enabled.
+            }
+        },
+
+        apply(analytics) {
+            if (! analytics || typeof window.gtag !== 'function') {
+                return;
+            }
+
+            window.gtag('consent', 'update', { analytics_storage: 'granted' });
+        },
+
+        acceptAll() {
+            this.persist(true);
+            this.apply(true);
+            this.visible = false;
+        },
+
+        acceptEssential() {
+            this.persist(false);
+            this.apply(false);
+            this.visible = false;
+        },
+    }));
+
     Alpine.data('aiChat', (config = {}) => ({
         open: false,
         messages: [],

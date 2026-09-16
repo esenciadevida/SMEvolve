@@ -116,4 +116,28 @@ class RobotsAndSeoTest extends TestCase
             ->assertSee('"@type":"Organization"', false)
             ->assertSee('"@type":"WebSite"', false);
     }
+
+    public function test_consent_banner_is_rendered(): void
+    {
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('x-data="cookieConsent(', false)
+            ->assertSee('Your privacy matters', false);
+    }
+
+    public function test_google_site_verification_meta_is_emitted_when_configured(): void
+    {
+        config()->set('seo.google_site_verification', 'umTlOqTbETzG1g_j6zNGBmJRK7a0ZkYexiLVvV6UzuM');
+
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('<meta name="google-site-verification" content="umTlOqTbETzG1g_j6zNGBmJRK7a0ZkYexiLVvV6UzuM">', false);
+    }
+
+    public function test_google_site_verification_meta_is_absent_by_default(): void
+    {
+        $this->get('/')
+            ->assertOk()
+            ->assertDontSee('google-site-verification');
+    }
 }

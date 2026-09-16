@@ -39,6 +39,22 @@ class AnalyticsTest extends TestCase
         }
     }
 
+    public function test_consent_mode_defaults_to_denied_until_opted_in(): void
+    {
+        config()->set('analytics.measurement_id', 'G-TEST123456');
+
+        $this->app->detectEnvironment(fn () => 'production');
+
+        try {
+            $this->get('/')
+                ->assertOk()
+                ->assertSee("analytics_storage: 'denied'", false)
+                ->assertSee("ad_storage: 'denied'", false);
+        } finally {
+            $this->app->detectEnvironment(fn () => 'testing');
+        }
+    }
+
     public function test_content_security_policy_allows_google_analytics_hosts(): void
     {
         $csp = $this->get('/')->headers->get('Content-Security-Policy');
