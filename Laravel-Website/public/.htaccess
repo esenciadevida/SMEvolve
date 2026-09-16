@@ -75,16 +75,4 @@
 <IfModule mod_headers.c>
     # Storage files must never be indexed (defence-in-depth on top of robots).
     Header set X-Robots-Tag "noindex, nofollow" env=NOINDEX
-
-    # ---------------------------------------------------------------
-    # Security headers
-    # ---------------------------------------------------------------
-    Header set X-Content-Type-Options "nosniff"
-    Header set X-Frame-Options "SAMEORIGIN"
-    Header set Referrer-Policy "strict-origin-when-cross-origin"
-    Header set Permissions-Policy "camera=(), microphone=(), geolocation=()"
-
-    # Pragmatic CSP: 'unsafe-inline' covers the inline theme/skeleton scripts,
-    # Alpine directives, and inline <style>; GA is allowed from its CDN.
-    Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https:; frame-ancestors 'self'; base-uri 'self'; form-action 'self'; object-src 'none'"
 </IfModule>

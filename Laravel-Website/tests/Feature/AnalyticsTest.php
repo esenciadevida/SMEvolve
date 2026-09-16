@@ -62,5 +62,16 @@ class AnalyticsTest extends TestCase
         $this->assertStringContainsString('https://www.googletagmanager.com', (string) $csp);
         $this->assertStringContainsString('https://www.google-analytics.com', (string) $csp);
         $this->assertStringContainsString('https://*.google-analytics.com', (string) $csp);
+        $this->assertStringContainsString('https://*.analytics.google.com', (string) $csp);
+    }
+
+    public function test_content_security_policy_keeps_alpine_functional(): void
+    {
+        $csp = $this->get('/')->headers->get('Content-Security-Policy');
+
+        $this->assertNotNull($csp);
+        $this->assertStringContainsString("'unsafe-inline'", (string) $csp);
+        $this->assertStringContainsString("'unsafe-eval'", (string) $csp);
+        $this->assertStringContainsString("script-src 'self'", (string) $csp);
     }
 }
