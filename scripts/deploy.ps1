@@ -49,16 +49,22 @@ if (-not (Test-Path -LiteralPath $Build)) {
     throw "Missing build directory: $Build (run without -SkipBuild?)"
 }
 
-# 2. Upload public/build (gitignored, so this is the only way it reaches the server).
-Write-Host "==> Uploading public/build to $RemoteApp/public/ ..." -ForegroundColor Cyan
-& scp -i $SshKey -P "$SshPort" -r "$Build" "${SshUserHost}:$RemoteApp/public"
+# 2. Upload public/build to a staging dir, then atomically swap it in on the
+#    server (gitignored locally, so this is the only way it reaches the server).
+#    The swap also prunes any stale hashed chunks from older builds.
+Write-Host "==> Uploading public/build to $RemoteApp/public/build.staging ..." -ForegroundColor Cyan
+& scp -i $SshKey -P "$SshPort" -r "$Build" "${SshUserHost}:$RemoteApp/public/build.staging"
 if ($LASTEXITCODE -ne 0) { throw "scp failed (exit $LASTEXITCODE)" }
 
-Write-Host "==> Fixing permissions + pulling code + refreshing Laravel caches..." -ForegroundColor Cyan
+Write-Host "==> Swapping build + setting permissions + pulling code + refreshing Laravel caches..." -ForegroundColor Cyan
 $remote = @(
-    "chmod -R 755 '$RemoteApp/public/build'",
-    "find '$RemoteApp/public/build' -type f -exec chmod 644 {} +",
     "cd '$RemoteApp'",
+    "rm -rf public/build.old",
+    "mv public/build public/build.old",
+    "mv public/build.staging public/build",
+    "rm -rf public/build.old",
+    "chmod -R 755 public/build",
+    "find public/build -type f -exec chmod 644 {} +",
     "git pull --ff-only",
     "$RemotePhp artisan config:clear",
     "$RemotePhp artisan config:cache",
