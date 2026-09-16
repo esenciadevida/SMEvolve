@@ -67,7 +67,7 @@ return [
         'url' => env('APP_URL', 'https://smevolve.tech'),
         'logo' => null,
         'email' => 'hello@smevolve.tech',
-        'phone' => '+2347041252965',
+        'phone' => '+447344402184',
         'social' => [],
     ],
 ];

@@ -94,7 +94,13 @@ function initProcessPath() {
         return;
     }
 
-    const length = path.getTotalLength();
+    let length;
+
+    try {
+        length = path.getTotalLength();
+    } catch {
+        return;
+    }
 
     gsap.set(path, { strokeDasharray: length, strokeDashoffset: length });
 
@@ -119,9 +125,23 @@ export function initAnimations() {
 
     initialised = true;
 
-    initHero();
-    initReveals();
-    initProcessPath();
+    // Each step is isolated so a single failure cannot leave other content
+    // stuck in its hidden "from" state.
+    [initHero, initReveals, initProcessPath].forEach((fn) => {
+        try {
+            fn();
+        } catch (error) {
+            console.warn('[SMEvolve animations]', error);
+        }
+    });
 
-    window.addEventListener('load', () => ScrollTrigger.refresh());
+    const refresh = () => ScrollTrigger.refresh();
+
+    if (document.readyState !== 'complete') {
+        window.addEventListener('load', refresh, { once: true });
+    } else {
+        requestAnimationFrame(refresh);
+    }
+    
+    requestAnimationFrame(refresh);
 }
