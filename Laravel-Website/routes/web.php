@@ -40,6 +40,7 @@ Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store')->middleware('throttle:contact');
 
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
+Route::get('/sitemap', [SitemapController::class, 'page'])->name('sitemap.page');
 
 Route::get('/robots.txt', function () {
     return response(file_get_contents(public_path('robots.txt')), 200, [

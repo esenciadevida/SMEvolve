@@ -1,5 +1,5 @@
 @php
-    $aboutDescription = 'Learn about SMEvolve, a technology company helping businesses grow through modern websites, custom software, and reliable digital solutions.';
+    $aboutDescription = 'Learn about SMEvolve, a digital solutions company serving businesses in Lagos and Nigeria with modern websites, custom software, AI chatbots, and automation solutions.';
 @endphp
 
 <x-layouts.app
@@ -15,6 +15,12 @@
             'name' => config('app.name'),
             'url' => url('/'),
             'description' => $aboutDescription,
+            'email' => config('company.contact.email'),
+            'telephone' => config('company.contact.phone'),
+            'areaServed' => [
+                ['@type' => 'Place', 'name' => 'Lagos, Nigeria'],
+                ['@type' => 'Country', 'name' => 'Nigeria'],
+            ],
         ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
         </script>
     </x-slot>

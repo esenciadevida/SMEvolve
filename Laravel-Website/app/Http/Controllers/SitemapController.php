@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Data\Portfolio\PortfolioData;
 use App\Data\ServicesData;
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,6 +32,15 @@ class SitemapController extends Controller
         return response($xml, 200, [
             'Content-Type' => 'application/xml; charset=UTF-8',
             'Cache-Control' => 'public, max-age='.$ttl.', s-maxage='.$ttl,
+        ]);
+    }
+
+    public function page(): View
+    {
+        return view('pages.sitemap', [
+            'services' => $this->services->catalog(),
+            'portfolioCategories' => $this->portfolio->categories(),
+            'portfolioProjects' => $this->portfolio->projects(),
         ]);
     }
 

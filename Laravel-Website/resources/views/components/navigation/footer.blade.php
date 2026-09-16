@@ -6,6 +6,7 @@
         : (config('company.hours.summary_string') ?? null);
     $socials = collect(config('social_links.platforms', []))->filter(fn ($platform) => ($platform['enabled'] ?? false) && filled($platform['href'] ?? null));
     $phone = $contact['phone'] ?? null;
+    $location = $footerConfig['location'] ?? null;
 @endphp
 
 <footer class="bg-dark text-slate-400">
@@ -106,15 +107,22 @@
             <nav aria-label="Contact">
                 <h2 class="text-xs font-semibold uppercase tracking-widest text-slate-300">Contact</h2>
                 <ul class="mt-4 space-y-3 text-sm">
+                    @if (filled($location))
+                        <li class="flex items-center gap-2 text-slate-400">
+                            <x-icon name="map-pin" class="h-4 w-4 flex-none" />
+                            {{ $location }}
+                        </li>
+                    @endif
+
                     @if (filled($contact['email'] ?? null))
                         <li>
                             <a href="mailto:{{ $contact['email'] }}" class="transition hover:text-white" data-track="footer:email">{{ $contact['email'] }}</a>
                         </li>
                     @endif
 
-                    @if (filled($contact['phone'] ?? null))
+                    @if (filled($phone))
                         <li>
-                            <a href="tel:{{ preg_replace('/\s+/', '', $contact['phone']) }}" class="transition hover:text-white" data-track="footer:phone">{{ $contact['phone'] }}</a>
+                            <a href="tel:{{ preg_replace('/\s+/', '', $phone) }}" class="transition hover:text-white" data-track="footer:phone">{{ $phone }}</a>
                         </li>
                     @endif
 

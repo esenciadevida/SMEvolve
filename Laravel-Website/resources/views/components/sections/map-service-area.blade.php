@@ -10,7 +10,7 @@
 <x-sections.section
     id="map-and-service-area"
     heading="Where We Work"
-    description="Based in Nigeria and serving clients everywhere, you don't have to be nearby to work with us."
+    description="SMEvolve serves businesses in Lagos and across Nigeria, delivering projects remotely using modern communication and project management tools."
     variant="surface"
 >
     <div class="grid items-stretch gap-10 lg:grid-cols-2">
@@ -66,7 +66,7 @@
                         <span class="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-600/10 text-primary-600">
                             <x-icon name="map" class="h-7 w-7" />
                         </span>
-                        <p class="max-w-xs text-sm leading-relaxed text-gray-500">Our office location. Load the interactive map to see it and get directions.</p>
+                        <p class="max-w-xs text-sm leading-relaxed text-gray-500">Load the interactive map to explore our service area.</p>
                         <button
                             type="button"
                             @click="load()"

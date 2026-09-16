@@ -14,7 +14,7 @@ return [
 
     'url' => env('APP_URL', 'https://smevolve.tech'),
 
-    'default_description' => 'SMEvolve helps businesses build modern websites, custom software, mobile applications, and automation solutions designed around their unique goals.',
+    'default_description' => 'SMEvolve helps businesses in Lagos and Nigeria build modern websites, custom software, mobile applications, AI chatbots, and automation solutions designed around their unique goals.',
 
     'robots' => 'index, follow',
 
@@ -59,8 +59,8 @@ return [
         'name' => env('APP_NAME', 'SMEvolve'),
         'url' => env('APP_URL', 'https://smevolve.tech'),
         'logo' => null,
-        'email' => null,
-        'phone' => null,
+        'email' => 'hello@smevolve.tech',
+        'phone' => '+2347041252965',
         'social' => [],
     ],
 ];

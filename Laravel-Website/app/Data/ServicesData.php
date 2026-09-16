@@ -73,8 +73,8 @@ class ServicesData
     {
         return [
             'meta' => [
-                'title' => 'Website Development Services',
-                'description' => 'Professional website development for growing businesses. Fast, responsive, and SEO-friendly websites built around your business goals.',
+                'title' => 'Website Development Services in Lagos | SMEvolve',
+                'description' => 'Professional website development for businesses in Lagos and Nigeria. Fast, responsive, and SEO-friendly websites built around your business goals.',
             ],
             'hero' => [
                 'heading' => 'Professional Website Development for Growing Businesses',
@@ -175,8 +175,8 @@ class ServicesData
     {
         return [
             'meta' => [
-                'title' => 'E-commerce Development Services',
-                'description' => 'Custom e-commerce solutions that help you sell online. Secure, scalable online stores with a great shopping experience.',
+                'title' => 'E-commerce Development Services in Lagos | SMEvolve',
+                'description' => 'Custom e-commerce solutions for businesses in Lagos and Nigeria. Secure, scalable online stores with a great shopping experience.',
             ],
             'hero' => [
                 'heading' => 'Custom E-commerce Solutions That Help You Sell Online',
@@ -279,8 +279,8 @@ class ServicesData
     {
         return [
             'meta' => [
-                'title' => 'Custom Software Development Services',
-                'description' => 'Custom software built around your business. Secure, scalable applications designed around your workflows and long-term goals.',
+                'title' => 'Custom Software Development in Lagos | SMEvolve',
+                'description' => 'Custom software built around your business in Lagos and Nigeria. Secure, scalable applications designed around your workflows and long-term goals.',
             ],
             'hero' => [
                 'heading' => 'Custom Software Built Around Your Business',
@@ -382,8 +382,8 @@ class ServicesData
     {
         return [
             'meta' => [
-                'title' => 'Laravel Development Services',
-                'description' => 'Professional Laravel development. Secure, scalable, and maintainable web applications built with the Laravel framework.',
+                'title' => 'Laravel Development Services in Lagos | SMEvolve',
+                'description' => 'Professional Laravel development for businesses in Lagos and Nigeria. Secure, scalable, and maintainable web applications built with Laravel.',
             ],
             'hero' => [
                 'heading' => 'Professional Laravel Development Services',
@@ -485,8 +485,8 @@ class ServicesData
     {
         return [
             'meta' => [
-                'title' => 'WordPress Development Services',
-                'description' => 'Professional WordPress websites built for business growth. Secure, responsive, and easy to manage with the WordPress platform.',
+                'title' => 'WordPress Development Services in Lagos | SMEvolve',
+                'description' => 'Professional WordPress websites for businesses in Lagos and Nigeria. Secure, responsive, and easy to manage with the WordPress platform.',
             ],
             'hero' => [
                 'heading' => 'Professional WordPress Websites Built for Business Growth',
@@ -588,8 +588,8 @@ class ServicesData
     {
         return [
             'meta' => [
-                'title' => 'Mobile App Development Services',
-                'description' => 'Mobile apps that help your business grow. Cross-platform applications built for usability, security, and long-term success.',
+                'title' => 'Mobile App Development Services in Lagos | SMEvolve',
+                'description' => 'Mobile apps for businesses in Lagos and Nigeria. Cross-platform applications built for usability, security, and long-term success.',
             ],
             'hero' => [
                 'heading' => 'Mobile Apps That Help Your Business Grow',
@@ -691,8 +691,8 @@ class ServicesData
     {
         return [
             'meta' => [
-                'title' => 'AI Solutions for Business',
-                'description' => 'Practical AI solutions for modern businesses. Automate routine work, improve customer interactions, and make better use of your data.',
+                'title' => 'AI Solutions for Business in Lagos | SMEvolve',
+                'description' => 'Practical AI solutions for businesses in Lagos and Nigeria. Automate routine work, improve customer interactions, and make better use of your data.',
             ],
             'hero' => [
                 'heading' => 'Practical AI Solutions for Modern Businesses',
@@ -793,8 +793,8 @@ class ServicesData
     {
         return [
             'meta' => [
-                'title' => 'Business Automation Services',
-                'description' => 'Automate repetitive work and improve business efficiency. Workflow automation, integrations, and systems that let your team focus on what matters.',
+                'title' => 'Business Automation Services in Lagos | SMEvolve',
+                'description' => 'Automate repetitive work and improve business efficiency in Lagos and Nigeria. Workflow automation, integrations, and systems that let your team focus on what matters.',
             ],
             'hero' => [
                 'heading' => 'Automate Repetitive Work and Improve Business Efficiency',
@@ -897,8 +897,8 @@ class ServicesData
     {
         return [
             'meta' => [
-                'title' => 'API Development & System Integration',
-                'description' => 'Secure API development and system integration. Connect your applications, automate data exchange, and build reliable digital ecosystems.',
+                'title' => 'API Development & System Integration in Lagos | SMEvolve',
+                'description' => 'Secure API development and system integration for businesses in Lagos and Nigeria. Connect your applications, automate data exchange, and build reliable digital ecosystems.',
             ],
             'hero' => [
                 'heading' => 'Secure API Development & System Integration',
@@ -1000,8 +1000,8 @@ class ServicesData
     {
         return [
             'meta' => [
-                'title' => 'Website Maintenance Services',
-                'description' => 'Keep your website secure, fast, and up to date with ongoing maintenance, security updates, backups, and expert technical support.',
+                'title' => 'Website Maintenance Services in Lagos | SMEvolve',
+                'description' => 'Keep your website secure, fast, and up to date. Ongoing maintenance, security updates, backups, and expert technical support for businesses in Lagos and Nigeria.',
             ],
             'hero' => [
                 'heading' => 'Keep Your Website Secure, Fast & Up to Date',

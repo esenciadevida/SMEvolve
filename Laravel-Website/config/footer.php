@@ -13,10 +13,12 @@ return [
 
     'company' => [
         'tagline' => 'Helping businesses grow through reliable technology.',
-        'description' => 'SMEvolve builds modern websites, custom software, mobile applications, and automation solutions that solve real business problems.',
+        'description' => 'SMEvolve builds modern websites, custom software, mobile applications, AI chatbots, and automation solutions for businesses in Lagos and across Nigeria.',
     ],
 
     'business_hours' => null,
+
+    'location' => 'Lagos, Nigeria',
 
     'bottom_links' => [
         ['label' => 'Privacy Policy', 'route' => 'privacy-policy.index'],

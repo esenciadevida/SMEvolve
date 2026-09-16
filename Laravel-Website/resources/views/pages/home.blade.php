@@ -1,5 +1,5 @@
 @php
-    $homeDescription = 'SMEvolve helps businesses build modern websites, custom software, mobile applications, and automation solutions designed around their unique goals.';
+    $homeDescription = 'SMEvolve helps businesses in Lagos and Nigeria build modern websites, custom software, mobile applications, AI chatbots, and automation solutions designed around their unique goals.';
 
     $organizationSchema = [
         '@context' => 'https://schema.org',
@@ -9,6 +9,11 @@
         'logo' => url('images/logo-light.png'),
         'description' => config('company.description'),
         'email' => config('company.contact.email'),
+        'telephone' => config('company.contact.phone'),
+        'areaServed' => [
+            ['@type' => 'Place', 'name' => 'Lagos, Nigeria'],
+            ['@type' => 'Country', 'name' => 'Nigeria'],
+        ],
     ];
 
     $webSiteSchema = [

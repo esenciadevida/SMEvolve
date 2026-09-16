@@ -12,9 +12,9 @@
     >
         <div aria-hidden="true" class="h-0.5 bg-gradient-to-r from-primary-600 via-secondary-500 to-accent-500"></div>
 
-        <div class="mx-auto flex h-20 max-w-site items-center justify-between gap-6 px-6 lg:px-8">
-            <div class="shrink-0">
-                <x-logo size="h-16" />
+        <div class="mx-auto flex h-20 max-w-site items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
+            <div class="min-w-0 shrink-0">
+                <x-logo size="h-14 sm:h-16" />
             </div>
 
             <x-navigation.menu variant="desktop" />

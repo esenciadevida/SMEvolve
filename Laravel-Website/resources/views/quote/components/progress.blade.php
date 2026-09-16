@@ -20,6 +20,28 @@
         <div class="h-full rounded-full bg-gradient-to-r from-primary-600 to-secondary-600 transition-all duration-500" style="width: {{ ($stepNumber / max(1, $totalSteps)) * 100 }}%"></div>
     </div>
 
+    <ol class="mt-4 flex items-center gap-1.5 md:hidden" aria-label="Quote progress steps">
+        @foreach ($steps as $index => $step)
+            @php
+                $state = $index < $currentIndex ? 'done' : ($index === $currentIndex ? 'current' : 'todo');
+            @endphp
+            <li class="flex-1" aria-hidden="true">
+                <span
+                    @class([
+                        'block h-1.5 rounded-full transition-colors',
+                        'bg-primary-600' => $state === 'current',
+                        'bg-primary-300 dark:bg-primary-500/50' => $state === 'done',
+                        'bg-gray-200 dark:bg-gray-700' => $state === 'todo',
+                    ])
+                ></span>
+            </li>
+        @endforeach
+    </ol>
+
+    <p class="mt-2 text-xs font-medium text-gray-500 md:hidden">
+        {{ $steps[$currentIndex]['label'] ?? '' }}
+    </p>
+
     <ol class="mt-6 hidden gap-2 md:flex">
         @foreach ($steps as $index => $step)
             @php

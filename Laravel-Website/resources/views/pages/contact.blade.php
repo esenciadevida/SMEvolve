@@ -22,7 +22,6 @@
             'url' => url('/'),
             'telephone' => config('company.contact.phone'),
             'email' => config('company.contact.email'),
-            'address' => config('company.address.formatted'),
         ],
     ];
 

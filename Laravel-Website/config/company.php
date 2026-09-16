@@ -16,12 +16,12 @@ return [
 
     'tagline' => 'Helping businesses grow through reliable technology.',
 
-    'description' => 'SMEvolve builds modern websites, custom software, mobile applications, and automation solutions that solve real business problems.',
+    'description' => 'SMEvolve builds modern websites, custom software, mobile applications, AI chatbots, and automation solutions for businesses in Lagos and across Nigeria.',
 
     'contact' => [
         'email' => 'hello@smevolve.tech',
-        'phone' => '+234 800 000 0000',
-        'whatsapp' => 'https://wa.me/2348000000000',
+        'phone' => '+2347041252965',
+        'whatsapp' => null,
     ],
 
     'address' => [
@@ -67,12 +67,12 @@ return [
     ],
 
     'service_area' => [
-        'introduction' => 'SMEvolve works with businesses across Nigeria and internationally. Whether you are nearby or located anywhere in the world, we can collaborate remotely using modern communication and project management tools.',
+        'introduction' => 'SMEvolve provides digital solutions to businesses in Lagos and across Nigeria. We collaborate remotely using modern communication and project management tools.',
 
         'coverage' => [
-            ['title' => 'Remote Worldwide', 'description' => 'We deliver projects remotely to clients in any location.', 'icon' => 'globe-alt'],
-            ['title' => 'Nigeria', 'description' => 'Based in Nigeria and serving businesses nationwide.', 'icon' => 'map-pin'],
-            ['title' => 'On-site Consultation', 'description' => 'On-site consultation and discovery where applicable.', 'icon' => 'briefcase'],
+            ['title' => 'Lagos, Nigeria', 'description' => 'Serving businesses in Lagos with websites, software, AI, and automation solutions.', 'icon' => 'map-pin'],
+            ['title' => 'Across Nigeria', 'description' => 'Working with businesses throughout Nigeria on digital transformation projects.', 'icon' => 'globe-alt'],
+            ['title' => 'Remote Collaboration', 'description' => 'Delivering projects remotely using modern tools and clear communication.', 'icon' => 'computer-desktop'],
         ],
     ],
 

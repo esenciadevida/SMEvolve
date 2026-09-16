@@ -26,11 +26,11 @@
         </div>
     </div>
 
-    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+    <div class="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
         @if ($roles->isEmpty())
             <p class="p-6 text-sm text-slate-500">No roles found.</p>
         @else
-            <table class="w-full text-sm">
+            <table class="w-full min-w-[720px] text-sm">
                 <thead class="border-b border-slate-200 bg-slate-50 text-left text-xs uppercase text-slate-500 dark:border-slate-800 dark:bg-slate-900">
                     <tr>
                         <th class="px-4 py-3">Role</th>
