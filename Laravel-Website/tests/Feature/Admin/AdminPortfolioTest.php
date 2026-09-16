@@ -4,6 +4,8 @@ namespace Tests\Feature\Admin;
 
 use App\Models\PortfolioCategory;
 use App\Models\PortfolioProject;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 class AdminPortfolioTest extends AdminTestCase
 {
@@ -234,6 +236,113 @@ class AdminPortfolioTest extends AdminTestCase
         $this->assertNull($project->challenge);
         $this->assertNull($project->features);
         $this->assertNull($project->meta);
+    }
+
+    public function test_super_admin_can_upload_main_and_gallery_images(): void
+    {
+        $role = $this->superAdminRole();
+        $admin = $this->createAdmin($role, 'boss@smevolve.tech');
+        Storage::fake('web_uploads');
+
+        $this->actingAs($admin, 'admin')
+            ->post(route('admin.portfolio.store'), [
+                'title' => 'Uploaded Project',
+                'slug' => 'uploaded-project',
+                'status' => 'Active',
+                'short_description' => 'A project with uploaded images.',
+                'image_upload' => UploadedFile::fake()->image('hero.png', 1200, 800),
+                'gallery' => [
+                    ['label' => 'Dashboard', 'type' => 'Overview', 'image' => 'https://example.com/dash.png'],
+                    ['label' => 'Uploaded shot', 'type' => 'Screenshot', 'image_upload' => UploadedFile::fake()->image('gallery.png', 800, 600)],
+                ],
+            ])
+            ->assertRedirect(route('admin.portfolio.index'));
+
+        $project = PortfolioProject::where('slug', 'uploaded-project')->firstOrFail();
+
+        $this->assertStringStartsWith(asset('upload/portfolio/'), $project->image);
+        $this->assertSame('https://example.com/dash.png', $project->gallery[0]['image']);
+        $this->assertStringStartsWith(asset('upload/portfolio/'), $project->gallery[1]['image']);
+
+        Storage::disk('web_uploads')->assertExists('portfolio/'.basename($project->image));
+        Storage::disk('web_uploads')->assertExists('portfolio/'.basename($project->gallery[1]['image']));
+    }
+
+    public function test_uploading_a_new_image_replaces_the_old_upload(): void
+    {
+        $role = $this->superAdminRole();
+        $admin = $this->createAdmin($role, 'boss@smevolve.tech');
+        Storage::fake('web_uploads');
+
+        $project = PortfolioProject::factory()->create([
+            'title' => 'Replace Me',
+            'slug' => 'replace-me',
+            'status' => 'Active',
+            'short_description' => 'Before.',
+            'image' => '/upload/portfolio/old-image.png',
+        ]);
+
+        Storage::disk('web_uploads')->put('portfolio/old-image.png', 'old');
+
+        $this->actingAs($admin, 'admin')
+            ->put(route('admin.portfolio.update', $project), [
+                'title' => 'Replace Me',
+                'slug' => 'replace-me',
+                'status' => 'Active',
+                'short_description' => 'After.',
+                'image_upload' => UploadedFile::fake()->image('new.png', 1200, 800),
+            ])
+            ->assertRedirect(route('admin.portfolio.index'));
+
+        $project->refresh();
+
+        $this->assertStringStartsWith(asset('upload/portfolio/'), $project->image);
+        Storage::disk('web_uploads')->assertMissing('portfolio/old-image.png');
+        Storage::disk('web_uploads')->assertExists('portfolio/'.basename($project->image));
+    }
+
+    public function test_deleting_a_project_removes_its_uploaded_files(): void
+    {
+        $role = $this->superAdminRole();
+        $admin = $this->createAdmin($role, 'boss@smevolve.tech');
+        Storage::fake('web_uploads');
+
+        $project = PortfolioProject::factory()->create([
+            'image' => '/upload/portfolio/delete-me.png',
+        ]);
+        PortfolioProject::where('id', $project->id)->update([
+            'gallery' => [['label' => 'Shot', 'type' => 'X', 'image' => '/upload/portfolio/delete-me-2.png']],
+        ]);
+        $project->refresh();
+
+        Storage::disk('web_uploads')->put('portfolio/delete-me.png', 'one');
+        Storage::disk('web_uploads')->put('portfolio/delete-me-2.png', 'two');
+
+        $this->actingAs($admin, 'admin')
+            ->delete(route('admin.portfolio.destroy', $project))
+            ->assertRedirect(route('admin.portfolio.index'));
+
+        Storage::disk('web_uploads')->assertMissing('portfolio/delete-me.png');
+        Storage::disk('web_uploads')->assertMissing('portfolio/delete-me-2.png');
+    }
+
+    public function test_non_image_file_uploads_are_rejected(): void
+    {
+        $role = $this->superAdminRole();
+        $admin = $this->createAdmin($role, 'boss@smevolve.tech');
+        Storage::fake('web_uploads');
+
+        $this->actingAs($admin, 'admin')
+            ->post(route('admin.portfolio.store'), [
+                'title' => 'Bad Upload',
+                'slug' => 'bad-upload',
+                'status' => 'Active',
+                'short_description' => 'Should fail.',
+                'image_upload' => UploadedFile::fake()->create('evil.php', 100),
+            ])
+            ->assertSessionHasErrors('image_upload');
+
+        Storage::disk('web_uploads')->assertDirectoryEmpty('portfolio');
     }
 
     public function test_structured_sections_render_on_public_project_page(): void

@@ -109,7 +109,7 @@
     </div>
 
     <div>
-        <label for="image" class="block text-sm font-medium">Image URL</label>
+        <label for="image" class="block text-sm font-medium">Image URL <span class="text-xs font-normal text-slate-500">(or upload below)</span></label>
         <input
             type="url"
             id="image"
@@ -118,6 +118,20 @@
             placeholder="https://example.com/project.jpg"
             class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/30 dark:border-slate-700 dark:bg-slate-800"
         >
+        <label for="image_upload" class="mt-2 block text-sm font-medium">Upload image</label>
+        <input
+            type="file"
+            id="image_upload"
+            name="image_upload"
+            accept="image/jpeg,image/png,image/webp,image/avif"
+            class="mt-1 block w-full text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-primary-600 file:px-3 file:py-2 file:text-sm file:font-medium file:text-white hover:file:bg-primary-700 dark:text-slate-300"
+        >
+        <p class="mt-1 text-xs text-slate-500">JPG, PNG, WebP or AVIF up to 5 MB. The uploaded file replaces the URL above when saved.</p>
+        @if ($p && $p->image)
+            <a href="{{ $p->image }}" target="_blank" rel="noopener">
+                <img src="{{ $p->image }}" alt="Current image preview" class="mt-2 h-24 w-40 rounded-lg border border-slate-200 object-cover dark:border-slate-800">
+            </a>
+        @endif
     </div>
 
     <div class="grid gap-4 sm:grid-cols-2">
@@ -434,6 +448,16 @@
                                 class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/30 dark:border-slate-700 dark:bg-slate-800"
                             >
                         </div>
+                    </div>
+                    <div class="mt-3">
+                        <label class="block text-xs font-medium">Upload image</label>
+                        <input
+                            type="file"
+                            :name="`gallery[${index}][image_upload]`"
+                            accept="image/jpeg,image/png,image/webp,image/avif"
+                            class="mt-1 block w-full text-xs text-slate-600 file:mr-2 file:rounded-lg file:border-0 file:bg-primary-600 file:px-2 file:py-1.5 file:text-xs file:font-medium file:text-white hover:file:bg-primary-700 dark:text-slate-300"
+                        >
+                        <p class="mt-1 text-xs text-slate-500">When you pick a file it replaces the Image URL above on save.</p>
                     </div>
                     <div class="mt-3 flex justify-end">
                         <button

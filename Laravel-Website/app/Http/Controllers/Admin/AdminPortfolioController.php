@@ -11,7 +11,9 @@ use App\Models\PortfolioProject;
 use App\Services\Admin\AdminAuditService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class AdminPortfolioController extends Controller
@@ -84,6 +86,8 @@ class AdminPortfolioController extends Controller
 
         $portfolio_project->update($payload);
 
+        $this->deleteReplacedUploads($old, $payload);
+
         $this->audit($request, 'portfolio.update', $portfolio_project, $old, $portfolio_project->fresh()->toArray());
 
         return redirect()->route('admin.portfolio.index')
@@ -95,7 +99,10 @@ class AdminPortfolioController extends Controller
         $this->authorize('admin.portfolio.delete');
 
         $old = $portfolio_project->only('slug', 'title');
+        $project = $portfolio_project;
         $portfolio_project->delete();
+
+        $this->deleteProjectUploads($project);
 
         $this->auditService->log(
             'portfolio.delete',
@@ -157,7 +164,7 @@ class AdminPortfolioController extends Controller
             'status' => $validated['status'],
             'featured' => $request->boolean('featured'),
             'is_published' => $request->boolean('is_published'),
-            'image' => $validated['image'] ?? null,
+            'image' => $this->resolveMainImage($request, $validated),
             'industry' => $validated['industry'] ?? null,
             'project_type' => $validated['project_type'] ?? null,
             'summary' => $validated['summary'] ?? null,
@@ -170,7 +177,7 @@ class AdminPortfolioController extends Controller
                 ->filter()
                 ->values()
                 ->all(),
-            'gallery' => $this->normalizeRows($validated['gallery'] ?? null, ['label', 'type', 'image']),
+            'gallery' => $this->normalizeGalleryRows($request, $validated['gallery'] ?? null),
             'challenge' => $this->normalizeHeadingSection($validated['challenge'] ?? null),
             'solution' => $this->normalizeHeadingSection($validated['solution'] ?? null),
             'features' => $this->normalizeRows($validated['features'] ?? null, ['icon', 'title', 'description']),
@@ -208,7 +215,130 @@ class AdminPortfolioController extends Controller
     }
 
     /**
-     * Normalise a list of rows (features, gallery) into the array shape the
+     * Main project image: an uploaded file wins over a pasted URL.
+     *
+     * @param  array<string, mixed>  $validated
+     */
+    private function resolveMainImage(PortfolioProjectStoreRequest $request, array $validated): ?string
+    {
+        if ($request->hasFile('image_upload')) {
+            return $this->storeUpload($request->file('image_upload'));
+        }
+
+        return $validated['image'] ?? null;
+    }
+
+    /**
+     * Store an uploaded image under /upload/portfolio and return its public URL.
+     */
+    private function storeUpload(UploadedFile $file): string
+    {
+        $path = $file->store('portfolio', 'web_uploads');
+
+        return asset('upload/'.$path);
+    }
+
+    /**
+     * Gallery rows; an uploaded file on a row overrides the row's Image URL.
+     *
+     * @param  array<string, mixed>|null  $value
+     * @return list<array<string, string>>|null
+     */
+    private function normalizeGalleryRows(PortfolioProjectStoreRequest $request, ?array $value): ?array
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        $rows = [];
+
+        foreach ($value as $index => $row) {
+            if (! is_array($row)) {
+                continue;
+            }
+
+            if ($request->hasFile("gallery.{$index}.image_upload")) {
+                $row['image'] = $this->storeUpload($request->file("gallery.{$index}.image_upload"));
+            }
+
+            $item = [];
+
+            foreach (['label', 'type', 'image'] as $field) {
+                $item[$field] = isset($row[$field]) ? trim((string) $row[$field]) : '';
+            }
+
+            if (array_filter($item, static fn (string $value) => $value !== '') === []) {
+                continue;
+            }
+
+            $rows[] = $item;
+        }
+
+        return $rows === [] ? null : $rows;
+    }
+
+    /**
+     * Remove our own uploaded files that are no longer referenced after an
+     * update (replaced image or a gallery row removed/overwritten). External
+     * URLs are never touched.
+     *
+     * @param  array<string, mixed>  $old
+     * @param  array<string, mixed>  $payload
+     */
+    private function deleteReplacedUploads(array $old, array $payload): void
+    {
+        $oldImage = $old['image'] ?? null;
+        $newImage = $payload['image'] ?? null;
+
+        if (is_string($oldImage) && $oldImage !== $newImage) {
+            $this->deleteUpload($oldImage);
+        }
+
+        $oldGallery = collect($old['gallery'] ?? [])->pluck('image')->filter();
+        $newGallery = collect($payload['gallery'] ?? [])->pluck('image')->filter();
+
+        foreach ($oldGallery as $oldUrl) {
+            if (! $newGallery->contains($oldUrl)) {
+                $this->deleteUpload($oldUrl);
+            }
+        }
+    }
+
+    /**
+     * Remove every uploaded file owned by a project (called when it is deleted).
+     */
+    private function deleteProjectUploads(PortfolioProject $project): void
+    {
+        $this->deleteUpload($project->image);
+
+        foreach ($project->gallery ?? [] as $row) {
+            $this->deleteUpload($row['image'] ?? null);
+        }
+    }
+
+    /**
+     * Delete a file we manage, honouring a strict path prefix so external URLs
+     * and unrelated files are never touched.
+     */
+    private function deleteUpload(?string $url): void
+    {
+        if (! is_string($url) || $url === '') {
+            return;
+        }
+
+        $path = parse_url($url, PHP_URL_PATH);
+
+        if (! is_string($path) || ! str_starts_with($path, '/upload/portfolio/')) {
+            return;
+        }
+
+        $relative = ltrim(substr($path, strlen('/upload/')), '/');
+
+        Storage::disk('web_uploads')->delete($relative);
+    }
+
+    /**
+     * Normalise a list of rows (features) into the array shape the
      * public project page renders, dropping empty rows. Returns null when no
      * rows remain.
      *

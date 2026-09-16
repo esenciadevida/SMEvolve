@@ -47,6 +47,21 @@ return [
             'report' => false,
         ],
 
+        /*
+        | Admin-uploaded web assets (portfolio images) live under the public
+        | directory so they are served directly and remain indexable. They must
+        | NOT go under /storage, which robots.txt and X-Robots-Tag keep out of
+        | Google's index.
+        */
+        'web_uploads' => [
+            'driver' => 'local',
+            'root' => public_path('upload'),
+            'url' => env('APP_URL').'/upload',
+            'visibility' => 'public',
+            'throw' => false,
+            'report' => false,
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
