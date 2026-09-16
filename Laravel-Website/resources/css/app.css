@@ -181,6 +181,170 @@
     }
 }
 
+.chat-content {
+    overflow-wrap: anywhere;
+    line-height: 1.65;
+}
+
+.chat-content > :first-child {
+    margin-top: 0;
+}
+
+.chat-content > :last-child {
+    margin-bottom: 0;
+}
+
+.chat-content p {
+    margin-block: 0.375rem;
+}
+
+.chat-content h1,
+.chat-content h2,
+.chat-content h3,
+.chat-content h4,
+.chat-content h5,
+.chat-content h6 {
+    margin-block: 0.625rem 0.25rem;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.chat-content h1 {
+    font-size: 1.0625rem;
+}
+
+.chat-content h2 {
+    font-size: 1rem;
+}
+
+.chat-content h3,
+.chat-content h4,
+.chat-content h5,
+.chat-content h6 {
+    font-size: 0.9375rem;
+}
+
+.chat-content ul,
+.chat-content ol {
+    margin-block: 0.375rem;
+    padding-inline-start: 1.25rem;
+}
+
+.chat-content ul {
+    list-style: disc;
+}
+
+.chat-content ol {
+    list-style: decimal;
+}
+
+.chat-content li {
+    margin-block: 0.2rem;
+    padding-inline-start: 0.125rem;
+}
+
+.chat-content li::marker {
+    color: var(--color-primary-600);
+    font-weight: 600;
+}
+
+.chat-content strong,
+.chat-content b {
+    font-weight: 700;
+}
+
+.chat-content a {
+    color: var(--color-primary-600);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+}
+
+.chat-content a:hover {
+    color: var(--color-primary-500);
+}
+
+.chat-content code {
+    border-radius: 0.375rem;
+    background-color: var(--color-slate-100);
+    padding: 0.1em 0.35em;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.85em;
+}
+
+.chat-content pre {
+    margin-block: 0.5rem;
+    border-radius: 0.625rem;
+    background-color: var(--color-slate-900);
+    padding: 0.625rem 0.75rem;
+    overflow-x: auto;
+    font-size: 0.8rem;
+    line-height: 1.6;
+}
+
+.chat-content pre code {
+    background-color: transparent;
+    padding: 0;
+    color: var(--color-slate-100);
+    font-size: inherit;
+}
+
+.chat-content blockquote {
+    margin-block: 0.5rem;
+    border-inline-start: 3px solid var(--color-primary-300);
+    padding-inline-start: 0.75rem;
+    color: var(--color-slate-500);
+    font-style: italic;
+}
+
+.chat-content hr {
+    margin-block: 0.75rem;
+    border: 0;
+    border-top: 1px solid var(--color-slate-200);
+}
+
+.chat-content table {
+    width: 100%;
+    margin-block: 0.5rem;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+}
+
+.chat-content th,
+.chat-content td {
+    border: 1px solid var(--color-slate-200);
+    padding: 0.3rem 0.5rem;
+    text-align: start;
+}
+
+.dark .chat-content a {
+    color: var(--color-primary-400);
+}
+
+.dark .chat-content a:hover {
+    color: var(--color-primary-300);
+}
+
+.dark .chat-content code {
+    background-color: rgb(51 65 85 / 0.65);
+    color: var(--color-slate-100);
+}
+
+.dark .chat-content blockquote {
+    border-color: var(--color-slate-600);
+    color: var(--color-slate-400);
+}
+
+.dark .chat-content hr {
+    border-color: var(--color-slate-700);
+}
+
+.dark .chat-content th,
+.dark .chat-content td {
+    border-color: var(--color-slate-600);
+}
+
 @layer components {
     .skeleton {
         position: relative;

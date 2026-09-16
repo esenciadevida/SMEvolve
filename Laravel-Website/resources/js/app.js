@@ -1,8 +1,75 @@
 import './bootstrap';
 
 import Alpine from 'alpinejs';
+import { marked } from 'marked';
 
 window.Alpine = Alpine;
+
+marked.setOptions({ gfm: true, breaks: true });
+
+const AI_ALLOWED_TAGS = new Set([
+    'P', 'BR', 'HR', 'STRONG', 'EM', 'B', 'I', 'U', 'S', 'DEL', 'MARK', 'SUB', 'SUP',
+    'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'UL', 'OL', 'LI', 'BLOCKQUOTE',
+    'CODE', 'PRE', 'A', 'SPAN', 'DIV',
+    'TABLE', 'THEAD', 'TBODY', 'TR', 'TH', 'TD',
+]);
+
+const AI_DROP_TAGS = new Set([
+    'SCRIPT', 'STYLE', 'IFRAME', 'OBJECT', 'EMBED', 'IMG', 'SVG', 'MATH',
+    'LINK', 'META', 'BASE', 'FORM', 'INPUT', 'BUTTON', 'TEXTAREA', 'SELECT',
+]);
+
+function sanitizeAiHtml(html) {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+
+    const clean = (node) => {
+        Array.from(node.childNodes).forEach((child) => {
+            if (child.nodeType === Node.TEXT_NODE) {
+                return;
+            }
+
+            if (child.nodeType !== Node.ELEMENT_NODE) {
+                child.remove();
+
+                return;
+            }
+
+            const tag = child.tagName.toUpperCase();
+
+            if (AI_DROP_TAGS.has(tag)) {
+                child.remove();
+
+                return;
+            }
+
+            if (! AI_ALLOWED_TAGS.has(tag)) {
+                child.replaceWith(...Array.from(child.childNodes));
+
+                return;
+            }
+
+            const href = tag === 'A' ? (child.getAttribute('href') || '') : null;
+
+            Array.from(child.attributes).forEach((attribute) => child.removeAttribute(attribute.name));
+
+            if (tag === 'A') {
+                if (/^https?:\/\//i.test(href)) {
+                    child.setAttribute('href', href);
+                    child.setAttribute('target', '_blank');
+                    child.setAttribute('rel', 'noopener noreferrer nofollow');
+                } else if (/^(mailto:|tel:|\/|#|\?)/i.test(href)) {
+                    child.setAttribute('href', href);
+                }
+            }
+
+            clean(child);
+        });
+    };
+
+    clean(doc.body);
+
+    return doc.body.innerHTML;
+}
 
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -73,6 +140,7 @@ document.addEventListener('alpine:init', () => {
         sessionId: null,
         conversationUuid: null,
         lastReason: null,
+        confirmClear: false,
         suggestions: [
             'What services do you offer?',
             'How much does a website cost?',
@@ -118,15 +186,17 @@ document.addEventListener('alpine:init', () => {
                 .replace(/'/g, '&#39;');
         },
 
-        linkify(content) {
+        renderResponse(content) {
             if (! content) {
                 return content;
             }
 
-            return this.escapeHtml(content).replace(
-                /(https?:\/\/[^\s<>]+)/gi,
-                '<a href="$1" target="_blank" rel="noopener nofollow" class="break-all font-medium text-primary-700 underline underline-offset-2 hover:text-primary-600 dark:text-primary-400 dark:hover:text-primary-300">$1</a>'
+            const withInternalLinks = String(content).replace(
+                /\(\/(services|quote|portfolio|packages|about|contact|faq)\)/gi,
+                (match, path) => `[${match}](/${path})`
             );
+
+            return sanitizeAiHtml(marked.parse(this.escapeHtml(withInternalLinks)));
         },
 
         init() {
@@ -215,7 +285,17 @@ document.addEventListener('alpine:init', () => {
             this.conversationUuid = null;
             this.lastReason = null;
             this.error = null;
+            this.confirmClear = false;
             this.ensure();
+        },
+
+        clearChat() {
+            if (this.loading) {
+                return;
+            }
+
+            this.storageSet('ai_messages', '[]');
+            this.newChat();
         },
 
         askSuggestion(prompt) {

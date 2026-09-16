@@ -34,7 +34,7 @@
             x-transition:leave="transition ease-in duration-150"
             x-transition:leave-start="opacity-100 translate-y-0 scale-100"
             x-transition:leave-end="opacity-0 translate-y-4 scale-95"
-            class="mb-3 flex h-[min(70dvh,38rem)] w-full min-h-[20rem] max-h-[calc(100dvh-7rem)] flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-card-hover ring-1 ring-black/5 dark:border-slate-700 dark:bg-slate-900 dark:ring-white/5 sm:w-[25rem]"
+            class="relative mb-3 flex h-[min(70dvh,38rem)] w-full min-h-[20rem] max-h-[calc(100dvh-7rem)] flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-card-hover ring-1 ring-black/5 dark:border-slate-700 dark:bg-slate-900 dark:ring-white/5 sm:w-[25rem]"
             role="dialog"
             aria-modal="true"
             aria-labelledby="ai-chat-title"
@@ -61,12 +61,24 @@
                         type="button"
                         @click="newChat()"
                         aria-label="Start a new chat"
-                        title="New chat"
+                        title="Start a new chat"
                         class="rounded-lg p-1.5 transition hover:bg-white/20 disabled:opacity-40 disabled:hover:bg-transparent"
                         :disabled="loading"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                        </svg>
+                    </button>
+                    <button
+                        type="button"
+                        @click="confirmClear = true"
+                        aria-label="Clear chat"
+                        title="Clear chat"
+                        class="rounded-lg p-1.5 transition hover:bg-white/20 disabled:opacity-40 disabled:hover:bg-transparent"
+                        :disabled="loading || messages.length === 0"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
                         </svg>
                     </button>
                     <button
@@ -100,9 +112,15 @@
                                 ? 'rounded-br-md bg-gradient-to-br from-primary-600 to-secondary-600 text-white shadow-md shadow-primary-600/20'
                                 : 'rounded-bl-md border border-slate-200/80 bg-white text-slate-800 shadow-sm dark:border-slate-700/70 dark:bg-slate-800 dark:text-slate-100'"
                         >
+                            <div
+                                x-show="message.role === 'assistant'"
+                                class="chat-content"
+                                x-html="renderResponse(message.content)"
+                            ></div>
                             <p
+                                x-show="message.role === 'user'"
                                 class="whitespace-pre-wrap break-words"
-                                x-html="message.role === 'user' ? escapeHtml(message.content) : linkify(message.content)"
+                                x-text="message.content"
                             ></p>
 
                             <p
@@ -254,6 +272,47 @@
                     </span>
                 </p>
             </form>
+
+            <div
+                x-show="confirmClear"
+                x-cloak
+                x-transition.opacity
+                class="absolute inset-0 z-20 flex items-center justify-center rounded-2xl bg-slate-900/40 p-4 backdrop-blur-sm"
+                role="alertdialog"
+                aria-modal="true"
+                aria-labelledby="ai-chat-clear-title"
+                @keydown.escape.stop="confirmClear = false"
+            >
+                <div
+                    @click.outside="confirmClear = false"
+                    class="w-full max-w-[17rem] rounded-2xl border border-slate-200 bg-white p-4 text-center shadow-xl dark:border-slate-700 dark:bg-slate-800"
+                >
+                    <span class="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-error-500/10 text-error-600 dark:text-error-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                        </svg>
+                    </span>
+                    <p id="ai-chat-clear-title" class="mt-3 text-sm font-semibold text-slate-800 dark:text-slate-100">Clear this chat?</p>
+                    <p class="mt-1 text-xs leading-relaxed text-slate-500 dark:text-slate-400">This removes the current conversation from this device and starts fresh.</p>
+                    <div class="mt-4 flex gap-2">
+                        <button
+                            type="button"
+                            @click="confirmClear = false"
+                            class="flex-1 rounded-xl border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-600 transition hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="button"
+                            @click="clearChat()"
+                            class="flex-1 rounded-xl bg-error-600 px-3 py-2 text-xs font-semibold text-white shadow-sm transition hover:brightness-110 disabled:opacity-50"
+                            :disabled="loading"
+                        >
+                            Clear chat
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <button
