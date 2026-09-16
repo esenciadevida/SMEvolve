@@ -22,6 +22,12 @@
     $canonicalUrl = $canonicalPath === '' ? $canonicalRoot : $canonicalRoot.'/'.$canonicalPath;
     $robotsValue = $robots ?: config('seo.robots');
 
+    // Google Analytics 4 is emitted only when a measurement ID is configured
+    // and only in production, so local/staging activity is never tracked.
+    $analyticsId = config('analytics.measurement_id');
+    $analyticsEnabled = filled($analyticsId)
+        && (! config('analytics.production_only') || app()->isProduction());
+
     $seo = config('seo');
     $ogImage = $seo['og']['image'] ? url($seo['og']['image']) : null;
 @endphp
@@ -36,6 +42,16 @@
         <title>{{ $pageTitle }}</title>
         <meta name="description" content="{{ $pageDescription }}">
         <meta name="robots" content="{{ $robotsValue }}">
+
+        @if ($analyticsEnabled)
+            <script async src="https://www.googletagmanager.com/gtag/js?id={{ $analyticsId }}"></script>
+            <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag() { dataLayer.push(arguments); }
+                gtag('js', new Date());
+                gtag('config', '{{ $analyticsId }}', { anonymize_ip: true });
+            </script>
+        @endif
 
         <link rel="icon" type="image/png" sizes="64x64" href="{{ asset('favicon.png') }}">
         <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
