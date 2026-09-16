@@ -8,7 +8,6 @@ return [
         ['label' => 'Packages', 'route' => 'packages', 'order' => 40, 'active' => ['packages']],
         ['label' => 'Portfolio', 'route' => 'portfolio', 'order' => 50, 'active' => ['portfolio', 'portfolio.show', 'portfolio.category']],
         ['label' => 'FAQ', 'route' => 'faq', 'order' => 65, 'active' => ['faq']],
-        ['label' => 'Sitemap', 'route' => 'sitemap.page', 'order' => 67, 'active' => ['sitemap.page']],
         ['label' => 'Contact', 'route' => 'contact', 'order' => 70, 'active' => ['contact']],
     ],
 
