@@ -43,9 +43,33 @@ Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap')
 Route::get('/sitemap', [SitemapController::class, 'page'])->name('sitemap.page');
 
 Route::get('/robots.txt', function () {
-    return response(file_get_contents(public_path('robots.txt')), 200, [
+    $isProduction = app()->environment('production');
+    $sitemap = rtrim(config('seo.url'), '/').'/sitemap.xml';
+
+    $lines = $isProduction
+        ? [
+            'User-agent: *',
+            'Allow: /',
+            '',
+            '# Private and application routes are protected by authentication and are',
+            '# not intended for search indexing. robots.txt is NOT a security mechanism.',
+            'Disallow: /admin/',
+            'Disallow: /api/',
+            'Disallow: /storage/',
+            'Disallow: /vendor/',
+            '',
+            '# Site search is crawlable but marked noindex, follow in the page head.',
+            '',
+            'Sitemap: '.$sitemap,
+        ]
+        : [
+            'User-agent: *',
+            'Disallow: /',
+        ];
+
+    return response(implode("\n", $lines)."\n", 200, [
         'Content-Type' => 'text/plain; charset=UTF-8',
-        'Cache-Control' => 'public, max-age=86400',
+        'Cache-Control' => $isProduction ? 'public, max-age=86400' : 'no-store',
     ]);
 })->name('robots');
 

@@ -10,7 +10,16 @@
         ? (str_contains($title, config('app.name')) ? $title : $title.', '.config('app.name'))
         : config('app.name');
     $pageDescription = filled($description) ? $description : config('seo.default_description');
-    $canonicalUrl = $canonical ?: (request()->path() === '' ? route('home') : url(request()->path()));
+
+    // Always emit the configured canonical domain so www/non-www and other
+    // host variations can never self-canonicalise and create duplicates. Even
+    // when a page passes its own canonical (built via route()/url()), strip the
+    // host it resolved to and rebuild it on the configured domain.
+    $canonicalRoot = rtrim(config('seo.url'), '/');
+    $canonicalPath = $canonical
+        ? trim((string) parse_url($canonical, PHP_URL_PATH), '/')
+        : trim(request()->path(), '/');
+    $canonicalUrl = $canonicalPath === '' ? $canonicalRoot : $canonicalRoot.'/'.$canonicalPath;
     $robotsValue = $robots ?: config('seo.robots');
 
     $seo = config('seo');

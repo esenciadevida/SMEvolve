@@ -1,4 +1,4 @@
-<x-layouts.app :title="'Something Went Wrong'">
+<x-layouts.app :title="'Something Went Wrong'" robots="noindex, nofollow">
     <section class="mx-auto flex max-w-site flex-col items-center px-6 py-24 text-center lg:px-8 lg:py-32">
         <div class="flex h-20 w-20 items-center justify-center rounded-3xl bg-error-500/10">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-10 w-10 text-error-600" aria-hidden="true">

@@ -6,13 +6,27 @@ use Tests\TestCase;
 
 class RobotsAndSeoTest extends TestCase
 {
-    public function test_robots_txt_is_served_and_references_the_sitemap(): void
+    public function test_robots_txt_disallows_all_crawling_outside_production(): void
     {
         $this->get('/robots.txt')
             ->assertOk()
-            ->assertSee('Sitemap: https://smevolve.tech/sitemap.xml', false)
-            ->assertSee('Disallow: /admin/', false)
-            ->assertSee('Disallow: /api/', false);
+            ->assertSee('Disallow: /', false);
+    }
+
+    public function test_robots_txt_in_production_references_the_sitemap_and_protects_private_routes(): void
+    {
+        $this->app->detectEnvironment(fn () => 'production');
+
+        try {
+            $this->get('/robots.txt')
+                ->assertOk()
+                ->assertSee('Sitemap: https://smevolve.tech/sitemap.xml', false)
+                ->assertSee('Disallow: /admin/', false)
+                ->assertSee('Disallow: /api/', false)
+                ->assertDontSee('Disallow: /search');
+        } finally {
+            $this->app->detectEnvironment(fn () => 'testing');
+        }
     }
 
     public function test_homepage_is_indexable(): void
@@ -71,6 +85,20 @@ class RobotsAndSeoTest extends TestCase
         $this->get('/search?q=website')
             ->assertOk()
             ->assertSee('<link rel="canonical" href="https://smevolve.tech/search"', false);
+    }
+
+    public function test_canonical_is_pinned_to_the_configured_host(): void
+    {
+        $this->get('https://www.smevolve.tech/services')
+            ->assertOk()
+            ->assertSee('<link rel="canonical" href="https://smevolve.tech/services"', false);
+    }
+
+    public function test_not_found_page_is_noindex(): void
+    {
+        $this->get('/this-page-does-not-exist-12345')
+            ->assertNotFound()
+            ->assertSee('<meta name="robots" content="noindex, follow">', false);
     }
 
     public function test_homepage_has_intentional_title_and_description(): void

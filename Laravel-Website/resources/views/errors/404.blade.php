@@ -1,4 +1,4 @@
-<x-layouts.app :title="'Page Not Found'">
+<x-layouts.app :title="'Page Not Found'" robots="noindex, follow">
     <section class="mx-auto flex max-w-site flex-col items-center px-6 py-24 text-center lg:px-8 lg:py-32">
         <div class="flex h-20 w-20 items-center justify-center rounded-3xl bg-primary-600/10">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-10 w-10 text-primary-600" aria-hidden="true">
