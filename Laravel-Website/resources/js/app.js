@@ -1239,7 +1239,7 @@ document.addEventListener('click', (event) => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    if (! document.querySelector('[data-hero], [data-reveal], [data-process-path]')) {
+    if (! document.querySelector('[data-hero]')) {
         return;
     }
 
