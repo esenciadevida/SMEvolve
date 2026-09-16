@@ -482,4 +482,32 @@ class AdminPortfolioTest extends AdminTestCase
             ->assertOk()
             ->assertSee('Real Client Project');
     }
+
+    public function test_projects_with_images_render_on_public_portfolio(): void
+    {
+        $category = $this->category(['slug' => 'ecommerce', 'name' => 'E-commerce Development']);
+        PortfolioProject::factory()->create([
+            'slug' => 'project-with-image',
+            'title' => 'Project With Image',
+            'portfolio_category_id' => $category->id,
+            'is_published' => true,
+            'featured' => true,
+            'image' => '/upload/portfolio/project-with-image.png',
+            'gallery' => [
+                ['label' => 'Dashboard', 'type' => 'Overview', 'image' => '/upload/portfolio/project-with-image.png'],
+            ],
+        ]);
+
+        $this->get(route('portfolio'))
+            ->assertOk()
+            ->assertSee('/upload/portfolio/project-with-image.png', false);
+
+        $this->get(route('portfolio.show', 'project-with-image'))
+            ->assertOk()
+            ->assertSee('Project With Image');
+
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertSee('Project With Image');
+    }
 }

@@ -27,8 +27,8 @@
         loading="{{ $loading }}"
         decoding="{{ $decoding }}"
         fetchpriority="{{ $fetchpriority }}"
-        @load="loaded = true"
-        @error="loaded = true"
+        x-on:load="loaded = true"
+        x-on:error="loaded = true"
         class="relative h-full w-full object-cover transition-opacity duration-500 {{ $imgClass }}"
         :class="loaded ? 'opacity-100' : 'opacity-0'"
     />
