@@ -75,4 +75,18 @@
 <IfModule mod_headers.c>
     # Storage files must never be indexed (defence-in-depth on top of robots).
     Header set X-Robots-Tag "noindex, nofollow" env=NOINDEX
+
+    # ---------------------------------------------------------------
+    # Security headers
+    # ---------------------------------------------------------------
+    # The Hostinger CDN edge overrides Content-Security-Policy headers set by
+    # PHP, so the middleware CSP never reaches browsers. Apache-set headers
+    # DO survive the edge, so this is the effective channel. Keep this policy
+    # in sync with app/Http/Middleware/SecurityHeaders.php.
+    # 'unsafe-eval' is required: Alpine.js compiles directives with new Function().
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+    Header set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+    Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://www.googletagmanager.com https://www.google-analytics.com; font-src 'self'; connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; frame-src 'self' https://www.google.com https://www.google.com.ng https://maps.google.com"
 </IfModule>
