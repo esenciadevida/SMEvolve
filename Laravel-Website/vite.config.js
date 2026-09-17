@@ -13,9 +13,13 @@ export default defineConfig({
     build: {
         rollupOptions: {
             output: {
-                manualChunks: {
-                    alpine: ['alpinejs'],
-                    gsap: ['gsap'],
+                manualChunks(id) {
+                    if (id.includes(`${'node_modules'}/alpinejs`) || id.includes(`${'node_modules'}${'\\'}alpinejs`)) {
+                        return 'alpine';
+                    }
+                    if (id.includes(`${'node_modules'}/gsap`) || id.includes(`${'node_modules'}${'\\'}gsap`)) {
+                        return 'gsap';
+                    }
                 },
             },
         },
