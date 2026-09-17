@@ -129,6 +129,8 @@ class AdminAiTest extends AdminTestCase
 
     public function test_super_admin_can_run_live_connection_check(): void
     {
+        config()->set('ai.groq.api_key', 'test-key');
+
         Http::fake([
             'api.groq.com/*' => Http::response([
                 'id' => 'chatcmpl-test',
