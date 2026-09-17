@@ -7,6 +7,7 @@ use App\Services\Security\RequestMetaService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Privacy-conscious, anonymous server-side page view tracking.
@@ -153,7 +154,7 @@ class PageViewTrackingService
      * Set a first-party anonymous visitor cookie (random identifier) when the
      * visitor does not already have one.
      */
-    public function ensureVisitorCookie(Request $request, \Symfony\Component\HttpFoundation\Response $response): void
+    public function ensureVisitorCookie(Request $request, Response $response): void
     {
         $cookie = $request->cookie(self::VISITOR_COOKIE);
 

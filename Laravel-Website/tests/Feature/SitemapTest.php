@@ -3,11 +3,11 @@
 namespace Tests\Feature;
 
 use App\Data\Portfolio\PortfolioData;
+use App\Data\ServicesData;
 use App\Models\PortfolioCategory;
 use App\Models\PortfolioProject;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
-use SimpleXMLElement;
 use Tests\TestCase;
 
 class SitemapTest extends TestCase
@@ -39,7 +39,7 @@ class SitemapTest extends TestCase
     {
         $this->seedProject();
 
-        $service = app(\App\Data\ServicesData::class)->catalog()->first();
+        $service = app(ServicesData::class)->catalog()->first();
         $project = app(PortfolioData::class)->projects()->first();
 
         $this->get('/sitemap.xml')

@@ -12,9 +12,6 @@ use DateTimeInterface;
  */
 class EmailFormat
 {
-    /**
-     * @param  mixed  $value
-     */
     public static function format(mixed $value): string
     {
         if ($value instanceof DateTimeInterface) {

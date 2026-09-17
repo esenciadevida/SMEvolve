@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Mail\NewContactMessage;
-use App\Models\AdminNotification;
 use App\Models\ContactMessage;
 use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;

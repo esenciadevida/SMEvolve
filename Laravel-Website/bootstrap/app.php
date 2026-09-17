@@ -3,9 +3,9 @@
 use App\Console\Commands\AiTestConnectionCommand;
 use App\Http\Middleware\AdminAuthenticate;
 use App\Http\Middleware\EnsureAdminHasPermission;
+use App\Http\Middleware\Noindex;
 use App\Http\Middleware\SecurityHeaders;
 use App\Http\Middleware\TrackPageViews;
-use App\Http\Middleware\Noindex;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
