@@ -6,6 +6,7 @@
     'placeholder' => null,
     'autocomplete' => null,
     'required' => false,
+    'inputmode' => null,
 ])
 
 @php
@@ -21,6 +22,7 @@
     value="{{ $finalValue }}"
     @if ($placeholder) placeholder="{{ $placeholder }}" @endif
     @if ($autocomplete) autocomplete="{{ $autocomplete }}" @endif
+    @if ($inputmode) inputmode="{{ $inputmode }}" @endif
     @if ($required) required @endif
     aria-invalid="{{ $hasError ? 'true' : 'false' }}"
     @if ($hasError) aria-describedby="{{ $id }}-error" @endif

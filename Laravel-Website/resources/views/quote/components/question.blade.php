@@ -33,6 +33,13 @@
         default => 'text',
     };
 
+    $inputMode = match ($inputType) {
+        'email' => 'email',
+        'tel' => 'tel',
+        'url' => 'url',
+        default => null,
+    };
+
     $autocomplete = match ($key) {
         'full_name' => 'name',
         'email' => 'email',
@@ -132,10 +139,9 @@
             :value="$value"
             :placeholder="$placeholder"
             :autocomplete="$autocomplete"
+            :inputmode="$inputMode"
             :required="$required"
             :maxlength="$question['max'] ?? null"
-            @if ($inputType === 'tel') inputmode="tel" @endif
-            @if ($inputType === 'email') inputmode="email" @endif
         />
     @endif
 
